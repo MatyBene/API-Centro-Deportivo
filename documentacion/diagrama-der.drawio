@@ -1,0 +1,86 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.15 Chrome/134.0.6998.205 Electron/35.2.1 Safari/537.36" version="26.2.15">
+  <diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">
+    <mxGraphModel dx="2684" dy="875" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="C-vyLk0tnHw3VtMMgP7b-23" value="Usuarios" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;" parent="1" vertex="1">
+          <mxGeometry x="690" y="230" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="C-vyLk0tnHw3VtMMgP7b-24" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" parent="C-vyLk0tnHw3VtMMgP7b-23" vertex="1">
+          <mxGeometry y="30" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="C-vyLk0tnHw3VtMMgP7b-25" value="PK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;fontStyle=1;" parent="C-vyLk0tnHw3VtMMgP7b-24" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C-vyLk0tnHw3VtMMgP7b-26" value="customer_id int NOT NULL " style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;fontStyle=5;" parent="C-vyLk0tnHw3VtMMgP7b-24" vertex="1">
+          <mxGeometry x="30" width="220" height="30" as="geometry">
+            <mxRectangle width="220" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C-vyLk0tnHw3VtMMgP7b-27" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="C-vyLk0tnHw3VtMMgP7b-23" vertex="1">
+          <mxGeometry y="60" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="C-vyLk0tnHw3VtMMgP7b-28" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;" parent="C-vyLk0tnHw3VtMMgP7b-27" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C-vyLk0tnHw3VtMMgP7b-29" value="customer_name char(50) NOT NULL" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;" parent="C-vyLk0tnHw3VtMMgP7b-27" vertex="1">
+          <mxGeometry x="30" width="220" height="30" as="geometry">
+            <mxRectangle width="220" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=ERone;startFill=0;endArrow=ERone;endFill=0;" edge="1" parent="1" source="bMSDryGwvFbEFKaxatis-2" target="bMSDryGwvFbEFKaxatis-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;startArrow=ERone;startFill=0;endArrow=ERone;endFill=0;" edge="1" parent="1" source="bMSDryGwvFbEFKaxatis-2" target="bMSDryGwvFbEFKaxatis-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=ERone;startFill=0;endArrow=ERone;endFill=0;" edge="1" parent="1" source="bMSDryGwvFbEFKaxatis-2" target="bMSDryGwvFbEFKaxatis-5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-315" y="500" />
+              <mxPoint x="65" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-2" value="&lt;div&gt;CREATE TABLE Usuario (&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; id INT PRIMARY KEY AUTO_INCREMENT,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; nombre VARCHAR(50) NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; apellido VARCHAR(50) NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; dni VARCHAR(20) NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; fecha_nacimiento DATE,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; telefono VARCHAR(20),&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; email VARCHAR(100)&lt;/div&gt;&lt;div&gt;);&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-450" y="230" width="270" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-3" value="&lt;div&gt;CREATE TABLE Credencial (&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; id INT PRIMARY KEY AUTO_INCREMENT,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; usuario_id INT UNIQUE NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; username VARCHAR(50) UNIQUE NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; password VARCHAR(255) NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; rol ENUM(&#39;socio&#39;, &#39;instructor&#39;, &#39;admin&#39;) NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; FOREIGN KEY (usuario_id) REFERENCES Usuario(id)&lt;/div&gt;&lt;div&gt;);&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-10" y="225" width="330" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="bMSDryGwvFbEFKaxatis-4" target="bMSDryGwvFbEFKaxatis-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-4" value="&lt;div&gt;CREATE TABLE Socio (&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; usuario_id INT PRIMARY KEY,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; estado VARCHAR(20),&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; FOREIGN KEY (usuario_id) REFERENCES Usuario(id)&lt;/div&gt;&lt;div&gt;);&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-650" y="620" width="330" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="bMSDryGwvFbEFKaxatis-5" target="bMSDryGwvFbEFKaxatis-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-5" value="&lt;div&gt;CREATE TABLE Instructor (&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; usuario_id INT PRIMARY KEY,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; especialidad VARCHAR(100),&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; FOREIGN KEY (usuario_id) REFERENCES Usuario(id)&lt;/div&gt;&lt;div&gt;);&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-105" y="620" width="340" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="bMSDryGwvFbEFKaxatis-6" target="bMSDryGwvFbEFKaxatis-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-6" value="&lt;div&gt;CREATE TABLE Clase (&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; id INT PRIMARY KEY AUTO_INCREMENT,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; nombre VARCHAR(100) NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; descripcion TEXT,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; limite_socios INT,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; hora_inicio TIME,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; hora_fin TIME,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; instructor_id INT NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; FOREIGN KEY (instructor_id) REFERENCES Instructor(usuario_id)&lt;/div&gt;&lt;div&gt;);&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-130" y="830" width="390" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;startArrow=ERmany;startFill=0;endArrow=ERone;endFill=0;" edge="1" parent="1" source="bMSDryGwvFbEFKaxatis-7" target="bMSDryGwvFbEFKaxatis-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-7" value="&lt;div&gt;CREATE TABLE Clase_DiaSemana (&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; clase_id INT,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; dia ENUM(&#39;Lunes&#39;,&#39;Martes&#39;,&#39;Miércoles&#39;,&#39;Jueves&#39;,&#39;Viernes&#39;),&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; PRIMARY KEY (clase_id, dia),&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; FOREIGN KEY (clase_id) REFERENCES Clase(id)&lt;/div&gt;&lt;div&gt;);&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="400" y="835" width="330" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="bMSDryGwvFbEFKaxatis-8" value="&lt;div&gt;CREATE TABLE Inscripcion (&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; id INT PRIMARY KEY AUTO_INCREMENT,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; fecha_inicio DATE NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; fecha_fin DATE,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; socio_id INT NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; clase_id INT NOT NULL,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; FOREIGN KEY (socio_id) REFERENCES Socio(usuario_id),&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; FOREIGN KEY (clase_id) REFERENCES Clase(id)&lt;/div&gt;&lt;div&gt;);&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-665" y="830" width="360" height="160" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
