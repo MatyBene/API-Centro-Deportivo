@@ -1,4 +1,4 @@
 package com.utn.API_CentroDeportivo.model.repository;
 
-public class IMemberRepository {
+public interface IMemberRepository {
 }
