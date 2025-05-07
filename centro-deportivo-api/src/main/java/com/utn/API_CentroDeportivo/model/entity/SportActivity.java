@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @ToString
 
-public class Class {
+public class SportActivity {
     private long id;
     private String name;
     private String description;

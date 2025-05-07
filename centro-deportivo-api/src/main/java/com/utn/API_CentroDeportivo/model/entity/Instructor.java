@@ -2,6 +2,8 @@ package com.utn.API_CentroDeportivo.model.entity;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,6 +12,6 @@ import lombok.*;
 @ToString
 
 public class Instructor {
-    private Specialty specialty;
-    private List<FitClass> classes;
+    private String specialty;
+    private List<SportActivity> classes;
 }
