@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @ToString
 
-public class Member {
+public class Member extends User{
     private Status status;
     private List<Enrollment> enrollments;
 }

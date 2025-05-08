@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @ToString
 
-public class Instructor {
+public class Instructor extends User{
     private String specialty;
     private List<SportActivity> classes;
 }
