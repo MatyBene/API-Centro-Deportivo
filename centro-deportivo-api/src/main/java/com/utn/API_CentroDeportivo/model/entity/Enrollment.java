@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @ToString
 
 public class Enrollment {
-    private long id;
+    private Long id;
     private LocalDate startDate;
     private LocalDate endDate;
     private Member member;

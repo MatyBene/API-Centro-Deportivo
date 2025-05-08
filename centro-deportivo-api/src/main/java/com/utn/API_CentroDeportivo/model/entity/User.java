@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 
 public abstract class User {
-    private long id;
+    private Long id;
     private String name;
     private String lastname;
     private String dni;

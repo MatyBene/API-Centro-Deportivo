@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 
 public class Credential {
-    private long id;
+    private Long id;
     private User user;
     private String username;
     private String password;
