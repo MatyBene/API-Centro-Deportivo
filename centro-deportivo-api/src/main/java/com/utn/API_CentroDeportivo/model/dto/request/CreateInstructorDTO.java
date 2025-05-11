@@ -8,8 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class CreateMemberDTO {
+public class CreateInstructorDTO {
     private UserRequestDTO userDTO;
-    private MemberRequestDTO memberDTO;
+    private InstructorRequestDTO instructorDTO;
     private CredentialDTO credentialDTO;
 }
