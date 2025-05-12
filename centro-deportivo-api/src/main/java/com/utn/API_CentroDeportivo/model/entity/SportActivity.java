@@ -14,7 +14,7 @@ import java.util.List;
 @ToString
 
 public class SportActivity {
-    private long id;
+    private Long id;
     private String name;
     private String description;
     private int maxMembers;

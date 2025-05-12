@@ -1,4 +1,5 @@
-package com.utn.API_CentroDeportivo.model.entity;
+package com.utn.API_CentroDeportivo.model.dto.request;
+
 import lombok.*;
 
 @Getter
@@ -7,8 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-
-public abstract class User {
+public class UserRequestDTO {
     private Long id;
     private String name;
     private String lastname;

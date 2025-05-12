@@ -1,4 +1,6 @@
-package com.utn.API_CentroDeportivo.model.entity;
+package com.utn.API_CentroDeportivo.model.dto.request;
+
+import com.utn.API_CentroDeportivo.model.entity.User;
 import com.utn.API_CentroDeportivo.model.enums.Role;
 import lombok.*;
 
@@ -8,11 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-
-public class Credential {
-    private Long id;
-    private User user;
+public class CredentialDTO {
     private String username;
     private String password;
-    private Role role;
+    private Role role = Role.MEMBER;
 }

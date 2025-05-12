@@ -1,5 +1,6 @@
-package com.utn.API_CentroDeportivo.model.dto.response;
+package com.utn.API_CentroDeportivo.model.dto.request;
 
+import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
 import lombok.*;
 
 import java.util.List;
@@ -10,8 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString
-
-public class InstructorDetailsDTO extends UserDetailsDTO{
+public class InstructorRequestDTO {
     private String specialty;
     private List<SportActivitySummaryDTO> activities;
 }

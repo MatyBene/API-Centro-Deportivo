@@ -1,4 +1,4 @@
-package com.utn.API_CentroDeportivo.model.entity;
+package com.utn.API_CentroDeportivo.model.dto.request;
 
 import lombok.*;
 
@@ -10,11 +10,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @ToString
-
-public class Enrollment {
-    private Long id;
+public class EnrollmentRequestDTO {
     private LocalDate startDate;
     private LocalDate endDate;
-    private Member member;
-    private SportActivity activity;
+    private Long memberId;
+    private Long activityId;
 }
