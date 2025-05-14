@@ -21,5 +21,5 @@ public class Instructor extends User{
     private String specialty;
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SportActivity> activities = new ArrayList<>();
-    
+
 }
