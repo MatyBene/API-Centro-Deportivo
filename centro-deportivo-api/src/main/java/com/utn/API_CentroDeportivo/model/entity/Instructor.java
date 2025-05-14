@@ -1,8 +1,12 @@
 package com.utn.API_CentroDeportivo.model.entity;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -13,6 +17,9 @@ import java.util.List;
 @ToString
 
 public class Instructor extends User{
+    @Column(nullable = false)
     private String specialty;
-    private List<SportActivity> classes;
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SportActivity> activities = new ArrayList<>();
+    
 }

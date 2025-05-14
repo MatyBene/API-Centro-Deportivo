@@ -26,7 +26,7 @@ public abstract class User {
     private String phone;
     @Column(nullable = false, unique = true)
     private String email;
-    
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Credential credential;
 
