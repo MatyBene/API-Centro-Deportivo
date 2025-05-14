@@ -2,12 +2,13 @@ package com.utn.API_CentroDeportivo.model.dto.response;
 
 import com.utn.API_CentroDeportivo.model.enums.Role;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString
 
 public class UserDetailsDTO extends UserSummaryDTO{

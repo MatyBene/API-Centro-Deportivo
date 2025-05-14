@@ -1,11 +1,12 @@
 package com.utn.API_CentroDeportivo.model.entity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString
 
 public abstract class User {

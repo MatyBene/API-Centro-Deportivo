@@ -1,12 +1,13 @@
 package com.utn.API_CentroDeportivo.model.dto.response;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString
 
 public class UserSummaryDTO {

@@ -2,6 +2,7 @@ package com.utn.API_CentroDeportivo.model.dto.response;
 
 import com.utn.API_CentroDeportivo.model.enums.Day;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString
 public class SportActivityDetailsDTO extends SportActivitySummaryDTO{
     private String description;

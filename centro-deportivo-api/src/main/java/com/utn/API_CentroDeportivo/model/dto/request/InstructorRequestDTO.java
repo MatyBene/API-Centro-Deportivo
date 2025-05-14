@@ -2,6 +2,7 @@ package com.utn.API_CentroDeportivo.model.dto.request;
 
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString
 public class InstructorRequestDTO {
     private String specialty;

@@ -3,6 +3,7 @@ package com.utn.API_CentroDeportivo.model.dto.request;
 import com.utn.API_CentroDeportivo.model.entity.Enrollment;
 import com.utn.API_CentroDeportivo.model.enums.Status;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString
 public class MemberRequestDTO {
     private Status status = Status.INACTIVE;
