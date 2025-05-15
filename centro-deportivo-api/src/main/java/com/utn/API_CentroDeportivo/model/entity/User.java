@@ -10,6 +10,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
