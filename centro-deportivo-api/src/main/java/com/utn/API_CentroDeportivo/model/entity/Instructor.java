@@ -2,6 +2,7 @@ package com.utn.API_CentroDeportivo.model.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -16,6 +17,7 @@ import java.util.List;
 @SuperBuilder
 @ToString
 
+@Entity
 public class Instructor extends User{
     @Column(nullable = false)
     private String specialty;
