@@ -10,7 +10,7 @@ public class CredentialMapper {
         Credential credential = new Credential();
         credential.setUsername(credentialDTO.getUsername());
         credential.setPassword(credentialDTO.getPassword());
-        credential.setRole(credentialDTO.getRole());
+//        credential.setRole(credentialDTO.getRole());
         credential.setUser(user);
         return credential;
     }
