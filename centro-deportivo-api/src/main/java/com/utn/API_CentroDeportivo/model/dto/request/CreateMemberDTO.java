@@ -1,5 +1,6 @@
 package com.utn.API_CentroDeportivo.model.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -10,7 +11,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 public class CreateMemberDTO {
+    @NotNull(message = "Los datos del usuario no pueden ser nulos")
     private UserRequestDTO userDTO;
-    private MemberRequestDTO memberDTO;
+//    private MemberRequestDTO memberDTO;
+    @NotNull(message = "Los datos de la credencial no pueden ser nulos")
     private CredentialDTO credentialDTO;
 }
