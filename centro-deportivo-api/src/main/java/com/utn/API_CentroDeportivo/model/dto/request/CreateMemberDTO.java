@@ -13,8 +13,7 @@ import lombok.experimental.SuperBuilder;
 public class CreateMemberDTO {
     @NotNull(message = "Los datos del usuario no pueden ser nulos")
     private UserRequestDTO userDTO;
-    @NotNull(message = "Los datos del socio no pueden ser nulos")
-    private MemberRequestDTO memberDTO;
+//    private MemberRequestDTO memberDTO;
     @NotNull(message = "Los datos de la credencial no pueden ser nulos")
     private CredentialDTO credentialDTO;
 }

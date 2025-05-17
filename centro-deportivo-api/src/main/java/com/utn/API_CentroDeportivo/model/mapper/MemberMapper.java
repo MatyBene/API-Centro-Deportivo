@@ -9,7 +9,6 @@ public class MemberMapper {
 
     public static Member mapToMember(CreateMemberDTO memberDTO) {
         UserRequestDTO userDTO = memberDTO.getUserDTO();
-        MemberRequestDTO memberRequestDTO = memberDTO.getMemberDTO();
 
         Member member = new Member();
         member.setName(userDTO.getName());
@@ -18,8 +17,6 @@ public class MemberMapper {
         member.setBirthdate(userDTO.getBirthdate());
         member.setPhone(userDTO.getPhone());
         member.setEmail(userDTO.getEmail());
-        member.setStatus(memberRequestDTO.getStatus());
-        member.setEnrollments(memberRequestDTO.getEnrollments());
         return member;
     }
 

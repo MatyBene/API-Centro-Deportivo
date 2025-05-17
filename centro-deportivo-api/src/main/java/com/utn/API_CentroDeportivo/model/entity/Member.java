@@ -18,7 +18,6 @@ import java.util.List;
 @Entity
 public class Member extends User{
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Status status;
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Enrollment> enrollments = new ArrayList<>();
