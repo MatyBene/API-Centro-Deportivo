@@ -8,15 +8,14 @@ import com.utn.API_CentroDeportivo.model.mapper.MemberMapper;
 import com.utn.API_CentroDeportivo.model.repository.ICredentialRepository;
 import com.utn.API_CentroDeportivo.model.repository.IMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class AuthService implements IAuthService{
 
     @Autowired
     private IMemberRepository memberRepository;
-
-    @Autowired
-    private ICredentialRepository credentialRepository;
 
     @Transactional
     public void registerMember(CreateMemberDTO memberDTO){
