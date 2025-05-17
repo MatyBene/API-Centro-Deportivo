@@ -10,7 +10,7 @@ import com.utn.API_CentroDeportivo.model.repository.IMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class AuthService {
+public class AuthService implements IAuthService{
 
     @Autowired
     private IMemberRepository memberRepository;
