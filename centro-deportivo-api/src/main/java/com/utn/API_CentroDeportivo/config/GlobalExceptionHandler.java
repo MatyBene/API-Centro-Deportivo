@@ -1,6 +1,7 @@
 package com.utn.API_CentroDeportivo.config;
 
 import com.utn.API_CentroDeportivo.model.dto.response.ErrorResponseDTO;
+import com.utn.API_CentroDeportivo.model.exception.FieldAlreadyExistsException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +32,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    // Datos repetidos
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponseDTO> handleIllegalArgument(DataIntegrityViolationException ex) {
+    // Datos repetidos en la base de datos
+    @ExceptionHandler(FieldAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDTO> handleFieldAlreadyExistsException(FieldAlreadyExistsException ex) {
+        Map<String, String> details = new HashMap<>();
+        details.put("error", ex.getMessage());
+
         ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .message(ex.getMessage())
-                .details(new HashMap<>())
+                .message("Error de datos duplicados")
+                .details(details)
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);

@@ -1,4 +1,9 @@
 package com.utn.API_CentroDeportivo.model.repository;
 
-public interface ICredentialRepository {
+import com.utn.API_CentroDeportivo.model.entity.Credential;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ICredentialRepository extends JpaRepository<Credential, Long> {
+
+    boolean existsByUsername(String username);
 }
