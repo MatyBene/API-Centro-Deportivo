@@ -12,8 +12,6 @@ import java.time.LocalDate;
 @SuperBuilder
 @ToString
 public class EnrollmentRequestDTO {
-    private LocalDate startDate;
-    private LocalDate endDate;
     private Long memberId;
     private Long activityId;
 }
