@@ -1,6 +1,7 @@
 package com.utn.API_CentroDeportivo.service;
 
-import com.utn.API_CentroDeportivo.model.dto.request.CreateMemberDTO;
+import com.utn.API_CentroDeportivo.model.dto.request.CredentialRequestDTO;
+import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
 import com.utn.API_CentroDeportivo.model.entity.Credential;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.enums.Role;
@@ -13,15 +14,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class AuthService implements IAuthService{
+public class AuthService implements IAuthService {
 
     @Autowired
     private IMemberRepository memberRepository;
 
     @Transactional
-    public void registerMember(CreateMemberDTO memberDTO){
+    public void registerMember(UserRequestDTO memberDTO) {
         Member member = MemberMapper.mapToMember(memberDTO);
-        Credential credential = CredentialMapper.mapToCredential(memberDTO.getCredentialDTO(), member);
+        CredentialRequestDTO credentialDTO = CredentialRequestDTO.builder().username(memberDTO.getUsername()).password(memberDTO.getPassword()).build();
+        Credential credential = CredentialMapper.mapToCredential(credentialDTO, member);
         credential.setRole(Role.MEMBER);
         member.setCredential(credential);
         member.setStatus(Status.INACTIVE);

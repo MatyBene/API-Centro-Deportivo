@@ -1,12 +1,12 @@
 package com.utn.API_CentroDeportivo.model.mapper;
 
-import com.utn.API_CentroDeportivo.model.dto.request.CredentialDTO;
+import com.utn.API_CentroDeportivo.model.dto.request.CredentialRequestDTO;
 import com.utn.API_CentroDeportivo.model.entity.Credential;
 import com.utn.API_CentroDeportivo.model.entity.User;
 
 public class CredentialMapper {
 
-    public static Credential mapToCredential(CredentialDTO credentialDTO, User user) {
+    public static Credential mapToCredential(CredentialRequestDTO credentialDTO, User user) {
         Credential credential = new Credential();
         credential.setUsername(credentialDTO.getUsername());
         credential.setPassword(credentialDTO.getPassword());

@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 public class UserRequestDTO {
+
     @NotBlank(message = "El nombre es obligatorio")
     private String name;
 
@@ -18,7 +19,7 @@ public class UserRequestDTO {
     private String lastname;
 
     @NotBlank(message = "El dni es obligatorio")
-    @Pattern(regexp = "\\d{8}", message = "El DNI debe tener al menos 7 dígitos")
+    @Pattern(regexp = "\\d{8}", message = "El DNI debe tener al menos 8 dígitos")
     private String dni;
 
     @NotBlank(message = "La fecha de nacimiento es obligatoria")
@@ -32,4 +33,15 @@ public class UserRequestDTO {
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "El email debe tener un formato válido")
     private String email;
+
+    @NotBlank(message = "El nombre de usuario es obligatorio")
+    private String username;
+
+    @NotBlank(message = "La contraseña no puede estar vacía")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+    @Pattern(
+            regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
+            message = "La contraseña debe contener al menos: 1 mayúscula, 1 minúscula, 1 número, 1 carácter especial y no tener espacios"
+    )
+    private String password;
 }

@@ -1,9 +1,10 @@
 package com.utn.API_CentroDeportivo.controller;
 
-import com.utn.API_CentroDeportivo.model.dto.request.CreateMemberDTO;
+import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
 import com.utn.API_CentroDeportivo.service.AuthService;
 import com.utn.API_CentroDeportivo.service.SportActivityService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class PublicController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> createMember(@RequestBody CreateMemberDTO memberDTO){
+    public ResponseEntity<String> createMember(@Valid @RequestBody UserRequestDTO memberDTO){
         authService.registerMember(memberDTO);
         return ResponseEntity.ok("El socio se creo correctamente");
     }
