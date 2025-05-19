@@ -2,7 +2,7 @@ package com.utn.API_CentroDeportivo.config;
 
 import com.utn.API_CentroDeportivo.model.dto.response.ErrorResponseDTO;
 import com.utn.API_CentroDeportivo.model.exception.FieldAlreadyExistsException;
-import org.springframework.dao.DataIntegrityViolationException;
+import com.utn.API_CentroDeportivo.model.exception.MemberAlreadyEnrolledException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -42,6 +42,22 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .message("Error de datos duplicados")
+                .details(details)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    // Member ya esta registrado en la actividad
+    @ExceptionHandler(MemberAlreadyEnrolledException.class)
+    public ResponseEntity<ErrorResponseDTO> handleMemberAlreadyEnrolledException(MemberAlreadyEnrolledException ex) {
+        Map<String, String> details = new HashMap<>();
+        details.put("error", ex.getMessage());
+
+        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message("El socio ya está inscripto en la actividad")
                 .details(details)
                 .build();
 
