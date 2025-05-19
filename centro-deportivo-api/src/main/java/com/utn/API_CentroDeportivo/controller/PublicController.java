@@ -1,6 +1,7 @@
 package com.utn.API_CentroDeportivo.controller;
 
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
 import com.utn.API_CentroDeportivo.service.AuthService;
 import com.utn.API_CentroDeportivo.service.SportActivityService;
@@ -30,8 +31,8 @@ public class PublicController {
     }
 
     @GetMapping ("/activities")
-    public ResponseEntity<List<SportActivity>> getActivities() {
-        List<SportActivity> activities = sportActivityService.getActivities();
+    public ResponseEntity<List<SportActivitySummaryDTO>> getActivities() {
+        List<SportActivitySummaryDTO> activities = sportActivityService.getActivities();
         return ResponseEntity.ok(activities);
 }
 
