@@ -14,7 +14,6 @@ import java.util.List;
 @ToString
 public class SportActivityDetailsDTO extends SportActivitySummaryDTO{
     private String description;
-    private int maxMembers;
     private int currentMembers;
     private String startTime;
     private String endTime;

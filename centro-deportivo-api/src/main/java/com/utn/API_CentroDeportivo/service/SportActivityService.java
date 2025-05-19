@@ -1,10 +1,13 @@
 package com.utn.API_CentroDeportivo.service;
+
+import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
 import com.utn.API_CentroDeportivo.model.mapper.SportActivityMapper;
 import com.utn.API_CentroDeportivo.model.repository.ISportActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +20,17 @@ public class SportActivityService {
         return sportActivityRepository.findAll().stream().map(SportActivityMapper::mapToSportActivitySummaryDTO).toList();
     }
 
-    public Optional<SportActivity> getActivityById(Long id) {
-        return sportActivityRepository.findById(id);
+    public Optional<SportActivityDetailsDTO> getActivityById(Long id) {
+        Optional<SportActivity> activity = sportActivityRepository.findById(id);
+        if (activity.isPresent()) {
+            SportActivityDetailsDTO activityDetailsDTO = SportActivityMapper.mapToSportActivityDetailsDTO(activity.get());
+            activityDetailsDTO.setCurrentMembers(getCurrentMembers(id));
+            return Optional.of(activityDetailsDTO);
+        }
+        return Optional.empty();
+    }
+
+    public int getCurrentMembers(Long id) {
+        return sportActivityRepository.findById(id).map(activity -> activity.getEnrollments() != null ? activity.getEnrollments().size() : 0).orElse(0);
     }
 }
