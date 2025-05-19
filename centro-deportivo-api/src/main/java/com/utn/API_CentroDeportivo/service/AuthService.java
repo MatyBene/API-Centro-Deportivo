@@ -30,7 +30,20 @@ public class AuthService implements IAuthService {
         validateUserFields(memberDTO);
         Member member = MemberMapper.mapToMember(memberDTO);
         member.setStatus(Status.INACTIVE);
+        Credential credential = Credential.builder().username(memberDTO.getUsername()).password(memberDTO.getPassword()).build();
+        member.setCredential(credential);
         createAndSaveUser(member, Role.MEMBER);
+    }
+
+    public void createAndSaveUser(User user, Role role) {
+        CredentialRequestDTO credentialDTO = CredentialRequestDTO.builder()
+                .username(user.getCredential().getUsername())
+                .password(user.getCredential().getPassword())
+                .build();
+        Credential credential = CredentialMapper.mapToCredential(credentialDTO, user);
+        credential.setRole(role);
+        user.setCredential(credential);
+        userRepository.save(user);
     }
 
     private void validateUserFields(UserRequestDTO userDTO) {
@@ -43,17 +56,6 @@ public class AuthService implements IAuthService {
         if (credentialRepository.existsByUsername(userDTO.getUsername())) {
             throw new FieldAlreadyExistsException("El nombre de usuario ya está registrado.");
         }
-    }
-
-    private void createAndSaveUser(User user, Role role) {
-        CredentialRequestDTO credentialDTO = CredentialRequestDTO.builder()
-                .username(user.getCredential().getUsername())
-                .password(user.getCredential().getPassword())
-                .build();
-        Credential credential = CredentialMapper.mapToCredential(credentialDTO, user);
-        credential.setRole(role);
-        user.setCredential(credential);
-        userRepository.save(user);
     }
 
 }
