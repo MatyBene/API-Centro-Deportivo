@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SportActivityService {
+public class SportActivityService implements ISportActivityService{
     @Autowired
     private ISportActivityRepository sportActivityRepository;
 
