@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.utn.API_CentroDeportivo.model.mapper.SportActivityMapper.mapToSportActivitySummaryDTO;
+
 @Service
 public class SportActivityService implements ISportActivityService{
     @Autowired
@@ -32,5 +34,11 @@ public class SportActivityService implements ISportActivityService{
 
     public int getCurrentMembers(Long id) {
         return sportActivityRepository.findById(id).map(activity -> activity.getEnrollments() != null ? activity.getEnrollments().size() : 0).orElse(0);
+    }
+
+    @Override
+    public List<SportActivitySummaryDTO> getActivitiesByInstructor(Long id) {
+        List<SportActivity> activities = sportActivityRepository.findByInstructor(id);
+        return activities.stream().map(SportActivityMapper::mapToSportActivitySummaryDTO).toList();
     }
 }

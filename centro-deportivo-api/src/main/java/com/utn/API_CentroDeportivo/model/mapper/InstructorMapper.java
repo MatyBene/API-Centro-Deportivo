@@ -15,7 +15,7 @@ public class InstructorMapper {
         instructorDetailsDTO.setPhone(instructor.getPhone());
         instructorDetailsDTO.setEmail(instructor.getEmail());
         instructorDetailsDTO.setSpecialty(instructor.getSpecialty());
-        
+
         return instructorDetailsDTO;
     }
 }
