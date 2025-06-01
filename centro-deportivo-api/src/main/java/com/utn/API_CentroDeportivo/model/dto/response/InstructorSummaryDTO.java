@@ -3,6 +3,7 @@ package com.utn.API_CentroDeportivo.model.dto.response;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 
-public class UserSummaryDTO {
-    private String name;
-    private String lastname;
+public class InstructorSummaryDTO extends UserSummaryDTO{
+    private String specialty;
+    private List<SportActivitySummaryDTO> activities;
 }

@@ -2,6 +2,7 @@ package com.utn.API_CentroDeportivo.service;
 
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
+import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
 import com.utn.API_CentroDeportivo.model.mapper.SportActivityMapper;
 import com.utn.API_CentroDeportivo.model.repository.ISportActivityRepository;
@@ -37,8 +38,8 @@ public class SportActivityService implements ISportActivityService{
     }
 
     @Override
-    public List<SportActivitySummaryDTO> getActivitiesByInstructor(Long id) {
-        List<SportActivity> activities = sportActivityRepository.findByInstructor(id);
+    public List<SportActivitySummaryDTO> getActivitiesByInstructor(Instructor instructor) {
+        List<SportActivity> activities = sportActivityRepository.findByInstructor(instructor);
         return activities.stream().map(SportActivityMapper::mapToSportActivitySummaryDTO).toList();
     }
 }

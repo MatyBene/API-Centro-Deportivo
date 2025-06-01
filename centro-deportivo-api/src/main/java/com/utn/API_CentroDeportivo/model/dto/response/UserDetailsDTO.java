@@ -15,6 +15,7 @@ public class UserDetailsDTO extends UserSummaryDTO{
     private String birthdate;
     private String phone;
     private String email;
+    private String dni;
     private String username;
     private Role role;
 }

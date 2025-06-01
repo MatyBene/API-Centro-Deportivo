@@ -2,6 +2,7 @@ package com.utn.API_CentroDeportivo.service;
 
 
 import com.utn.API_CentroDeportivo.model.dto.response.InstructorDetailsDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.InstructorSummaryDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
 import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
@@ -23,12 +24,12 @@ public class InstructorService implements IInstructorService{
     private ISportActivityService sportActivityService;
 
     @Override
-    public Optional<InstructorDetailsDTO> getInstructorById(long id) {
+    public Optional<InstructorSummaryDTO> getInstructorSummaryById(long id) {
         Optional<User> instructor = userRepository.findById(id);
         if (instructor.isPresent()) {
-            InstructorDetailsDTO instructorDetailsDTO = InstructorMapper.mapToInstructorDetailsDTO((Instructor) instructor.get());
-            instructorDetailsDTO.setActivities(sportActivityService.getActivitiesByInstructor(id));
-            return Optional.of(instructorDetailsDTO);
+            InstructorSummaryDTO instructorSummaryDTO = InstructorMapper.mapToInstructorSummaryDTO((Instructor) instructor.get());
+            instructorSummaryDTO.setActivities(sportActivityService.getActivitiesByInstructor((Instructor) instructor.get()));
+            return Optional.of(instructorSummaryDTO);
         }
         return Optional.empty();
     }

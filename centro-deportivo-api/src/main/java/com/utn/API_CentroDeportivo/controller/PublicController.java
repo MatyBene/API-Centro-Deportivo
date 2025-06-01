@@ -3,9 +3,8 @@ package com.utn.API_CentroDeportivo.controller;
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
-import com.utn.API_CentroDeportivo.model.entity.SportActivity;
-import com.utn.API_CentroDeportivo.service.AuthService;
-import com.utn.API_CentroDeportivo.service.SportActivityService;
+import com.utn.API_CentroDeportivo.service.IAuthService;
+import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +18,10 @@ import java.util.List;
 
 public class PublicController {
     @Autowired
-    private SportActivityService sportActivityService;
+    private ISportActivityService sportActivityService;
 
     @Autowired
-    private AuthService authService;
+    private IAuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<String> createMember(@Valid @RequestBody UserRequestDTO memberDTO) {
