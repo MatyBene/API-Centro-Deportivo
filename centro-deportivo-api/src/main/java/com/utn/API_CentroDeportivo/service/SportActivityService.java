@@ -4,6 +4,7 @@ import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
 import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
+import com.utn.API_CentroDeportivo.model.exception.SportActivityNotFoundException;
 import com.utn.API_CentroDeportivo.model.mapper.SportActivityMapper;
 import com.utn.API_CentroDeportivo.model.repository.ISportActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,6 @@ public class SportActivityService implements ISportActivityService{
     @Override
     public Optional<SportActivity> getSportActivityById(Long id) {
         return Optional.ofNullable(sportActivityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Actividad no encontrada")));
+                .orElseThrow(() -> new SportActivityNotFoundException("Actividad no encontrada")));
     }
 }

@@ -29,7 +29,7 @@ public class MemberService implements IMemberService {
     @Override
     public Optional<Member> getMemberById(Long memberId) {
         return Optional.ofNullable((Member) userRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("Socio no encontrado")));
+                .orElseThrow(() -> new MemberNotFoundException("Socio no encontrado")));
     }
 
 }
