@@ -24,4 +24,10 @@ public class MemberService implements IMemberService {
         userRepository.save(existingMember);
     }
 
+    @Override
+    public Member getMemberById(Long memberId) {
+        return (Member) userRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Socio no encontrado"));
+    }
+
 }
