@@ -42,4 +42,10 @@ public class SportActivityService implements ISportActivityService{
         List<SportActivity> activities = sportActivityRepository.findByInstructor(instructor);
         return activities.stream().map(SportActivityMapper::mapToSportActivitySummaryDTO).toList();
     }
+
+    @Override
+    public Optional<SportActivity> getSportActivityById(Long id) {
+        return Optional.ofNullable(sportActivityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Actividad no encontrada")));
+    }
 }
