@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class MemberService implements IMemberService {
 
@@ -22,6 +24,12 @@ public class MemberService implements IMemberService {
         existingMember.setStatus(Status.ACTIVE);
 
         userRepository.save(existingMember);
+    }
+
+    @Override
+    public Optional<Member> getMemberById(Long memberId) {
+        return Optional.ofNullable((Member) userRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("Socio no encontrado")));
     }
 
 }
