@@ -60,13 +60,13 @@ public class AuthService implements IAuthService {
 
     private void validateUserFields(UserRequestDTO userDTO) {
         if (userRepository.existsByDni(userDTO.getDni())) {
-            throw new FieldAlreadyExistsException("El DNI ya está registrado.");
+            throw new FieldAlreadyExistsException("dni", "El DNI ya está registrado: " + userDTO.getDni());
         }
         if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new FieldAlreadyExistsException("El email ya está registrado.");
+            throw new FieldAlreadyExistsException("email", "El email ya está registrado: " + userDTO.getEmail());
         }
         if (credentialService.existsByUsername(userDTO.getUsername())) {
-            throw new FieldAlreadyExistsException("El nombre de usuario ya está registrado.");
+            throw new FieldAlreadyExistsException("username", "El nombre de usuario ya está registrado: " + userDTO.getUsername());
         }
     }
 

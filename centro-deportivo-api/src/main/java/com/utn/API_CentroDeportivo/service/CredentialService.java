@@ -16,7 +16,7 @@ public class CredentialService implements ICredentialService{
     public UserDetails loadUserByUsername(String username) {
         UserDetails user = credentialRepository.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("Usuario no encontrado");
+            throw new UsernameNotFoundException("El nombre de usuario no existe: " + username);
         }
         return user;
     }

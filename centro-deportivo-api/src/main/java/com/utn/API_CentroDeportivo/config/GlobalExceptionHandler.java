@@ -5,109 +5,127 @@ import com.utn.API_CentroDeportivo.model.exception.FieldAlreadyExistsException;
 import com.utn.API_CentroDeportivo.model.exception.MemberAlreadyEnrolledException;
 import com.utn.API_CentroDeportivo.model.exception.MemberNotFoundException;
 import com.utn.API_CentroDeportivo.model.exception.SportActivityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Validaciones de DTOs
+    @Autowired
+    private MessageSource messageSource;
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleUserNotFoundException(UsernameNotFoundException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("username", extractUsername(ex.getMessage()));
+        details.put("reason", messageSource.getMessage("error.user.not.found.reason", null, locale));
+        return buildErrorResponse(HttpStatus.NOT_FOUND,
+                messageSource.getMessage("error.user.not.found", null, locale),
+                details,
+                "USER_NOT_FOUND");
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDTO> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponseDTO> handleValidationExceptions(MethodArgumentNotValidException ex, Locale locale) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage()));
-
-        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .message("Validation failed")
-                .details(errors)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.validation.failed", null, locale),
+                errors,
+                "VALIDATION_FAILED");
     }
 
-    // Datos repetidos en la base de datos
     @ExceptionHandler(FieldAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponseDTO> handleFieldAlreadyExistsException(FieldAlreadyExistsException ex) {
+    public ResponseEntity<ErrorResponseDTO> handleFieldAlreadyExistsException(FieldAlreadyExistsException ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
-        details.put("error", ex.getMessage());
-
-        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .message("Error de datos duplicados")
-                .details(details)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        details.put("field", ex.getField());
+        details.put("value", extractFieldValue(ex.getMessage()));
+        details.put("reason", messageSource.getMessage("error.field.already.exists.reason", null, locale));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.field.already.exists", null, locale),
+                details,
+                "FIELD_ALREADY_EXISTS");
     }
 
-    // Member ya esta registrado en la actividad
     @ExceptionHandler(MemberAlreadyEnrolledException.class)
-    public ResponseEntity<ErrorResponseDTO> handleMemberAlreadyEnrolledException(MemberAlreadyEnrolledException ex) {
+    public ResponseEntity<ErrorResponseDTO> handleMemberAlreadyEnrolledException(MemberAlreadyEnrolledException ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
-        details.put("error", ex.getMessage());
-
-        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .message("El socio ya está inscripto en la actividad")
-                .details(details)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        details.put("memberId", extractMemberId(ex.getMessage()));
+        details.put("reason", messageSource.getMessage("error.member.already.enrolled.reason", null, locale));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.member.already.enrolled", null, locale),
+                details,
+                "MEMBER_ALREADY_ENROLLED");
     }
 
-    // Member no encontrado en la base de datos
     @ExceptionHandler(MemberNotFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleMemberNotFoundException(MemberNotFoundException ex) {
+    public ResponseEntity<ErrorResponseDTO> handleMemberNotFoundException(MemberNotFoundException ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
-        details.put("error", ex.getMessage());
-
-        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
-                .status(HttpStatus.NOT_FOUND.value())
-                .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-                .message("El socio no fue encontrado en la base de datos")
-                .details(details)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        details.put("memberId", extractMemberId(ex.getMessage()));
+        details.put("reason", messageSource.getMessage("error.member.not.found.reason", null, locale));
+        return buildErrorResponse(HttpStatus.NOT_FOUND,
+                messageSource.getMessage("error.member.not.found", null, locale),
+                details,
+                "MEMBER_NOT_FOUND");
     }
 
-    // SportActivity no encontrado en la base de datos
     @ExceptionHandler(SportActivityNotFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleSportActivityNotFoundException(SportActivityNotFoundException ex) {
+    public ResponseEntity<ErrorResponseDTO> handleSportActivityNotFoundException(SportActivityNotFoundException ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
-        details.put("error", ex.getMessage());
-
-        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
-                .status(HttpStatus.NOT_FOUND.value())
-                .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-                .message("El actividad no fue encontrada en la base de datos")
-                .details(details)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        details.put("activityId", extractActivityId(ex.getMessage()));
+        details.put("reason", messageSource.getMessage("error.sport.activity.not.found.reason", null, locale));
+        return buildErrorResponse(HttpStatus.NOT_FOUND,
+                messageSource.getMessage("error.sport.activity.not.found", null, locale),
+                details,
+                "SPORT_ACTIVITY_NOT_FOUND");
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex) {
-        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                .message("An unexpected error occurred")
-                .details(new HashMap<>())
-                .build();
+    public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex, Locale locale) {
+        // Sin logging, solo devolvemos una respuesta genérica
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                messageSource.getMessage("error.generic", null, locale),
+                null,
+                "GENERIC_ERROR");
+    }
 
-        ex.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    private ResponseEntity<ErrorResponseDTO> buildErrorResponse(HttpStatus status, String message, Map<String, String> details, String code) {
+        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
+                .status(status.value())
+                .error(status.getReasonPhrase())
+                .code(code)
+                .message(message)
+                .details(details != null ? details : new HashMap<>())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(status).body(errorResponse);
+    }
+
+    private String extractFieldValue(String message) {
+        return message != null && message.contains(": ") ? message.split(": ")[1].trim() : "unknown";
+    }
+
+    private String extractUsername(String message) {
+        return message != null && message.contains(": ") ? message.split(": ")[1].trim() : "unknown";
+    }
+
+    private String extractMemberId(String message) {
+        return message != null && message.contains(": ") ? message.split(": ")[1].trim() : "unknown";
+    }
+
+    private String extractActivityId(String message) {
+        return message != null && message.contains(": ") ? message.split(": ")[1].trim() : "unknown";
     }
 }

@@ -48,11 +48,12 @@ public class PublicController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request){
+
+        UserDetails user = credentialService.loadUserByUsername(request.getUsername());
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getUsername(), request.getPassword()
         ));
-
-        UserDetails user = credentialService.loadUserByUsername(request.getUsername());
 
         String token = jwtService.generateToken(user);
 
