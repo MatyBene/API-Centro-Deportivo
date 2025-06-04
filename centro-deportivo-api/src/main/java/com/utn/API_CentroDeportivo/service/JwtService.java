@@ -33,7 +33,7 @@ public class JwtService implements IJwtService{
 
     @Override
     public String extractUsername(String token) {
-        return "";
+        return extractAllClaims(token).getSubject();
     }
 
     @Override
