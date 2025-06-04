@@ -18,4 +18,9 @@ public class CredentialService implements ICredentialService{
         }
         return user;
     }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return credentialRepository.existsByUsername(username);
+    }
 }
