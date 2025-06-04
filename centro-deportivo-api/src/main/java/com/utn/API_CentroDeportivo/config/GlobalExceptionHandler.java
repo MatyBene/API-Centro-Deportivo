@@ -28,10 +28,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleUserNotFoundException(UsernameNotFoundException ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
-        details.put("username", extractUsername(ex.getMessage()));
-        details.put("reason", messageSource.getMessage("error.user.not.found.reason", null, locale));
+        details.put("message", messageSource.getMessage("error.user.not.found.detail", null, locale));
         return buildErrorResponse(HttpStatus.NOT_FOUND,
-                messageSource.getMessage("error.user.not.found", null, locale),
+                messageSource.getMessage("error.data.not.found", null, locale),
                 details,
                 "USER_NOT_FOUND");
     }
@@ -42,7 +41,7 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage()));
         return buildErrorResponse(HttpStatus.BAD_REQUEST,
-                messageSource.getMessage("error.validation.failed", null, locale),
+                messageSource.getMessage("error.data.validation", null, locale),
                 errors,
                 "VALIDATION_FAILED");
     }
@@ -51,10 +50,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> handleFieldAlreadyExistsException(FieldAlreadyExistsException ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
         details.put("field", ex.getField());
-        details.put("value", extractFieldValue(ex.getMessage()));
-        details.put("reason", messageSource.getMessage("error.field.already.exists.reason", null, locale));
+        details.put("message", messageSource.getMessage("error.field.already.exists.detail", null, locale));
         return buildErrorResponse(HttpStatus.BAD_REQUEST,
-                messageSource.getMessage("error.field.already.exists", null, locale),
+                messageSource.getMessage("error.data.validation", null, locale),
                 details,
                 "FIELD_ALREADY_EXISTS");
     }
@@ -62,10 +60,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MemberAlreadyEnrolledException.class)
     public ResponseEntity<ErrorResponseDTO> handleMemberAlreadyEnrolledException(MemberAlreadyEnrolledException ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
-        details.put("memberId", extractMemberId(ex.getMessage()));
-        details.put("reason", messageSource.getMessage("error.member.already.enrolled.reason", null, locale));
+        details.put("message", messageSource.getMessage("error.member.already.enrolled.detail", null, locale));
         return buildErrorResponse(HttpStatus.BAD_REQUEST,
-                messageSource.getMessage("error.member.already.enrolled", null, locale),
+                messageSource.getMessage("error.data.validation", null, locale),
                 details,
                 "MEMBER_ALREADY_ENROLLED");
     }
@@ -73,10 +70,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MemberNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleMemberNotFoundException(MemberNotFoundException ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
-        details.put("memberId", extractMemberId(ex.getMessage()));
-        details.put("reason", messageSource.getMessage("error.member.not.found.reason", null, locale));
+        details.put("message", messageSource.getMessage("error.member.not.found.detail", null, locale));
         return buildErrorResponse(HttpStatus.NOT_FOUND,
-                messageSource.getMessage("error.member.not.found", null, locale),
+                messageSource.getMessage("error.data.not.found", null, locale),
                 details,
                 "MEMBER_NOT_FOUND");
     }
@@ -84,20 +80,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SportActivityNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleSportActivityNotFoundException(SportActivityNotFoundException ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
-        details.put("activityId", extractActivityId(ex.getMessage()));
-        details.put("reason", messageSource.getMessage("error.sport.activity.not.found.reason", null, locale));
+        details.put("message", messageSource.getMessage("error.sport.activity.not.found.detail", null, locale));
         return buildErrorResponse(HttpStatus.NOT_FOUND,
-                messageSource.getMessage("error.sport.activity.not.found", null, locale),
+                messageSource.getMessage("error.data.not.found", null, locale),
                 details,
                 "SPORT_ACTIVITY_NOT_FOUND");
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex, Locale locale) {
-        // Sin logging, solo devolvemos una respuesta genérica
+        Map<String, String> details = new HashMap<>();
+        details.put("message", messageSource.getMessage("error.generic.detail", null, locale));
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-                messageSource.getMessage("error.generic", null, locale),
-                null,
+                messageSource.getMessage("error.data.unexpected", null, locale),
+                details,
                 "GENERIC_ERROR");
     }
 
@@ -111,21 +107,5 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .build();
         return ResponseEntity.status(status).body(errorResponse);
-    }
-
-    private String extractFieldValue(String message) {
-        return message != null && message.contains(": ") ? message.split(": ")[1].trim() : "unknown";
-    }
-
-    private String extractUsername(String message) {
-        return message != null && message.contains(": ") ? message.split(": ")[1].trim() : "unknown";
-    }
-
-    private String extractMemberId(String message) {
-        return message != null && message.contains(": ") ? message.split(": ")[1].trim() : "unknown";
-    }
-
-    private String extractActivityId(String message) {
-        return message != null && message.contains(": ") ? message.split(": ")[1].trim() : "unknown";
     }
 }
