@@ -25,4 +25,19 @@ public class InstructorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/my-activities")
+    public ResponseEntity<List<SportActivityDetailsDTO>> getMyActivities(@RequestHeader("Authorization") String authHeader) {
+
+        String token = authHeader.replace("Bearer ", "");
+
+        String username = jwtUtil.extractUsername(token);
+
+        return instructorService.findByUsername(username)
+                .map(instructor -> {
+                    List<SportActivityDetailsDTO> activities = sportActivityService.getActivitiesDetailsByInstructor(instructor);
+                    return ResponseEntity.ok(activities);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }

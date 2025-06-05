@@ -42,4 +42,12 @@ public class SportActivityService implements ISportActivityService{
         List<SportActivity> activities = sportActivityRepository.findByInstructor(instructor);
         return activities.stream().map(SportActivityMapper::mapToSportActivitySummaryDTO).toList();
     }
+
+    @Override
+    public List<SportActivityDetailsDTO> getActivitiesDetailsByInstructor(Instructor instructor) {
+        List<SportActivity> activities = sportActivityRepository.findByInstructor(instructor);
+        return activities.stream()
+                .map(SportActivityMapper::mapToSportActivityDetailsDTO)
+                .toList();
+    }
 }
