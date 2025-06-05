@@ -17,6 +17,9 @@ public class MemberService implements IMemberService {
     @Autowired
     private IUserRepository userRepository;
 
+    @Autowired
+    private ICredentialService credentialService;
+
     @Transactional
     public void updateMemberStatus(Long memberId) {
         Member existingMember = (Member) userRepository.findById(memberId)
@@ -36,6 +39,14 @@ public class MemberService implements IMemberService {
     @Override
     public void saveMember(User member) {
         userRepository.save(member);
+    }
+
+    @Transactional
+    @Override
+    public void deleteMemberByUsername(String username) {
+        Member member = (Member) userRepository.findById(credentialService.getUserByUsername(username).getId())
+                .orElseThrow(() -> new MemberNotFoundException("Socio no encontrado"));
+        userRepository.delete(member);
     }
 
 

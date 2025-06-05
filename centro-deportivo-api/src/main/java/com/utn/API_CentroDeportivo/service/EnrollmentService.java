@@ -1,6 +1,5 @@
 package com.utn.API_CentroDeportivo.service;
 
-import com.utn.API_CentroDeportivo.model.dto.request.EnrollmentRequestDTO;
 import com.utn.API_CentroDeportivo.model.entity.Enrollment;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 public class EnrollmentService implements IEnrollmentService{
@@ -23,17 +21,18 @@ public class EnrollmentService implements IEnrollmentService{
     private IMemberService memberService;
 
     @Autowired
+    private ICredentialService credentialService;
+
+    @Autowired
     private ISportActivityService sportActivityService;
 
     @Transactional
-    public void enrollMemberToActivity(EnrollmentRequestDTO enrollmentDTO) {
-        Long memberId = enrollmentDTO.getMemberId();
-        Long activityId = enrollmentDTO.getActivityId();
+    public void enrollMemberToActivity(String username, Long activityId) {
 
-        Member member = memberService.getMemberById(memberId).get();
+        Member member = (Member) credentialService.getUserByUsername(username);
         SportActivity activity = sportActivityService.getSportActivityById(activityId).get();
 
-        if (enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId).isPresent()) {
+        if (enrollmentRepository.findByMemberIdAndActivityId(member.getId(), activityId).isPresent()) {
             throw new MemberAlreadyEnrolledException("El socio ya está inscripto en esta actividad");
         }
 
@@ -45,5 +44,6 @@ public class EnrollmentService implements IEnrollmentService{
                 .build();
 
         enrollmentRepository.save(enrollment);
+        memberService.updateMemberStatus(member.getId());
     }
 }
