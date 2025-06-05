@@ -34,4 +34,11 @@ public class InstructorService implements IInstructorService{
         return Optional.empty();
     }
 
+    @Override
+    public Optional<Instructor> findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .filter(user -> user instanceof Instructor)
+                .map(user -> (Instructor) user);
+    }
+
 }
