@@ -10,5 +10,6 @@ public interface IMemberService {
     void updateMemberStatus(Long memberId);
     Optional<Member> getMemberById(Long memberId);
     void saveMember(User member);
+    void deleteMemberByUsername(String username);
     void updateMemberProfile(String username, MemberEditDTO dto);
 }
