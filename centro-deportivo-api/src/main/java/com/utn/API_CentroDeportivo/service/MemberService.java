@@ -1,9 +1,11 @@
 package com.utn.API_CentroDeportivo.service;
 
+import com.utn.API_CentroDeportivo.model.dto.request.MemberEditDTO;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.User;
 import com.utn.API_CentroDeportivo.model.enums.Status;
 import com.utn.API_CentroDeportivo.model.exception.MemberNotFoundException;
+import com.utn.API_CentroDeportivo.model.repository.IMemberRepository;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,9 @@ public class MemberService implements IMemberService {
 
     @Autowired
     private IUserRepository userRepository;
+
+    @Autowired
+    private IMemberRepository memberRepository;
 
     @Transactional
     public void updateMemberStatus(Long memberId) {
@@ -38,5 +43,18 @@ public class MemberService implements IMemberService {
         userRepository.save(member);
     }
 
+    @Override
+    public void updateMemberProfile(String username, MemberEditDTO dto) {
+        Member member = memberRepository.findByCredentialUsername(username)
+                .orElseThrow(() -> new RuntimeException("Socio no encontrado"));
+
+        member.setName(dto.getName());
+        member.setLastname(dto.getLastname());
+        member.setPhone(dto.getPhone());
+        member.setEmail(dto.getEmail());
+        member.setBirthdate(dto.getBirthdate());
+
+        memberRepository.save(member);
+    }
 
 }
