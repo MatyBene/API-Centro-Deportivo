@@ -46,9 +46,9 @@ public class MemberController {
 
     @PreAuthorize("hasRole('MEMBER')")
     @PutMapping("/profile")
-    public ResponseEntity<Void> updateProfile(@RequestBody MemberEditDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
+    public ResponseEntity<String> updateProfile(@RequestBody MemberEditDTO dto) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         memberService.updateMemberProfile(username, dto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Se modifico el usuario correctamente");
     }
 }

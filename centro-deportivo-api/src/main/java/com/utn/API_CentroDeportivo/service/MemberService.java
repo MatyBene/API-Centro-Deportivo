@@ -46,18 +46,30 @@ public class MemberService implements IMemberService {
         userRepository.save(member);
     }
 
+    @Transactional
     @Override
     public void updateMemberProfile(String username, MemberEditDTO dto) {
-        Member member = memberRepository.findByCredentialUsername(username)
-                .orElseThrow(() -> new RuntimeException("Socio no encontrado"));
+        Member member = (Member) userRepository.findById(credentialService.getUserByUsername(username).getId())
+                .orElseThrow(( ) -> new MemberNotFoundException("Socio no encontrado"));
 
-        member.setName(dto.getName());
-        member.setLastname(dto.getLastname());
-        member.setPhone(dto.getPhone());
-        member.setEmail(dto.getEmail());
-        member.setBirthdate(dto.getBirthdate());
+        if (dto.getName() != null) {
+            member.setName(dto.getName());
+        }
+        if (dto.getLastname() != null) {
+            member.setLastname(dto.getLastname());
+        }
 
-        memberRepository.save(member);
+        if (dto.getPhone() != null) {
+            member.setPhone(dto.getPhone());
+        }
+
+        if (dto.getEmail() != null) {
+            member.setEmail(dto.getEmail());
+        }
+        if (dto.getBirthdate() != null) {
+            member.setBirthdate(dto.getBirthdate());
+        }
+        userRepository.save(member);
     }
     @Transactional
     @Override
