@@ -1,13 +1,20 @@
 package com.utn.API_CentroDeportivo.controller;
 
+import com.utn.API_CentroDeportivo.model.dto.request.LoginRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.LoginResponseDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
 import com.utn.API_CentroDeportivo.service.IAuthService;
+import com.utn.API_CentroDeportivo.service.ICredentialService;
+import com.utn.API_CentroDeportivo.service.IJwtService;
 import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,16 +24,40 @@ import java.util.List;
 @RequestMapping("/api/v1/public")
 
 public class PublicController {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private IJwtService jwtService;
+
     @Autowired
     private ISportActivityService sportActivityService;
 
     @Autowired
     private IAuthService authService;
 
+    @Autowired
+    private ICredentialService credentialService;
+
     @PostMapping("/register")
     public ResponseEntity<String> createMember(@Valid @RequestBody UserRequestDTO memberDTO) {
         authService.registerMember(memberDTO);
         return ResponseEntity.ok("El socio se creo correctamente");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request){
+
+        UserDetails user = credentialService.loadUserByUsername(request.getUsername());
+
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                request.getUsername(), request.getPassword()
+        ));
+
+        String token = jwtService.generateToken(user);
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @GetMapping("/activities")
