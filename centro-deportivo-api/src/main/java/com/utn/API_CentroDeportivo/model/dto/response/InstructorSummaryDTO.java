@@ -13,5 +13,5 @@ import java.util.List;
 
 public class InstructorSummaryDTO extends UserSummaryDTO{
     private String specialty;
-    private List<SportActivitySummaryDTO> activities;
+    private int activityCount;
 }
