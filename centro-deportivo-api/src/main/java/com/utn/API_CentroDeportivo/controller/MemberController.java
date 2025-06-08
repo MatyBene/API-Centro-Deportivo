@@ -51,4 +51,12 @@ public class MemberController {
         memberService.updateMemberProfile(username, dto);
         return ResponseEntity.ok("Se modifico el usuario correctamente");
     }
+
+    @PreAuthorize("hasRole('MEMBER')")
+    @DeleteMapping("/activities/{activityId}")
+    public ResponseEntity<String> unsubscribeFromActivity(@PathVariable Long activityId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        enrollmentService.unsubscribeMemberFromActivity(username, activityId);
+        return ResponseEntity.ok("Te diste de baja de la actividad con éxito");
+    }
 }
