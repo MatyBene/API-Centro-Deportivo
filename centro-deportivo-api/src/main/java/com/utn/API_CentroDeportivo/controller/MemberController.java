@@ -2,6 +2,7 @@ package com.utn.API_CentroDeportivo.controller;
 
 import com.utn.API_CentroDeportivo.model.dto.request.EnrollmentRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.request.MemberEditDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.EnrollmentDTO;
 import com.utn.API_CentroDeportivo.service.IEnrollmentService;
 import com.utn.API_CentroDeportivo.service.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -58,5 +60,12 @@ public class MemberController {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         enrollmentService.unsubscribeMemberFromActivity(username, activityId);
         return ResponseEntity.ok("Te diste de baja de la actividad con éxito");
+    }
+
+    @PreAuthorize("hasRole('MEMBER')")
+    @GetMapping("/{id}/activities")
+    public ResponseEntity<List<EnrollmentDTO>> getMyActivities(@PathVariable Long id) {
+        List<EnrollmentDTO> enrollments = enrollmentService.getEnrollmentsByMemberId(id);
+        return ResponseEntity.ok(enrollments);
     }
 }
