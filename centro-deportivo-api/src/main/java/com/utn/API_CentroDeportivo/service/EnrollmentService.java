@@ -1,5 +1,6 @@
 package com.utn.API_CentroDeportivo.service;
 
+import com.utn.API_CentroDeportivo.model.dto.response.EnrollmentDTO;
 import com.utn.API_CentroDeportivo.model.entity.Enrollment;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EnrollmentService implements IEnrollmentService{
@@ -66,5 +69,16 @@ public class EnrollmentService implements IEnrollmentService{
             member.setStatus(Status.INACTIVE);
             userRepository.save(member);
         }
+    }
+    public List<EnrollmentDTO> getEnrollmentsByMemberId(Long memberId) {
+        List<Enrollment> enrollments = enrollmentRepository.findByMemberId(memberId);
+
+        return enrollments.stream()
+                .map(enrollment -> EnrollmentDTO.builder()
+                        .activityName(enrollment.getActivity().getName())
+                        .startDate(enrollment.getStartDate())
+                        .endDate(enrollment.getEndDate())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

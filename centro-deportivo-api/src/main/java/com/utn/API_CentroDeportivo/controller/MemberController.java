@@ -59,4 +59,5 @@ public class MemberController {
         enrollmentService.unsubscribeMemberFromActivity(username, activityId);
         return ResponseEntity.ok("Te diste de baja de la actividad con éxito");
     }
+
 }
