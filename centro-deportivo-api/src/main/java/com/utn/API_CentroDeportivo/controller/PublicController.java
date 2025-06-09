@@ -3,17 +3,12 @@ package com.utn.API_CentroDeportivo.controller;
 import com.utn.API_CentroDeportivo.model.dto.request.LoginRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.LoginResponseDTO;
-import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
-import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
 import com.utn.API_CentroDeportivo.service.IAuthService;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
 import com.utn.API_CentroDeportivo.service.IJwtService;
 import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,9 +28,6 @@ public class PublicController {
 
     @Autowired
     private IJwtService jwtService;
-
-    @Autowired
-    private ISportActivityService sportActivityService;
 
     @Autowired
     private IAuthService authService;
@@ -63,20 +55,4 @@ public class PublicController {
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
-    @GetMapping("/activities")
-    public ResponseEntity<Page<SportActivitySummaryDTO>> getActivities(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<SportActivitySummaryDTO> activities = sportActivityService.getActivities(pageable);
-        return ResponseEntity.ok(activities);
-    }
-
-    @GetMapping("/activities/{id}")
-    public ResponseEntity<SportActivityDetailsDTO> getActivity(@PathVariable Long id) {
-        return sportActivityService.getActivityById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 }

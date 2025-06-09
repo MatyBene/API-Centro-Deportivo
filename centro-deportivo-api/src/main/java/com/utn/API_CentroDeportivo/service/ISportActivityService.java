@@ -6,11 +6,15 @@ import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface ISportActivityService {
     Page<SportActivitySummaryDTO> getActivities(Pageable pageable);
+    Page<SportActivitySummaryDTO> findActivitiesByName(String name, Pageable pageable);
+    Page<SportActivitySummaryDTO> findActivitiesByTimeRange(String startTime, String endTime, Pageable pageable);
     Optional<SportActivityDetailsDTO> getActivityById(Long id);
     int getCurrentMembers(Long id);
     List<SportActivitySummaryDTO> getActivitiesByInstructor(Instructor instructor);
