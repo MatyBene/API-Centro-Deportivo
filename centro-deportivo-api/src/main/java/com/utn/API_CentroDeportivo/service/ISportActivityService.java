@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface ISportActivityService {
     Page<SportActivitySummaryDTO> getActivities(Pageable pageable);
+    Page<SportActivitySummaryDTO> findActivitiesByName(String name, Pageable pageable);
     Optional<SportActivityDetailsDTO> getActivityById(Long id);
     int getCurrentMembers(Long id);
     List<SportActivitySummaryDTO> getActivitiesByInstructor(Instructor instructor);

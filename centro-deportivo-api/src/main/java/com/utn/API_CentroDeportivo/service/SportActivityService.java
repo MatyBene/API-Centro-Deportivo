@@ -28,6 +28,12 @@ public class SportActivityService implements ISportActivityService{
                 .map(SportActivityMapper::mapToSportActivitySummaryDTO);
     }
 
+    @Override
+    public Page<SportActivitySummaryDTO> findActivitiesByName(String name, Pageable pageable) {
+        return sportActivityRepository.findByNameContainingIgnoreCase(name, pageable)
+                .map(SportActivityMapper::mapToSportActivitySummaryDTO);
+    }
+
     public Optional<SportActivityDetailsDTO> getActivityById(Long id) {
         Optional<SportActivity> activity = sportActivityRepository.findById(id);
         if (activity.isPresent()) {
