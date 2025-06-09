@@ -11,6 +11,9 @@ import com.utn.API_CentroDeportivo.service.IJwtService;
 import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -61,8 +64,12 @@ public class PublicController {
     }
 
     @GetMapping("/activities")
-    public ResponseEntity<List<SportActivitySummaryDTO>> getActivities() {
-        List<SportActivitySummaryDTO> activities = sportActivityService.getActivities();
+    public ResponseEntity<Page<SportActivitySummaryDTO>> getActivities(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<SportActivitySummaryDTO> activities = sportActivityService.getActivities(pageable);
         return ResponseEntity.ok(activities);
     }
 

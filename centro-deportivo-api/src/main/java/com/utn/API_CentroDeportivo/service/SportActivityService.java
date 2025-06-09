@@ -8,6 +8,8 @@ import com.utn.API_CentroDeportivo.model.exception.SportActivityNotFoundExceptio
 import com.utn.API_CentroDeportivo.model.mapper.SportActivityMapper;
 import com.utn.API_CentroDeportivo.model.repository.ISportActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +22,10 @@ public class SportActivityService implements ISportActivityService{
     @Autowired
     private ISportActivityRepository sportActivityRepository;
 
-    public List<SportActivitySummaryDTO> getActivities() {
-        return sportActivityRepository.findAll().stream().map(SportActivityMapper::mapToSportActivitySummaryDTO).toList();
+    @Override
+    public Page<SportActivitySummaryDTO> getActivities(Pageable pageable) {
+        return sportActivityRepository.findAll(pageable)
+                .map(SportActivityMapper::mapToSportActivitySummaryDTO);
     }
 
     public Optional<SportActivityDetailsDTO> getActivityById(Long id) {
