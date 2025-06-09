@@ -10,5 +10,6 @@ import java.util.List;
 
 public interface ISportActivityRepository extends JpaRepository<SportActivity, Long> {
     List<SportActivity> findByInstructor(Instructor instructor);
+    List<SportActivity> findByNameContainingIgnoreCase(String name);
 
 }
