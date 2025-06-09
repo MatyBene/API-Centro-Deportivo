@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,12 @@ public class SportActivityService implements ISportActivityService{
     @Override
     public Page<SportActivitySummaryDTO> findActivitiesByName(String name, Pageable pageable) {
         return sportActivityRepository.findByNameContainingIgnoreCase(name, pageable)
+                .map(SportActivityMapper::mapToSportActivitySummaryDTO);
+    }
+
+    @Override
+    public Page<SportActivitySummaryDTO> findActivitiesByTimeRange(LocalTime startTimeFrom, LocalTime endTimeTo, Pageable pageable) {
+        return sportActivityRepository.findByTimeRangeOverlap(startTimeFrom, endTimeTo, pageable)
                 .map(SportActivityMapper::mapToSportActivitySummaryDTO);
     }
 

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalTime;
+
 @RestController
 @RequestMapping("/api/v1/activities")
 public class SportActivityController {
@@ -25,6 +27,19 @@ public class SportActivityController {
                                                                                 @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<SportActivitySummaryDTO> activities = sportActivityService.findActivitiesByName(name, pageable);
+        return ResponseEntity.ok(activities);
+    }
+
+    @GetMapping("/search-by-time")
+    public ResponseEntity<Page<SportActivitySummaryDTO>> searchActivitiesByTimeRange(
+            @RequestParam("startTime") String startTime,
+            @RequestParam("endTime") String endTime,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        LocalTime startTimeFrom = LocalTime.parse(startTime);
+        LocalTime endTimeTo = LocalTime.parse(endTime);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<SportActivitySummaryDTO> activities = sportActivityService.findActivitiesByTimeRange(startTimeFrom, endTimeTo, pageable);
         return ResponseEntity.ok(activities);
     }
 }
