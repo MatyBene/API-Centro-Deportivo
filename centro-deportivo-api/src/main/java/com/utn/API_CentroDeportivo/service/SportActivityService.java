@@ -9,6 +9,7 @@ import com.utn.API_CentroDeportivo.model.mapper.SportActivityMapper;
 import com.utn.API_CentroDeportivo.model.repository.ISportActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,10 @@ public class SportActivityService implements ISportActivityService{
     }
 
     @Override
-    public Page<SportActivitySummaryDTO> findActivitiesByTimeRange(LocalTime startTimeFrom, LocalTime endTimeTo, Pageable pageable) {
+    public Page<SportActivitySummaryDTO> findActivitiesByTimeRange(String startTime, String endTime, Pageable pageable) {
+        LocalTime startTimeFrom = LocalTime.parse(startTime);
+        LocalTime endTimeTo = LocalTime.parse(endTime);
+
         return sportActivityRepository.findByTimeRangeOverlap(startTimeFrom, endTimeTo, pageable)
                 .map(SportActivityMapper::mapToSportActivitySummaryDTO);
     }

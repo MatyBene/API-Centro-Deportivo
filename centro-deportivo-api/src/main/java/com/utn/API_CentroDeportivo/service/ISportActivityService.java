@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface ISportActivityService {
     Page<SportActivitySummaryDTO> getActivities(Pageable pageable);
     Page<SportActivitySummaryDTO> findActivitiesByName(String name, Pageable pageable);
-    Page<SportActivitySummaryDTO> findActivitiesByTimeRange(LocalTime startTimeFrom, LocalTime endTimeTo, Pageable pageable);
+    Page<SportActivitySummaryDTO> findActivitiesByTimeRange(String startTime, String endTime, Pageable pageable);
     Optional<SportActivityDetailsDTO> getActivityById(Long id);
     int getCurrentMembers(Long id);
     List<SportActivitySummaryDTO> getActivitiesByInstructor(Instructor instructor);
