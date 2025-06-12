@@ -1,4 +1,4 @@
-package com.utn.API_CentroDeportivo.service;
+package com.utn.API_CentroDeportivo.service.impl;
 
 import com.utn.API_CentroDeportivo.config.SecurityConfig;
 import com.utn.API_CentroDeportivo.model.dto.request.CredentialRequestDTO;
@@ -12,6 +12,10 @@ import com.utn.API_CentroDeportivo.model.exception.FieldAlreadyExistsException;
 import com.utn.API_CentroDeportivo.model.mapper.CredentialMapper;
 import com.utn.API_CentroDeportivo.model.mapper.MemberMapper;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
+import com.utn.API_CentroDeportivo.service.IAuthService;
+import com.utn.API_CentroDeportivo.service.ICredentialService;
+import com.utn.API_CentroDeportivo.service.IInstructorService;
+import com.utn.API_CentroDeportivo.service.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

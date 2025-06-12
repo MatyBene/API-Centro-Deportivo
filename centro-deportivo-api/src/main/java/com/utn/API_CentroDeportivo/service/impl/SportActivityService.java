@@ -1,4 +1,4 @@
-package com.utn.API_CentroDeportivo.service;
+package com.utn.API_CentroDeportivo.service.impl;
 
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
@@ -8,6 +8,7 @@ import com.utn.API_CentroDeportivo.model.exception.InvalidTimeFormatException;
 import com.utn.API_CentroDeportivo.model.exception.SportActivityNotFoundException;
 import com.utn.API_CentroDeportivo.model.mapper.SportActivityMapper;
 import com.utn.API_CentroDeportivo.model.repository.ISportActivityRepository;
+import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SportActivityService implements ISportActivityService{
+public class SportActivityService implements ISportActivityService {
     @Autowired
     private ISportActivityRepository sportActivityRepository;
 

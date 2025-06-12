@@ -61,9 +61,10 @@ public class MemberController {
     }
 
     @PreAuthorize("hasRole('MEMBER')")
-    @GetMapping("/{id}/activities")
-    public ResponseEntity<List<EnrollmentDTO>> getMyActivities(@PathVariable Long id) {
-        List<EnrollmentDTO> enrollments = enrollmentService.getEnrollmentsByMemberId(id);
+    @GetMapping("/activities")
+    public ResponseEntity<List<EnrollmentDTO>> getMyActivities() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<EnrollmentDTO> enrollments = enrollmentService.getEnrollmentsByUsername(username);
         return ResponseEntity.ok(enrollments);
     }
 }

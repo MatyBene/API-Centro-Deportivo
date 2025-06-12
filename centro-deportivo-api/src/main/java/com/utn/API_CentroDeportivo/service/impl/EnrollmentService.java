@@ -1,4 +1,4 @@
-package com.utn.API_CentroDeportivo.service;
+package com.utn.API_CentroDeportivo.service.impl;
 
 import com.utn.API_CentroDeportivo.model.dto.response.EnrollmentDTO;
 import com.utn.API_CentroDeportivo.model.entity.Enrollment;
@@ -8,6 +8,10 @@ import com.utn.API_CentroDeportivo.model.enums.Status;
 import com.utn.API_CentroDeportivo.model.exception.MemberAlreadyEnrolledException;
 import com.utn.API_CentroDeportivo.model.repository.IEnrollmentRepository;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
+import com.utn.API_CentroDeportivo.service.ICredentialService;
+import com.utn.API_CentroDeportivo.service.IEnrollmentService;
+import com.utn.API_CentroDeportivo.service.IMemberService;
+import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class EnrollmentService implements IEnrollmentService{
+public class EnrollmentService implements IEnrollmentService {
 
     @Autowired
     private IEnrollmentRepository enrollmentRepository;
@@ -70,8 +74,9 @@ public class EnrollmentService implements IEnrollmentService{
             userRepository.save(member);
         }
     }
-    public List<EnrollmentDTO> getEnrollmentsByMemberId(Long memberId) {
-        List<Enrollment> enrollments = enrollmentRepository.findByMemberId(memberId);
+    public List<EnrollmentDTO> getEnrollmentsByUsername(String username) {
+        Member member = (Member) credentialService.getUserByUsername(username);
+        List<Enrollment> enrollments = enrollmentRepository.findByMemberId(member.getId());
 
         return enrollments.stream()
                 .map(enrollment -> EnrollmentDTO.builder()

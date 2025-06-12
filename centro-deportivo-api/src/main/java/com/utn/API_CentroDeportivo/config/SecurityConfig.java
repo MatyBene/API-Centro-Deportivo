@@ -1,6 +1,6 @@
 package com.utn.API_CentroDeportivo.config;
 
-import com.utn.API_CentroDeportivo.service.CredentialService;
+import com.utn.API_CentroDeportivo.service.impl.CredentialService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
