@@ -10,7 +10,6 @@ import com.utn.API_CentroDeportivo.model.mapper.SportActivityMapper;
 import com.utn.API_CentroDeportivo.model.repository.ISportActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +17,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
-
-import static com.utn.API_CentroDeportivo.model.mapper.SportActivityMapper.mapToSportActivitySummaryDTO;
 
 @Service
 public class SportActivityService implements ISportActivityService{
@@ -78,6 +75,7 @@ public class SportActivityService implements ISportActivityService{
                 .map(SportActivityMapper::mapToSportActivityDetailsDTO)
                 .toList();
     }
+
     @Override
     public Optional<SportActivity> getSportActivityEntityById(Long id) {
         return Optional.ofNullable(sportActivityRepository.findById(id)

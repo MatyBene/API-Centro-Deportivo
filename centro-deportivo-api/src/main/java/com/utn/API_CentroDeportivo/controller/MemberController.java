@@ -7,12 +7,9 @@ import com.utn.API_CentroDeportivo.service.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -36,7 +33,7 @@ public class MemberController {
 
     @PreAuthorize("hasRole('MEMBER')")
     @DeleteMapping("/me")
-    public ResponseEntity<String> deleteOwnAccount(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<String> deleteOwnAccount(){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         memberService.deleteMemberByUsername(username);
