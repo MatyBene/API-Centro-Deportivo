@@ -1,10 +1,7 @@
 package com.utn.API_CentroDeportivo.config;
 
 import com.utn.API_CentroDeportivo.model.dto.response.ErrorResponseDTO;
-import com.utn.API_CentroDeportivo.model.exception.FieldAlreadyExistsException;
-import com.utn.API_CentroDeportivo.model.exception.MemberAlreadyEnrolledException;
-import com.utn.API_CentroDeportivo.model.exception.MemberNotFoundException;
-import com.utn.API_CentroDeportivo.model.exception.SportActivityNotFoundException;
+import com.utn.API_CentroDeportivo.model.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -85,6 +82,16 @@ public class GlobalExceptionHandler {
                 messageSource.getMessage("error.data.not.found", null, locale),
                 details,
                 "SPORT_ACTIVITY_NOT_FOUND");
+    }
+
+    @ExceptionHandler(InvalidTimeFormatException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidTimeFormatException(InvalidTimeFormatException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("message", messageSource.getMessage("error.invalid.time.format.detail", null, locale));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.data.validation", null, locale),
+                details,
+                "INVALID_TIME_FORMAT");
     }
 
     @ExceptionHandler(Exception.class)

@@ -4,6 +4,7 @@ import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
 import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
+import com.utn.API_CentroDeportivo.model.exception.InvalidTimeFormatException;
 import com.utn.API_CentroDeportivo.model.exception.SportActivityNotFoundException;
 import com.utn.API_CentroDeportivo.model.mapper.SportActivityMapper;
 import com.utn.API_CentroDeportivo.model.repository.ISportActivityRepository;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,11 +40,15 @@ public class SportActivityService implements ISportActivityService{
 
     @Override
     public Page<SportActivitySummaryDTO> findActivitiesByTimeRange(String startTime, String endTime, Pageable pageable) {
-        LocalTime startTimeFrom = LocalTime.parse(startTime);
-        LocalTime endTimeTo = LocalTime.parse(endTime);
+        try {
+            LocalTime startTimeFrom = LocalTime.parse(startTime);
+            LocalTime endTimeTo = LocalTime.parse(endTime);
 
-        return sportActivityRepository.findByTimeRangeOverlap(startTimeFrom, endTimeTo, pageable)
-                .map(SportActivityMapper::mapToSportActivitySummaryDTO);
+            return sportActivityRepository.findByTimeRangeOverlap(startTimeFrom, endTimeTo, pageable)
+                    .map(SportActivityMapper::mapToSportActivitySummaryDTO);
+        } catch (DateTimeParseException e) {
+            throw new InvalidTimeFormatException("El formato de hora es inválido.");
+        }
     }
 
     public Optional<SportActivityDetailsDTO> getActivityById(Long id) {
@@ -73,7 +79,7 @@ public class SportActivityService implements ISportActivityService{
                 .toList();
     }
     @Override
-    public Optional<SportActivity> getSportActivityById(Long id) {
+    public Optional<SportActivity> getSportActivityEntityById(Long id) {
         return Optional.ofNullable(sportActivityRepository.findById(id)
                 .orElseThrow(() -> new SportActivityNotFoundException("Actividad no encontrada")));
     }

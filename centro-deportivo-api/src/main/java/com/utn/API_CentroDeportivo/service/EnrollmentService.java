@@ -30,7 +30,7 @@ public class EnrollmentService implements IEnrollmentService{
     public void enrollMemberToActivity(String username, Long activityId) {
 
         Member member = (Member) credentialService.getUserByUsername(username);
-        SportActivity activity = sportActivityService.getSportActivityById(activityId).get();
+        SportActivity activity = sportActivityService.getSportActivityEntityById(activityId).get();
 
         if (enrollmentRepository.findByMemberIdAndActivityId(member.getId(), activityId).isPresent()) {
             throw new MemberAlreadyEnrolledException("El socio ya está inscripto en esta actividad");

@@ -19,5 +19,5 @@ public interface ISportActivityService {
     int getCurrentMembers(Long id);
     List<SportActivitySummaryDTO> getActivitiesByInstructor(Instructor instructor);
     List<SportActivityDetailsDTO> getActivitiesDetailsByInstructor(Instructor instructor);
-    Optional<SportActivity> getSportActivityById(Long id);
+    Optional<SportActivity> getSportActivityEntityById(Long id);
 }
