@@ -3,8 +3,6 @@ package com.utn.API_CentroDeportivo.controller;
 import com.utn.API_CentroDeportivo.model.dto.request.LoginRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.LoginResponseDTO;
-import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
-import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
 import com.utn.API_CentroDeportivo.service.IAuthService;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
 import com.utn.API_CentroDeportivo.service.IJwtService;
@@ -32,9 +30,6 @@ public class PublicController {
     private IJwtService jwtService;
 
     @Autowired
-    private ISportActivityService sportActivityService;
-
-    @Autowired
     private IAuthService authService;
 
     @Autowired
@@ -60,16 +55,4 @@ public class PublicController {
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
-    @GetMapping("/activities")
-    public ResponseEntity<List<SportActivitySummaryDTO>> getActivities() {
-        List<SportActivitySummaryDTO> activities = sportActivityService.getActivities();
-        return ResponseEntity.ok(activities);
-    }
-
-    @GetMapping("/activities/{id}")
-    public ResponseEntity<SportActivityDetailsDTO> getActivity(@PathVariable Long id) {
-        return sportActivityService.getActivityById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 }
