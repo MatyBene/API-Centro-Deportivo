@@ -1,5 +1,6 @@
-package com.utn.API_CentroDeportivo.service;
+package com.utn.API_CentroDeportivo.service.impl;
 
+import com.utn.API_CentroDeportivo.service.IJwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,7 +14,7 @@ import java.security.Key;
 import java.util.Date;
 
 @Service
-public class JwtService implements IJwtService{
+public class JwtService implements IJwtService {
 
     @Value("${jwt.secret}")
     private String secretKey;

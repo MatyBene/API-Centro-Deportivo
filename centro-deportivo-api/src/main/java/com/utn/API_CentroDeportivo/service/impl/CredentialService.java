@@ -1,17 +1,16 @@
-package com.utn.API_CentroDeportivo.service;
+package com.utn.API_CentroDeportivo.service.impl;
 
 import com.utn.API_CentroDeportivo.model.entity.Credential;
 import com.utn.API_CentroDeportivo.model.entity.User;
 import com.utn.API_CentroDeportivo.model.repository.ICredentialRepository;
+import com.utn.API_CentroDeportivo.service.ICredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class CredentialService implements ICredentialService{
+public class CredentialService implements ICredentialService {
 
     @Autowired
     private ICredentialRepository credentialRepository;
