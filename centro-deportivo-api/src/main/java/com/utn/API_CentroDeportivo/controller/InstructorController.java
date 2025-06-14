@@ -2,18 +2,19 @@ package com.utn.API_CentroDeportivo.controller;
 
 import com.utn.API_CentroDeportivo.model.dto.response.InstructorDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.InstructorSummaryDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.MembersDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
 import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.service.IInstructorService;
+import com.utn.API_CentroDeportivo.service.IMemberService;
 import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,9 @@ public class InstructorController {
 
     @Autowired
     private ISportActivityService sportActivityService;
+
+    @Autowired
+    private IMemberService memberService;
 
     @GetMapping("/{id}")
     public ResponseEntity<InstructorSummaryDTO> getInstructor(@PathVariable Long id) {
@@ -65,5 +69,14 @@ public class InstructorController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @GetMapping("/{id}/members")
+    public ResponseEntity<Page<MembersDetailsDTO>> getAllMembers(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        return ResponseEntity.ok(memberService.getAllMembers(page, size));
     }
 }
