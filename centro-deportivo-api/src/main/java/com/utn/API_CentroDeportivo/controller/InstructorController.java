@@ -42,6 +42,7 @@ public class InstructorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     @GetMapping("/my-activities")
     public ResponseEntity<List<SportActivityDetailsDTO>> getMyActivities() {
 
@@ -54,6 +55,7 @@ public class InstructorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     @GetMapping("/my-activities/{activityId}")
     public ResponseEntity<SportActivityDetailsDTO> getMyActivityDetails(@PathVariable Long activityId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
