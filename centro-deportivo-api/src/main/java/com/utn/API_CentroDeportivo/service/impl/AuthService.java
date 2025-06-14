@@ -14,8 +14,6 @@ import com.utn.API_CentroDeportivo.model.mapper.MemberMapper;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.service.IAuthService;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
-import com.utn.API_CentroDeportivo.service.IInstructorService;
-import com.utn.API_CentroDeportivo.service.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,15 +25,6 @@ public class AuthService implements IAuthService {
     private IUserRepository userRepository;
 
     @Autowired
-    private IMemberService memberService;
-
-    @Autowired
-    private IInstructorService instructorService;
-
-//    @Autowired
-//    private IAdminService adminService;
-
-    @Autowired
     private ICredentialService credentialService;
 
     @Autowired
@@ -43,7 +32,6 @@ public class AuthService implements IAuthService {
 
     @Transactional
     public void registerMember(MemberRequestDTO memberDTO) {
-        validateUserFields(memberDTO);
         Member member = MemberMapper.mapToMember(memberDTO);
         member.setStatus(Status.INACTIVE);
         Credential credential = Credential.builder().username(memberDTO.getUsername()).password(memberDTO.getPassword()).build();
@@ -51,7 +39,9 @@ public class AuthService implements IAuthService {
         createAndSaveUser(member, Role.MEMBER);
     }
 
+    @Transactional
     public void createAndSaveUser(User user, Role role) {
+        validateUserFields(user);
         CredentialRequestDTO credentialDTO = CredentialRequestDTO.builder()
                 .username(user.getCredential().getUsername())
                 .password(securityConfig.passwordEncoder().encode(user.getCredential().getPassword()))
@@ -59,17 +49,17 @@ public class AuthService implements IAuthService {
         Credential credential = CredentialMapper.mapToCredential(credentialDTO, user);
         credential.setRole(role);
         user.setCredential(credential);
-        memberService.saveMember(user);
+        userRepository.save(user);
     }
 
-    private void validateUserFields(MemberRequestDTO userDTO) {
-        if (userRepository.existsByDni(userDTO.getDni())) {
+    private void validateUserFields(User user) {
+        if (userRepository.existsByDni(user.getDni())) {
             throw new FieldAlreadyExistsException("dni", "El campo ya está registrado");
         }
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new FieldAlreadyExistsException("email", "El campo ya está registrado");
         }
-        if (credentialService.existsByUsername(userDTO.getUsername())) {
+        if (credentialService.existsByUsername(user.getCredential().getUsername())) {
             throw new FieldAlreadyExistsException("username", "El campo ya está registrado");
         }
     }

@@ -2,7 +2,6 @@ package com.utn.API_CentroDeportivo.service.impl;
 
 import com.utn.API_CentroDeportivo.model.dto.request.MemberEditDTO;
 import com.utn.API_CentroDeportivo.model.entity.Member;
-import com.utn.API_CentroDeportivo.model.entity.User;
 import com.utn.API_CentroDeportivo.model.enums.Status;
 import com.utn.API_CentroDeportivo.model.exception.MemberNotFoundException;
 import com.utn.API_CentroDeportivo.model.repository.IMemberRepository;
@@ -43,11 +42,6 @@ public class MemberService implements IMemberService {
                 .orElseThrow(() -> new MemberNotFoundException("Socio no encontrado")));
     }
 
-    @Override
-    public void saveMember(User member) {
-        userRepository.save(member);
-    }
-
     @Transactional
     @Override
     public void updateMemberProfile(String username, MemberEditDTO dto) {
@@ -60,17 +54,16 @@ public class MemberService implements IMemberService {
         if (dto.getLastname() != null) {
             member.setLastname(dto.getLastname());
         }
-
         if (dto.getPhone() != null) {
             member.setPhone(dto.getPhone());
         }
-
         if (dto.getEmail() != null) {
             member.setEmail(dto.getEmail());
         }
         if (dto.getBirthdate() != null) {
             member.setBirthdate(dto.getBirthdate());
         }
+
         userRepository.save(member);
     }
     @Transactional
