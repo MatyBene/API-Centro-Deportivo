@@ -1,10 +1,12 @@
 package com.utn.API_CentroDeportivo.service.impl;
 
 import com.utn.API_CentroDeportivo.model.dto.request.MemberEditDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.MembersDetailsDTO;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.User;
 import com.utn.API_CentroDeportivo.model.enums.Status;
 import com.utn.API_CentroDeportivo.model.exception.MemberNotFoundException;
+import com.utn.API_CentroDeportivo.model.mapper.MemberMapper;
 import com.utn.API_CentroDeportivo.model.repository.IMemberRepository;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
@@ -80,6 +82,13 @@ public class MemberService implements IMemberService {
                 .orElseThrow(() -> new MemberNotFoundException("Socio no encontrado"));
         userRepository.delete(member);
     }
+    @Override
+    public MembersDetailsDTO getMemberDetailsById(Long memberId) {
+        Member member = (Member) userRepository.findById(memberId)
+                .filter(user -> user instanceof Member)
+                .orElseThrow(() -> new MemberNotFoundException("Socio no encontrado"));
 
+        return MemberMapper.mapToMemberDetailsDTO(member);
+    }
 
 }
