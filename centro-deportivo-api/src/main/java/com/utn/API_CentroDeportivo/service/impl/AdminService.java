@@ -9,6 +9,7 @@ import com.utn.API_CentroDeportivo.model.enums.Status;
 import com.utn.API_CentroDeportivo.model.mapper.AdminMapper;
 import com.utn.API_CentroDeportivo.model.mapper.InstructorMapper;
 import com.utn.API_CentroDeportivo.model.mapper.MemberMapper;
+import com.utn.API_CentroDeportivo.model.validation.AdminValidation;
 import com.utn.API_CentroDeportivo.model.validation.InstructorValidation;
 import com.utn.API_CentroDeportivo.service.IAdminService;
 import com.utn.API_CentroDeportivo.service.IAuthService;
@@ -64,10 +65,18 @@ public class AdminService implements IAdminService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
+
         if (userDTO.getRole() == Role.INSTRUCTOR) {
             Set<ConstraintViolation<UserRequestDTO>> instructorViolations = validator.validate(userDTO, InstructorValidation.class);
             if (!instructorViolations.isEmpty()) {
                 throw new ConstraintViolationException(instructorViolations);
+            }
+        }
+
+        if (userDTO.getRole() == Role.ADMIN) {
+            Set<ConstraintViolation<UserRequestDTO>> adminViolations = validator.validate(userDTO, AdminValidation.class);
+            if (!adminViolations.isEmpty()) {
+                throw new ConstraintViolationException(adminViolations);
             }
         }
     }

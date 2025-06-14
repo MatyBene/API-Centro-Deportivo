@@ -1,6 +1,8 @@
 package com.utn.API_CentroDeportivo.model.dto.request;
 
+import com.utn.API_CentroDeportivo.model.enums.PermissionLevel;
 import com.utn.API_CentroDeportivo.model.enums.Role;
+import com.utn.API_CentroDeportivo.model.validation.AdminValidation;
 import com.utn.API_CentroDeportivo.model.validation.InstructorValidation;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -53,4 +55,7 @@ public class UserRequestDTO {
 
     @NotBlank(groups = InstructorValidation.class, message = "La especialidad es obligatoria para el rol INSTRUCTOR")
     private String specialty;
+
+    @NotNull(groups = AdminValidation.class, message = "El nivel de permiso es obligatorio para el rol ADMIN")
+    private PermissionLevel permissionLevel;
 }
