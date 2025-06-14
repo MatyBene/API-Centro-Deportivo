@@ -6,6 +6,7 @@ import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.User;
 import com.utn.API_CentroDeportivo.model.enums.Role;
 import com.utn.API_CentroDeportivo.model.enums.Status;
+import com.utn.API_CentroDeportivo.model.exception.InvalidRoleException;
 import com.utn.API_CentroDeportivo.model.mapper.AdminMapper;
 import com.utn.API_CentroDeportivo.model.mapper.InstructorMapper;
 import com.utn.API_CentroDeportivo.model.mapper.MemberMapper;
@@ -48,7 +49,7 @@ public class AdminService implements IAdminService {
                 user = AdminMapper.mapToAdmin(userDTO);
                 break;
             default:
-                throw new IllegalArgumentException("Invalid role: " + userDTO.getRole());
+                throw new InvalidRoleException("El rol especificado no es válido: " + userDTO.getRole());
         }
 
         Credential credential = Credential.builder()

@@ -94,6 +94,16 @@ public class GlobalExceptionHandler {
                 "INVALID_TIME_FORMAT");
     }
 
+    @ExceptionHandler(InvalidRoleException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidRoleException(InvalidRoleException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("message", messageSource.getMessage("error.invalid.role.detail", null, locale));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.data.validation", null, locale),
+                details,
+                "INVALID_ROLE");
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
