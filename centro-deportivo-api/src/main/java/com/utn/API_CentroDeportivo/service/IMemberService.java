@@ -1,6 +1,7 @@
 package com.utn.API_CentroDeportivo.service;
 
 import com.utn.API_CentroDeportivo.model.dto.request.MemberEditDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.MembersDetailsDTO;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.User;
 
@@ -12,4 +13,5 @@ public interface IMemberService {
     void saveMember(User member);
     void deleteMemberByUsername(String username);
     void updateMemberProfile(String username, MemberEditDTO dto);
+    MembersDetailsDTO getMemberDetailsById(Long memberId);
 }
