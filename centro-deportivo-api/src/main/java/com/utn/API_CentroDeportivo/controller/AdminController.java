@@ -18,9 +18,24 @@ public class AdminController {
     private IAdminService adminService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/create-user")
-    public ResponseEntity<String> createUser(@RequestBody UserRequestDTO userDTO) {
+    @PostMapping("/create-member")
+    public ResponseEntity<String> createMember(@RequestBody UserRequestDTO userDTO) {
         adminService.createUser(userDTO);
-        return ResponseEntity.ok("Usuario creado correctamente");
+        return ResponseEntity.ok("Socio creado correctamente");
     }
+
+    @PreAuthorize("hasRole('ADMIN') and (hasAuthority('PERMISSION_USER_MANAGER') or hasAuthority('PERMISSION_SUPER_ADMIN'))")
+    @PostMapping("/create-instructor")
+    public ResponseEntity<String> createInstructor(@RequestBody UserRequestDTO userDTO) {
+        adminService.createUser(userDTO);
+        return ResponseEntity.ok("Instructor creado correctamente");
+    }
+
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('PERMISSION_SUPER_ADMIN')")
+    @PostMapping("/create-instructor")
+    public ResponseEntity<String> createAdmin(@RequestBody UserRequestDTO userDTO) {
+        adminService.createUser(userDTO);
+        return ResponseEntity.ok("Admin creado correctamente");
+    }
+
 }

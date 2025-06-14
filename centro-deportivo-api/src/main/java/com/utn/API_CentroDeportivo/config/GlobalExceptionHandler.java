@@ -2,6 +2,7 @@ package com.utn.API_CentroDeportivo.config;
 
 import com.utn.API_CentroDeportivo.model.dto.response.ErrorResponseDTO;
 import com.utn.API_CentroDeportivo.model.exception.*;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -102,6 +103,20 @@ public class GlobalExceptionHandler {
                 messageSource.getMessage("error.data.validation", null, locale),
                 details,
                 "INVALID_ROLE");
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(ConstraintViolationException ex, Locale locale) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getConstraintViolations().forEach(cv -> {
+            String field = cv.getPropertyPath().toString();
+            String message = cv.getMessage();
+            errors.put(field, message);
+        });
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.data.validation", null, locale),
+                errors,
+                "VALIDATION_FAILED");
     }
 
     @ExceptionHandler(Exception.class)
