@@ -2,7 +2,7 @@ package com.utn.API_CentroDeportivo.service.impl;
 
 import com.utn.API_CentroDeportivo.config.SecurityConfig;
 import com.utn.API_CentroDeportivo.model.dto.request.CredentialRequestDTO;
-import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
+import com.utn.API_CentroDeportivo.model.dto.request.MemberRequestDTO;
 import com.utn.API_CentroDeportivo.model.entity.Credential;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.User;
@@ -42,7 +42,7 @@ public class AuthService implements IAuthService {
     private SecurityConfig securityConfig;
 
     @Transactional
-    public void registerMember(UserRequestDTO memberDTO) {
+    public void registerMember(MemberRequestDTO memberDTO) {
         validateUserFields(memberDTO);
         Member member = MemberMapper.mapToMember(memberDTO);
         member.setStatus(Status.INACTIVE);
@@ -62,7 +62,7 @@ public class AuthService implements IAuthService {
         memberService.saveMember(user);
     }
 
-    private void validateUserFields(UserRequestDTO userDTO) {
+    private void validateUserFields(MemberRequestDTO userDTO) {
         if (userRepository.existsByDni(userDTO.getDni())) {
             throw new FieldAlreadyExistsException("dni", "El campo ya está registrado");
         }

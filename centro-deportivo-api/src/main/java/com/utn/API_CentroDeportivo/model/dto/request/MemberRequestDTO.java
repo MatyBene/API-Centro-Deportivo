@@ -1,12 +1,7 @@
 package com.utn.API_CentroDeportivo.model.dto.request;
 
-import com.utn.API_CentroDeportivo.model.enums.Role;
-import com.utn.API_CentroDeportivo.model.validation.InstructorValidation;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Getter
@@ -14,19 +9,20 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @ToString
-public class UserRequestDTO {
+public class MemberRequestDTO {
+
     @NotBlank(message = "El nombre es obligatorio")
     private String name;
 
     @NotBlank(message = "El apellido es obligatorio")
     private String lastname;
 
-    @NotBlank(message = "El DNI es obligatorio")
-    @Pattern(regexp = "\\d{8}", message = "El DNI debe tener 8 dígitos")
+    @NotBlank(message = "El dni es obligatorio")
+    @Pattern(regexp = "\\d{8}", message = "El DNI debe tener al menos 8 dígitos")
     private String dni;
 
     @NotBlank(message = "La fecha de nacimiento es obligatoria")
-    @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "El formato de la fecha debe ser yyyy-MM-dd")
+    @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "El formato de la fecha de nacimiento debe ser YYYY-MM-DD")
     private String birthdate;
 
     @NotBlank(message = "El teléfono es obligatorio")
@@ -44,13 +40,7 @@ public class UserRequestDTO {
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     @Pattern(
             regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
-            message = "La contraseña debe ser segura (incluir mayúscula, minúscula, número y carácter especial)"
+            message = "La contraseña debe contener al menos: 1 mayúscula, 1 minúscula, 1 número, 1 carácter especial y no tener espacios"
     )
     private String password;
-
-    @NotNull(message = "El rol es obligatorio")
-    private Role role;
-
-    @NotBlank(groups = InstructorValidation.class, message = "La especialidad es obligatoria para el rol INSTRUCTOR")
-    private String specialty;
 }

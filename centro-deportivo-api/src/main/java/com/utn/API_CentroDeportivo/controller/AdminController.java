@@ -1,6 +1,6 @@
 package com.utn.API_CentroDeportivo.controller;
 
-import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
+import com.utn.API_CentroDeportivo.model.dto.request.MemberRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +18,7 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create-user")
-    public ResponseEntity<String> createUser(@RequestBody UserRequestDTO userDTO) {
+    public ResponseEntity<String> createUser(@RequestBody MemberRequestDTO userDTO) {
         adminService.createUser(userDTO);
         return ResponseEntity.ok("Usuario creado correctamente");
     }
