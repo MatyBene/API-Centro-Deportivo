@@ -1,5 +1,6 @@
 package com.utn.API_CentroDeportivo.model.mapper;
 
+import com.utn.API_CentroDeportivo.model.dto.request.MemberRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.EnrollmentDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.MembersDetailsDTO;
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class MemberMapper {
 
-    public static Member mapToMember(UserRequestDTO memberDTO) {
+    public static Member mapToMember(MemberRequestDTO memberDTO) {
         Member member = new Member();
         member.setName(memberDTO.getName());
         member.setLastname(memberDTO.getLastname());
@@ -40,5 +41,15 @@ public class MemberMapper {
                 .build();
     }
 
+    public static Member mapToMember(UserRequestDTO dto) {
+        Member member = new Member();
+        member.setName(dto.getName());
+        member.setLastname(dto.getLastname());
+        member.setDni(dto.getDni());
+        member.setBirthdate(dto.getBirthdate());
+        member.setPhone(dto.getPhone());
+        member.setEmail(dto.getEmail());
+        return member;
+    }
 
 }
