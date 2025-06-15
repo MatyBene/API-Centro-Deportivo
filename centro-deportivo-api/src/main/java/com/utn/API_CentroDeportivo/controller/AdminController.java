@@ -65,4 +65,12 @@ public class AdminController {
         Page<AdminViewDTO> dtoPage = adminService.getUsers(role, status, permission, pageable);
         return ResponseEntity.ok(dtoPage);
     }
+
+    @GetMapping("/users/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getUserDetailsByUsername(@PathVariable String username) {
+        return adminService.findUserDetailsByUsername(username)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
