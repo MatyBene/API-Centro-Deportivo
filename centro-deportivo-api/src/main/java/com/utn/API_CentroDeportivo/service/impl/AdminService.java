@@ -7,6 +7,7 @@ import com.utn.API_CentroDeportivo.model.enums.PermissionLevel;
 import com.utn.API_CentroDeportivo.model.enums.Role;
 import com.utn.API_CentroDeportivo.model.enums.Status;
 import com.utn.API_CentroDeportivo.model.exception.InvalidRoleException;
+import com.utn.API_CentroDeportivo.model.exception.NoUsersFoundException;
 import com.utn.API_CentroDeportivo.model.mapper.AdminMapper;
 import com.utn.API_CentroDeportivo.model.mapper.InstructorMapper;
 import com.utn.API_CentroDeportivo.model.mapper.MemberMapper;
@@ -70,6 +71,10 @@ public class AdminService implements IAdminService {
     @Override
     public Page<AdminViewDTO> getUsers(Role role, Status status, PermissionLevel permission, Pageable pageable) {
         Page<? extends User> userPage = userRepository.findUsersByFilters(role, status, permission, pageable);
+
+        if (userPage.isEmpty()) {
+            throw new NoUsersFoundException("No se encontraron usuarios con los filtros proporcionados.");
+        }
 
         return userPage.map(user -> {
             if (user instanceof Admin admin) {

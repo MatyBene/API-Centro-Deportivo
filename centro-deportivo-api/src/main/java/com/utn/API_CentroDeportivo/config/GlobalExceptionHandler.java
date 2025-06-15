@@ -119,6 +119,16 @@ public class GlobalExceptionHandler {
                 "VALIDATION_FAILED");
     }
 
+    @ExceptionHandler(NoUsersFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleNoUsersFoundException(NoUsersFoundException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("message", messageSource.getMessage("error.users.not.found.detail", null, locale));
+        return buildErrorResponse(HttpStatus.NOT_FOUND,
+                messageSource.getMessage("error.data.not.found", null, locale),
+                details,
+                "USERS_NOT_FOUND");
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
