@@ -119,6 +119,16 @@ public class GlobalExceptionHandler {
                 "VALIDATION_FAILED");
     }
 
+    @ExceptionHandler(InvalidFilterCombinationException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidFilterCombination(InvalidFilterCombinationException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("error", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.data.validation", null, locale),
+                details,
+                "INVALID_FILTER_COMBINATION");
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex, Locale locale) {
         Map<String, String> details = new HashMap<>();

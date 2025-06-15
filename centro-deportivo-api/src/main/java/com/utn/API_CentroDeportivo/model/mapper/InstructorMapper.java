@@ -1,6 +1,7 @@
 package com.utn.API_CentroDeportivo.model.mapper;
 
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.AdminViewDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.InstructorDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.InstructorSummaryDTO;
 import com.utn.API_CentroDeportivo.model.entity.Instructor;
@@ -40,5 +41,19 @@ public class InstructorMapper {
 
         return instructorSummaryDTO;
 
+    }
+
+    public static AdminViewDTO toAdminViewDTO(Instructor instructor) {
+        if (instructor == null) {
+            return null;
+        }
+        AdminViewDTO dto = new AdminViewDTO();
+        dto.setId(instructor.getId());
+        dto.setName(instructor.getName());
+        dto.setLastname(instructor.getLastname());
+        dto.setUsername(instructor.getCredential().getUsername());
+        dto.setRole(instructor.getCredential().getRole());
+        dto.setSpeciality(instructor.getSpecialty());
+        return dto;
     }
 }
