@@ -40,6 +40,7 @@ public class InstructorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     @GetMapping("/my-activities")
     public ResponseEntity<List<SportActivityDetailsDTO>> getMyActivities() {
 
@@ -52,6 +53,7 @@ public class InstructorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     @GetMapping("/my-activities/{activityId}")
     public ResponseEntity<SportActivityDetailsDTO> getMyActivityDetails(@PathVariable Long activityId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -71,12 +73,16 @@ public class InstructorController {
         return ResponseEntity.notFound().build();
     }
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    @GetMapping("/{id}/members")
+    @GetMapping("/members")
     public ResponseEntity<Page<MembersDetailsDTO>> getAllMembers(
-            @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
     ) {
         return ResponseEntity.ok(memberService.getAllMembers(page, size));
+    }
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @GetMapping("/members/{memberId}")
+    public ResponseEntity<MembersDetailsDTO> getMemberDetails(@PathVariable Long memberId) {
+        return ResponseEntity.ok(memberService.getMemberDetailsById(memberId));
     }
 }

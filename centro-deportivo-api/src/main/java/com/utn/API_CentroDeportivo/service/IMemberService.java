@@ -15,4 +15,5 @@ public interface IMemberService {
     void deleteMemberByUsername(String username);
     void updateMemberProfile(String username, MemberEditDTO dto);
     Page<MembersDetailsDTO> getAllMembers(int page, int size);
+    MembersDetailsDTO getMemberDetailsById(Long memberId);
 }
