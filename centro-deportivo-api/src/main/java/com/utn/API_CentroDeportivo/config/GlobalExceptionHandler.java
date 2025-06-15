@@ -119,14 +119,14 @@ public class GlobalExceptionHandler {
                 "VALIDATION_FAILED");
     }
 
-    @ExceptionHandler(NoUsersFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleNoUsersFoundException(NoUsersFoundException ex, Locale locale) {
+    @ExceptionHandler(InvalidFilterCombinationException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidFilterCombination(InvalidFilterCombinationException ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
-        details.put("message", messageSource.getMessage("error.users.not.found.detail", null, locale));
-        return buildErrorResponse(HttpStatus.NOT_FOUND,
-                messageSource.getMessage("error.data.not.found", null, locale),
+        details.put("error", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.data.validation", null, locale),
                 details,
-                "USERS_NOT_FOUND");
+                "INVALID_FILTER_COMBINATION");
     }
 
     @ExceptionHandler(Exception.class)

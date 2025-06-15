@@ -6,8 +6,8 @@ import com.utn.API_CentroDeportivo.model.entity.*;
 import com.utn.API_CentroDeportivo.model.enums.PermissionLevel;
 import com.utn.API_CentroDeportivo.model.enums.Role;
 import com.utn.API_CentroDeportivo.model.enums.Status;
+import com.utn.API_CentroDeportivo.model.exception.InvalidFilterCombinationException;
 import com.utn.API_CentroDeportivo.model.exception.InvalidRoleException;
-import com.utn.API_CentroDeportivo.model.exception.NoUsersFoundException;
 import com.utn.API_CentroDeportivo.model.mapper.AdminMapper;
 import com.utn.API_CentroDeportivo.model.mapper.InstructorMapper;
 import com.utn.API_CentroDeportivo.model.mapper.MemberMapper;
@@ -72,9 +72,7 @@ public class AdminService implements IAdminService {
     public Page<AdminViewDTO> getUsers(Role role, Status status, PermissionLevel permission, Pageable pageable) {
         Page<? extends User> userPage = userRepository.findUsersByFilters(role, status, permission, pageable);
 
-        if (userPage.isEmpty()) {
-            throw new NoUsersFoundException("No se encontraron usuarios con los filtros proporcionados.");
-        }
+        validateFilterCombination(role, status, permission);
 
         return userPage.map(user -> {
             if (user instanceof Admin admin) {
@@ -88,6 +86,15 @@ public class AdminService implements IAdminService {
             }
             throw new IllegalArgumentException("Tipo de usuario desconocido: " + user.getClass());
         });
+    }
+
+    private void validateFilterCombination(Role role, Status status, PermissionLevel permission) {
+        if (permission != null && role != Role.ADMIN) {
+            throw new InvalidFilterCombinationException("El filtro 'permission' solo es aplicable para el rol 'ADMIN'.");
+        }
+        if (status != null && role != Role.MEMBER) {
+            throw new InvalidFilterCombinationException("El filtro 'status' solo es aplicable para el rol 'MEMBER'.");
+        }
     }
 
     private void validate(UserRequestDTO userDTO) {
