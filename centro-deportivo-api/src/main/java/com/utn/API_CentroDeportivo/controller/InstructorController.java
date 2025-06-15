@@ -1,13 +1,11 @@
 package com.utn.API_CentroDeportivo.controller;
 
-import com.utn.API_CentroDeportivo.model.dto.response.InstructorDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.InstructorSummaryDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
 import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.service.IInstructorService;
 import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;

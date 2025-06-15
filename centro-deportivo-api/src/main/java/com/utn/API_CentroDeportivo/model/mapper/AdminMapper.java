@@ -1,6 +1,7 @@
 package com.utn.API_CentroDeportivo.model.mapper;
 
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.AdminViewDTO;
 import com.utn.API_CentroDeportivo.model.entity.Admin;
 
 import java.time.LocalDate;
@@ -18,5 +19,19 @@ public class AdminMapper {
         admin.setPermissionLevel(dto.getPermissionLevel());
         admin.setHireDate(LocalDate.now());
         return admin;
+    }
+
+    public static AdminViewDTO toAdminViewDTO(Admin admin) {
+        if (admin == null) {
+            return null;
+        }
+        AdminViewDTO dto = new AdminViewDTO();
+        dto.setId(admin.getId());
+        dto.setName(admin.getName());
+        dto.setLastname(admin.getLastname());
+        dto.setUsername(admin.getCredential().getUsername());
+        dto.setRole(admin.getCredential().getRole());
+        dto.setPermissionLevel(admin.getPermissionLevel());
+        return dto;
     }
 }

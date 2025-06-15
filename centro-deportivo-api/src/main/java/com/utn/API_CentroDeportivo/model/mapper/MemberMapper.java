@@ -2,6 +2,7 @@ package com.utn.API_CentroDeportivo.model.mapper;
 
 import com.utn.API_CentroDeportivo.model.dto.request.MemberRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.AdminViewDTO;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 
 public class MemberMapper {
@@ -26,6 +27,20 @@ public class MemberMapper {
         member.setPhone(dto.getPhone());
         member.setEmail(dto.getEmail());
         return member;
+    }
+
+    public static AdminViewDTO toAdminViewDTO(Member member) {
+        if (member == null) {
+            return null;
+        }
+        AdminViewDTO dto = new AdminViewDTO();
+        dto.setId(member.getId());
+        dto.setName(member.getName());
+        dto.setLastname(member.getLastname());
+        dto.setUsername(member.getCredential().getUsername());
+        dto.setRole(member.getCredential().getRole());
+        dto.setStatus(member.getStatus());
+        return dto;
     }
 
 }
