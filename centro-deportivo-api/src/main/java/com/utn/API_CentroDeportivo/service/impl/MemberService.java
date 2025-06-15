@@ -3,6 +3,7 @@ package com.utn.API_CentroDeportivo.service.impl;
 import com.utn.API_CentroDeportivo.model.dto.request.MemberEditDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.MembersDetailsDTO;
 import com.utn.API_CentroDeportivo.model.entity.Member;
+import com.utn.API_CentroDeportivo.model.entity.User;
 import com.utn.API_CentroDeportivo.model.enums.Status;
 import com.utn.API_CentroDeportivo.model.exception.MemberNotFoundException;
 import com.utn.API_CentroDeportivo.model.mapper.MemberMapper;
@@ -10,9 +11,15 @@ import com.utn.API_CentroDeportivo.model.repository.IMemberRepository;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
 import com.utn.API_CentroDeportivo.service.IMemberService;
+import com.utn.API_CentroDeportivo.model.mapper.MemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.Optional;
 
@@ -76,6 +83,14 @@ public class MemberService implements IMemberService {
         userRepository.delete(member);
     }
     @Override
+    public Page<MembersDetailsDTO> getAllMembers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Page<Member> members = memberRepository.findAll(pageable);
+        System.out.println("Cantidad de miembros: " + members.getTotalElements());
+        return memberRepository.findAll(pageable)
+                .map(MemberMapper::mapToMemberDetailsDTO);
+    }
+    @Override
     public MembersDetailsDTO getMemberDetailsById(Long memberId) {
         Member member = (Member) userRepository.findById(memberId)
                 .filter(user -> user instanceof Member)
@@ -83,5 +98,8 @@ public class MemberService implements IMemberService {
 
         return MemberMapper.mapToMemberDetailsDTO(member);
     }
-
+    @Override
+    public void saveMember(User member) {
+        userRepository.save(member);
+    }
 }

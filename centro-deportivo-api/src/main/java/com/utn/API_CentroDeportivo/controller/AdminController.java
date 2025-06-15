@@ -32,7 +32,7 @@ public class AdminController {
     }
 
     @PreAuthorize("hasRole('ADMIN') and hasAuthority('PERMISSION_SUPER_ADMIN')")
-    @PostMapping("/create-instructor")
+    @PostMapping("/create-admin")
     public ResponseEntity<String> createAdmin(@RequestBody UserRequestDTO userDTO) {
         adminService.createUser(userDTO);
         return ResponseEntity.ok("Admin creado correctamente");
