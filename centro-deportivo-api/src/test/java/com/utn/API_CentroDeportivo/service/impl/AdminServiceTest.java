@@ -227,4 +227,44 @@ class AdminServiceTest {
         // Act & Assert
         assertThrows(UserNotFoundException.class, () -> adminService.findUserDetailsByUsername("unknown"));
     }
+
+    @Test
+    void deleteUserById_WhenDeletingAsSuperAdmin_ShouldSucceed() {
+        // Arrange
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getName()).thenReturn("superadmin");
+
+        when(credentialService.getUserByUsername("superadmin")).thenReturn(superAdmin);
+        when(userRepository.findById(memberId)).thenReturn(Optional.of(member));
+
+        // Act
+        adminService.deleteUserById(memberId);
+
+        // Assert
+        verify(userRepository, times(1)).delete(member);
+    }
+
+    @Test
+    void deleteUserById_WhenAdminDeletesSelf_ShouldThrowAccessDeniedException() {
+        // Arrange
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getName()).thenReturn("superadmin");
+
+        when(credentialService.getUserByUsername("superadmin")).thenReturn(superAdmin);
+        when(userRepository.findById(superAdminId)).thenReturn(Optional.of(superAdmin));
+
+        // Act & Assert
+        assertThrows(AccessDeniedException.class, () -> adminService.deleteUserById(superAdminId));
+    }
+
+    @Test
+    void deleteUserByUsername_WhenUserNotFound_ShouldThrowException() {
+        // Arrange
+        when(credentialService.getUserByUsername("unknown")).thenThrow(new UserNotFoundException("Usuario no encontrado."));
+
+        // Act & Assert
+        assertThrows(UserNotFoundException.class, () -> adminService.deleteUserByUsername("unknown"));
+    }
 }
