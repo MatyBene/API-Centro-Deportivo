@@ -203,4 +203,28 @@ class AdminServiceTest {
             adminService.getUsers(Role.INSTRUCTOR, Status.ACTIVE, null, pageable);
         });
     }
+
+    @Test
+    void findUserDetailsByUsername_WhenUserIsMember_ShouldReturnDetails() {
+        // Arrange
+        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
+        when(userRepository.findById(memberId)).thenReturn(Optional.of(member));
+        when(enrollmentService.getEnrollmentsByUsername(memberUsername)).thenReturn(Collections.emptyList());
+
+        // Act
+        Optional<UserDetailsDTO> result = adminService.findUserDetailsByUsername(memberUsername);
+
+        // Assert
+        assertTrue(result.isPresent());
+        verify(userRepository, times(1)).findById(memberId);
+    }
+
+    @Test
+    void findUserDetailsByUsername_WhenUserNotFound_ShouldThrowException() {
+        // Arrange
+        when(credentialService.getUserByUsername(anyString())).thenThrow(new UserNotFoundException("Usuario no encontrado."));
+
+        // Act & Assert
+        assertThrows(UserNotFoundException.class, () -> adminService.findUserDetailsByUsername("unknown"));
+    }
 }
