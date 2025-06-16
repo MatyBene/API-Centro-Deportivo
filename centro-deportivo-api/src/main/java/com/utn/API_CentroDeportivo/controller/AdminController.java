@@ -1,14 +1,20 @@
 package com.utn.API_CentroDeportivo.controller;
 
+import com.utn.API_CentroDeportivo.model.dto.request.EnrollmentRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.AdminViewDTO;
+import com.utn.API_CentroDeportivo.model.enums.PermissionLevel;
+import com.utn.API_CentroDeportivo.model.enums.Role;
+import com.utn.API_CentroDeportivo.model.enums.Status;
 import com.utn.API_CentroDeportivo.service.IAdminService;
+import com.utn.API_CentroDeportivo.service.IEnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -16,6 +22,9 @@ public class AdminController {
 
     @Autowired
     private IAdminService adminService;
+
+    @Autowired
+    private IEnrollmentService enrollmentService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create-member")
@@ -38,4 +47,52 @@ public class AdminController {
         return ResponseEntity.ok("Admin creado correctamente");
     }
 
+    @PreAuthorize("hasRole('ADMIN') and (hasAuthority('PERMISSION_SUPER_ADMIN') or hasAuthority('PERMISSION_USER_MANAGER'))")
+    @PostMapping("/enroll-member")
+    public ResponseEntity<String> enrollMemberInActivity(@RequestBody EnrollmentRequestDTO request) {
+        enrollmentService.enrollMemberToActivity(request.getUsername(), request.getActivityId());
+        return ResponseEntity.ok("El socio se inscribió correctamente en la actividad");
+    }
+
+    @PreAuthorize("hasRole('ADMIN') and (hasAuthority('PERMISSION_SUPER_ADMIN') or hasAuthority('PERMISSION_USER_MANAGER'))")
+    @DeleteMapping("/activity/{activityId}/member/{username}")
+    public ResponseEntity<String> unsubscribeMemberFromActivity(@PathVariable Long activityId, @PathVariable String username) {
+        enrollmentService.unsubscribeMemberFromActivity(username, activityId);
+        return ResponseEntity.ok("El socio se dio de baja correctamente de la actividad");
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users")
+    public ResponseEntity<Page<AdminViewDTO>> getUsers(
+            @RequestParam(required = false) Role role,
+            @RequestParam(required = false) Status status,
+            @RequestParam(required = false) PermissionLevel permission,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+
+        Page<AdminViewDTO> dtoPage = adminService.getUsers(role, status, permission, pageable);
+        return ResponseEntity.ok(dtoPage);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users/{username}")
+    public ResponseEntity<?> getUserDetailsByUsername(@PathVariable String username) {
+        return adminService.findUserDetailsByUsername(username)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN') and (hasAuthority('PERMISSION_USER_MANAGER') or hasAuthority('PERMISSION_SUPER_ADMIN'))")
+    @DeleteMapping("/users/id/{id}")
+    public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
+        adminService.deleteUserById(id);
+        return ResponseEntity.ok("Usuario fue eliminado correctamente.");
+    }
+
+    @PreAuthorize("hasRole('ADMIN') and (hasAuthority('PERMISSION_USER_MANAGER') or hasAuthority('PERMISSION_SUPER_ADMIN'))")
+    @DeleteMapping("/users/username/{username}")
+    public ResponseEntity<String> deleteUserByUsername(@PathVariable String username) {
+        adminService.deleteUserByUsername(username);
+        return ResponseEntity.ok("Usuario fue eliminado correctamente.");
+    }
 }

@@ -26,10 +26,10 @@ public class MemberController {
 
     @PreAuthorize("hasRole('MEMBER')")
     @PostMapping("/enroll")
-    public ResponseEntity<String> enrollMemberInActivity(@RequestBody EnrollmentRequestDTO enrollmentDTO) {
+    public ResponseEntity<String> enrollMemberInActivity(@RequestBody Long activityId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        enrollmentService.enrollMemberToActivity(username, enrollmentDTO.getActivityId());
+        enrollmentService.enrollMemberToActivity(username, activityId);
 
         return ResponseEntity.ok("El socio se inscribió correctamente en la actividad");
     }

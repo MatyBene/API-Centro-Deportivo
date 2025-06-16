@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -137,6 +138,26 @@ public class GlobalExceptionHandler {
                 "MAX_CAPACITY");
     }
 
+
+    @ExceptionHandler(InvalidFilterCombinationException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidFilterCombination(InvalidFilterCombinationException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("error", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.data.validation", null, locale),
+                details,
+                "INVALID_FILTER_COMBINATION");
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponseDTO> handleAccessDeniedException(AccessDeniedException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("message", ex.getMessage());
+        return buildErrorResponse(HttpStatus.FORBIDDEN,
+                "Acceso denegado",
+                details,
+                "ACCESS_DENIED");
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex, Locale locale) {
