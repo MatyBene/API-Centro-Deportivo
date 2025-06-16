@@ -176,4 +176,31 @@ class AdminServiceTest {
         assertThrows(ConstraintViolationException.class, () -> adminService.createUser(userRequestBuilder.build()));
         verify(authService, never()).createAndSaveUser(any(), any());
     }
+
+    @Test
+    void getUsers_WhenNoFiltersProvided_ShouldReturnAllUsers() {
+        // Arrange
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<User> userPage = new PageImpl<>(Collections.singletonList(member));
+        when(userRepository.findUsersByFilters(null, null, null, pageable)).thenReturn(userPage);
+
+        // Act
+        Page<AdminViewDTO> result = adminService.getUsers(null, null, null, pageable);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        verify(userRepository, times(1)).findUsersByFilters(null, null, null, pageable);
+    }
+
+    @Test
+    void getUsers_WhenFilterCombinationIsInvalid_ShouldThrowException() {
+        // Arrange
+        Pageable pageable = PageRequest.of(0, 10);
+
+        // Act & Assert
+        assertThrows(InvalidFilterCombinationException.class, () -> {
+            adminService.getUsers(Role.INSTRUCTOR, Status.ACTIVE, null, pageable);
+        });
+    }
 }
