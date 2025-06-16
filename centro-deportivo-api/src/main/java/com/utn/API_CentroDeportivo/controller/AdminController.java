@@ -54,6 +54,13 @@ public class AdminController {
         return ResponseEntity.ok("El socio se inscribió correctamente en la actividad");
     }
 
+    @PreAuthorize("hasRole('ADMIN') and (hasAuthority('PERMISSION_SUPER_ADMIN') or hasAuthority('PERMISSION_USER_MANAGER'))")
+    @DeleteMapping("/activity/{activityId}/member/{username}")
+    public ResponseEntity<String> unsubscribeMemberFromActivity(@PathVariable Long activityId, @PathVariable String username) {
+        enrollmentService.unsubscribeMemberFromActivity(username, activityId);
+        return ResponseEntity.ok("El socio se dio de baja correctamente de la actividad");
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users")
     public ResponseEntity<Page<AdminViewDTO>> getUsers(
@@ -66,8 +73,8 @@ public class AdminController {
         return ResponseEntity.ok(dtoPage);
     }
 
-    @GetMapping("/users/{username}")
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users/{username}")
     public ResponseEntity<?> getUserDetailsByUsername(@PathVariable String username) {
         return adminService.findUserDetailsByUsername(username)
                 .map(ResponseEntity::ok)
