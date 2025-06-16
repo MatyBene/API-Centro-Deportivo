@@ -60,6 +60,7 @@ public class EnrollmentService implements IEnrollmentService {
         enrollmentRepository.save(enrollment);
         memberService.updateMemberStatus(member.getId());
     }
+
     @Transactional
     @Override
     public void unsubscribeMemberFromActivity(String username, Long activityId) {
@@ -76,6 +77,7 @@ public class EnrollmentService implements IEnrollmentService {
             userRepository.save(member);
         }
     }
+
     public List<EnrollmentDTO> getEnrollmentsByUsername(String username) {
         Member member = (Member) credentialService.getUserByUsername(username);
         List<Enrollment> enrollments = enrollmentRepository.findByMemberId(member.getId());
@@ -88,8 +90,9 @@ public class EnrollmentService implements IEnrollmentService {
                         .build())
                 .collect(Collectors.toList());
     }
-    public void cancelEnrollment(Long instructorId, Long enrollmentId) {
-        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+
+    public void cancelEnrollment(Long instructorId, Long activityId, Long memberId) {
+        Enrollment enrollment = enrollmentRepository.findByMemberIdAndActivityId(activityId, memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Inscripción no encontrada"));
 
         SportActivity activity = enrollment.getActivity();
@@ -104,3 +107,4 @@ public class EnrollmentService implements IEnrollmentService {
         enrollmentRepository.delete(enrollment);
     }
 }
+
