@@ -24,18 +24,18 @@ public class InstructorMapper {
         return instructor;
     }
 
-    public static InstructorDetailsDTO mapToInstructorDetailsDTO(Instructor instructor){
-        InstructorDetailsDTO instructorDetailsDTO = new InstructorDetailsDTO();
-        instructorDetailsDTO.setName(instructor.getName());
-        instructorDetailsDTO.setLastname(instructor.getLastname());
-        instructorDetailsDTO.setDni(instructor.getDni());
-        instructorDetailsDTO.setBirthdate(instructor.getBirthdate());
-        instructorDetailsDTO.setPhone(instructor.getPhone());
-        instructorDetailsDTO.setEmail(instructor.getEmail());
-        instructorDetailsDTO.setSpecialty(instructor.getSpecialty());
-
-        return instructorDetailsDTO;
-    }
+//    public static InstructorDetailsDTO mapToInstructorDetailsDTO(Instructor instructor){
+//        InstructorDetailsDTO instructorDetailsDTO = new InstructorDetailsDTO();
+//        instructorDetailsDTO.setName(instructor.getName());
+//        instructorDetailsDTO.setLastname(instructor.getLastname());
+//        instructorDetailsDTO.setDni(instructor.getDni());
+//        instructorDetailsDTO.setBirthdate(instructor.getBirthdate());
+//        instructorDetailsDTO.setPhone(instructor.getPhone());
+//        instructorDetailsDTO.setEmail(instructor.getEmail());
+//        instructorDetailsDTO.setSpecialty(instructor.getSpecialty());
+//
+//        return instructorDetailsDTO;
+//    }
     public static InstructorSummaryDTO mapToInstructorSummaryDTO (Instructor instructor){
         InstructorSummaryDTO instructorSummaryDTO = new InstructorSummaryDTO();
         instructorSummaryDTO.setName(instructor.getName());

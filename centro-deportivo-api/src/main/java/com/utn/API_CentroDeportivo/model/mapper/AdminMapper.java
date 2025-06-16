@@ -1,6 +1,7 @@
 package com.utn.API_CentroDeportivo.model.mapper;
 
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.AdminDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.AdminViewDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.UserDetailsDTO;
 import com.utn.API_CentroDeportivo.model.entity.Admin;
@@ -43,6 +44,8 @@ public class AdminMapper {
                 .email(admin.getEmail())
                 .username(admin.getCredential().getUsername())
                 .role(admin.getCredential().getRole())
+                .hireDate(admin.getHireDate())
+                .permissionLevel(admin.getPermissionLevel())
                 .build();
     }
 }
