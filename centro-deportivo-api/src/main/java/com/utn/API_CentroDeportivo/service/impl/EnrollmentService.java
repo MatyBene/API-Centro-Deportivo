@@ -6,6 +6,8 @@ import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
 import com.utn.API_CentroDeportivo.model.enums.Status;
 import com.utn.API_CentroDeportivo.model.exception.MemberAlreadyEnrolledException;
+import com.utn.API_CentroDeportivo.model.exception.MemberNotFoundException;
+import com.utn.API_CentroDeportivo.model.exception.UnauthorizedException;
 import com.utn.API_CentroDeportivo.model.repository.IEnrollmentRepository;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
@@ -85,5 +87,20 @@ public class EnrollmentService implements IEnrollmentService {
                         .endDate(enrollment.getEndDate())
                         .build())
                 .collect(Collectors.toList());
+    }
+    public void cancelEnrollment(Long instructorId, Long enrollmentId) {
+        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+                .orElseThrow(() -> new MemberNotFoundException("Inscripción no encontrada"));
+
+        SportActivity activity = enrollment.getActivity();
+        if (!activity.getInstructor().getId().equals(instructorId)) {
+            throw new UnauthorizedException("El instructor no tiene permiso para cancelar esta inscripción");
+        }
+
+        Member member = enrollment.getMember();
+        if (member == null) {
+            throw new MemberNotFoundException("Socio no encontrado");
+        }
+        enrollmentRepository.delete(enrollment);
     }
 }
