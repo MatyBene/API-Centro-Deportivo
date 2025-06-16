@@ -3,10 +3,7 @@ package com.utn.API_CentroDeportivo.service.impl;
 import com.utn.API_CentroDeportivo.model.dto.response.EnrollmentDTO;
 import com.utn.API_CentroDeportivo.model.entity.*;
 import com.utn.API_CentroDeportivo.model.enums.Status;
-import com.utn.API_CentroDeportivo.model.exception.InstructorNotFoundException;
-import com.utn.API_CentroDeportivo.model.exception.MemberAlreadyEnrolledException;
-import com.utn.API_CentroDeportivo.model.exception.MemberNotFoundException;
-import com.utn.API_CentroDeportivo.model.exception.UnauthorizedException;
+import com.utn.API_CentroDeportivo.model.exception.*;
 import com.utn.API_CentroDeportivo.model.repository.IEnrollmentRepository;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
@@ -96,7 +93,7 @@ public class EnrollmentService implements IEnrollmentService {
 
         Enrollment enrollment = enrollmentRepository
                 .findByMemberIdAndActivityId(memberId, activityId)
-                .orElseThrow(() -> new MemberNotFoundException("Inscripción no encontrada"));
+                .orElseThrow(() -> new EnrollmentNotFoundException("Inscripción no encontrada"));
 
         SportActivity activity = enrollment.getActivity();
         if (!activity.getInstructor().getId().equals(instructorId)) {
@@ -104,9 +101,6 @@ public class EnrollmentService implements IEnrollmentService {
         }
 
         Member member = enrollment.getMember();
-        if (member == null) {
-            throw new MemberNotFoundException("Socio no encontrado");
-        }
 
         enrollmentRepository.delete(enrollment);
 

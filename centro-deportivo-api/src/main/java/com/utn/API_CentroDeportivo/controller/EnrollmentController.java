@@ -21,7 +21,7 @@ public class EnrollmentController {
 
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @DeleteMapping("/{activityId}/members/{memberId}")
-    public ResponseEntity<Void> removeMemberFromActivity(
+    public ResponseEntity<String> removeMemberFromActivity(
             @PathVariable Long activityId,
             @PathVariable Long memberId) {
 
@@ -29,7 +29,7 @@ public class EnrollmentController {
         Long instructorId = credentialService.getUserByUsername(username).getId();
 
         enrollmentService.cancelEnrollment(instructorId, activityId, memberId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("El socio se dio de baja con éxito.");
     }
 
 }
