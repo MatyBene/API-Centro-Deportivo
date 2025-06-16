@@ -115,5 +115,65 @@ class AdminServiceTest {
         userManager.setPermissionLevel(PermissionLevel.USER_MANAGER);
     }
 
+    @Test
+    void createUser_WhenRoleIsMember_ShouldSucceed() {
+        // Arrange
+        UserRequestDTO memberDto = userRequestBuilder.role(Role.MEMBER).build();
+        when(validator.validate(any(UserRequestDTO.class))).thenReturn(Collections.emptySet());
+        doNothing().when(authService).createAndSaveUser(any(User.class), any(Role.class));
 
+        // Act
+        adminService.createUser(memberDto);
+
+        // Assert
+        verify(authService, times(1)).createAndSaveUser(any(Member.class), eq(Role.MEMBER));
+    }
+
+    @Test
+    void createUser_WhenRoleIsInstructor_ShouldSucceed() {
+        // Arrange
+        UserRequestDTO instructorDto = userRequestBuilder
+                .role(Role.INSTRUCTOR)
+                .specialty("Yoga")
+                .build();
+        when(validator.validate(any(UserRequestDTO.class))).thenReturn(Collections.emptySet());
+        when(validator.validate(any(UserRequestDTO.class), eq(InstructorValidation.class))).thenReturn(Collections.emptySet());
+        doNothing().when(authService).createAndSaveUser(any(User.class), any(Role.class));
+
+        // Act
+        adminService.createUser(instructorDto);
+
+        // Assert
+        verify(authService, times(1)).createAndSaveUser(any(Instructor.class), eq(Role.INSTRUCTOR));
+    }
+
+    @Test
+    void createUser_WhenRoleIsAdmin_ShouldSucceed() {
+        // Arrange
+        UserRequestDTO adminDto = userRequestBuilder
+                .role(Role.ADMIN)
+                .permissionLevel(PermissionLevel.USER_MANAGER)
+                .build();
+        when(validator.validate(any(UserRequestDTO.class))).thenReturn(Collections.emptySet());
+        when(validator.validate(any(UserRequestDTO.class), eq(AdminValidation.class))).thenReturn(Collections.emptySet());
+        doNothing().when(authService).createAndSaveUser(any(User.class), any(Role.class));
+
+        // Act
+        adminService.createUser(adminDto);
+
+        // Assert
+        verify(authService, times(1)).createAndSaveUser(any(Admin.class), eq(Role.ADMIN));
+    }
+
+    @Test
+    void createUser_WhenDtoIsInvalid_ShouldThrowConstraintViolationException() {
+        // Arrange
+        Set<ConstraintViolation<UserRequestDTO>> violations = new HashSet<>();
+        violations.add(mock(ConstraintViolation.class));
+        when(validator.validate(any(UserRequestDTO.class))).thenReturn(violations);
+
+        // Act & Assert
+        assertThrows(ConstraintViolationException.class, () -> adminService.createUser(userRequestBuilder.build()));
+        verify(authService, never()).createAndSaveUser(any(), any());
+    }
 }
