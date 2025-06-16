@@ -2,20 +2,23 @@ package com.utn.API_CentroDeportivo.service.impl;
 
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.AdminViewDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.EnrollmentDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.SportActivitySummaryDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.UserDetailsDTO;
 import com.utn.API_CentroDeportivo.model.entity.*;
 import com.utn.API_CentroDeportivo.model.enums.PermissionLevel;
 import com.utn.API_CentroDeportivo.model.enums.Role;
 import com.utn.API_CentroDeportivo.model.enums.Status;
 import com.utn.API_CentroDeportivo.model.exception.InvalidFilterCombinationException;
 import com.utn.API_CentroDeportivo.model.exception.InvalidRoleException;
+import com.utn.API_CentroDeportivo.model.exception.UserNotFoundException;
 import com.utn.API_CentroDeportivo.model.mapper.AdminMapper;
 import com.utn.API_CentroDeportivo.model.mapper.InstructorMapper;
 import com.utn.API_CentroDeportivo.model.mapper.MemberMapper;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.model.validation.AdminValidation;
 import com.utn.API_CentroDeportivo.model.validation.InstructorValidation;
-import com.utn.API_CentroDeportivo.service.IAdminService;
-import com.utn.API_CentroDeportivo.service.IAuthService;
+import com.utn.API_CentroDeportivo.service.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import jakarta.validation.ConstraintViolationException;
@@ -24,6 +27,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -37,6 +42,15 @@ public class AdminService implements IAdminService {
 
     @Autowired
     private IUserRepository userRepository;
+
+    @Autowired
+    private ICredentialService credentialService;
+
+    @Autowired
+    private ISportActivityService sportActivityService;
+
+    @Autowired
+    private IEnrollmentService enrollmentService;
 
     @Override
     public void createUser(UserRequestDTO userDTO) {
@@ -86,6 +100,28 @@ public class AdminService implements IAdminService {
             }
             throw new IllegalArgumentException("Tipo de usuario desconocido: " + user.getClass());
         });
+    }
+
+    @Override
+    public Optional<UserDetailsDTO> findUserDetailsByUsername(String username) {
+        User user = userRepository.findById(credentialService.getUserByUsername(username).getId())
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado."));
+
+        if(user instanceof Member member){
+            List<EnrollmentDTO> enrollments = enrollmentService.getEnrollmentsByUsername(username);
+            return Optional.of(MemberMapper.mapToMembersDetailsDTO(member, enrollments));
+        }
+
+        if(user instanceof Instructor instructor){
+            List<SportActivitySummaryDTO> activities = sportActivityService.getActivitiesByInstructor(instructor);
+            return Optional.of(InstructorMapper.mapToInstructorDetailsDTO(instructor, activities));
+        }
+
+        if(user instanceof Admin admin){
+            return Optional.of(AdminMapper.mapToAdminDetailsDTO(admin));
+        }
+
+        return Optional.empty();
     }
 
     private void validateFilterCombination(Role role, Status status, PermissionLevel permission) {
