@@ -127,6 +127,15 @@ public class GlobalExceptionHandler {
                 details,
                 "ENROLLMENT_NOT_FOUND");
     }
+    @ExceptionHandler(MaxCapacityException.class)
+    public ResponseEntity<ErrorResponseDTO> handleMaxCapacity(MaxCapacityException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("message", messageSource.getMessage("error.max.capacity.detail", null, locale));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.max.capacity", null, locale),
+                details,
+                "MAX_CAPACITY");
+    }
 
 
     @ExceptionHandler(Exception.class)
