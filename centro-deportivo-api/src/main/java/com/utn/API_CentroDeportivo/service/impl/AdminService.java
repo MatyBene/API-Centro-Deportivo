@@ -25,6 +25,8 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -122,6 +124,42 @@ public class AdminService implements IAdminService {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public void deleteUserById(Long id) {
+        User userToDelete = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado."));
+
+        checkDeletionPermission(userToDelete);
+        userRepository.delete(userToDelete);
+    }
+
+    private void checkDeletionPermission(User userToDelete) {
+        String currentAdminUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        Admin currentAdmin = (Admin) credentialService.getUserByUsername(currentAdminUsername);
+        PermissionLevel currentAdminPermission = currentAdmin.getPermissionLevel();
+
+        if (currentAdmin.getId().equals(userToDelete.getId())) {
+            throw new AccessDeniedException("Un administrador no puede eliminar su propia cuenta.");
+        }
+
+        if (currentAdminPermission == PermissionLevel.SUPER_ADMIN) {
+            if (userToDelete instanceof Admin && ((Admin) userToDelete).getPermissionLevel() == PermissionLevel.SUPER_ADMIN) {
+                throw new AccessDeniedException("Un SUPER_ADMIN no puede eliminar a otro SUPER_ADMIN.");
+            }
+            return;
+        }
+
+        if (currentAdminPermission == PermissionLevel.USER_MANAGER) {
+            if (userToDelete instanceof Member || userToDelete instanceof Instructor) {
+                return;
+            } else {
+                throw new AccessDeniedException("Un USER_MANAGER solo puede eliminar socios e instructores.");
+            }
+        }
+
+        throw new AccessDeniedException("No tienes permisos para eliminar usuarios.");
     }
 
     private void validateFilterCombination(Role role, Status status, PermissionLevel permission) {

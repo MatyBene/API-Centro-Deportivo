@@ -80,4 +80,12 @@ public class AdminController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+
+    @PreAuthorize("hasRole('ADMIN') and (hasAuthority('PERMISSION_USER_MANAGER') or hasAuthority('PERMISSION_SUPER_ADMIN'))")
+    @DeleteMapping("/users/id/{id}")
+    public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
+        adminService.deleteUserById(id);
+        return ResponseEntity.ok("Usuario fue eliminado correctamente.");
+    }
 }
