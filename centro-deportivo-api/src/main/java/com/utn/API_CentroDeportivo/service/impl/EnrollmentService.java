@@ -62,8 +62,9 @@ public class EnrollmentService implements IEnrollmentService {
     public void unsubscribeMemberFromActivity(String username, Long activityId) {
         Member member = (Member) credentialService.getUserByUsername(username);
 
-        Enrollment enrollment = enrollmentRepository.findByMemberIdAndActivityId(member.getId(), activityId)
-                .orElseThrow(() -> new IllegalStateException("El socio no está inscripto en esta actividad"));
+        Enrollment enrollment = enrollmentRepository
+                .findByMemberIdAndActivityId(member.getId(), activityId)
+                .orElseThrow(() -> new EnrollmentNotFoundException("Inscripción no encontrada"));
 
         enrollmentRepository.delete(enrollment);
 
