@@ -31,5 +31,12 @@ public class EnrollmentController {
         enrollmentService.cancelEnrollment(instructorId, activityId, memberId);
         return ResponseEntity.ok("El socio se dio de baja con éxito.");
     }
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @PostMapping("/my-activities/{activityId}/enroll/{memberId}")
+    public ResponseEntity<String> enrollMemberToMyActivity(@PathVariable Long activityId, @PathVariable Long memberId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        enrollmentService.enrollMemberToActivityByInstructor(username, activityId, memberId);
+        return ResponseEntity.ok("Socio inscripto correctamente a la actividad");
+    }
 
 }
