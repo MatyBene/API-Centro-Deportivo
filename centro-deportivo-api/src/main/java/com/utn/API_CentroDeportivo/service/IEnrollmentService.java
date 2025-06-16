@@ -8,4 +8,6 @@ public interface IEnrollmentService {
     void enrollMemberToActivity(String username, Long activityId);
     void unsubscribeMemberFromActivity(String username, Long activityId);
     List<EnrollmentDTO> getEnrollmentsByUsername(String username);
+    void cancelEnrollment(Long instructorId, Long activityId, Long memberId);
+    void enrollMemberToActivityByInstructor(String username, Long activityId, Long memberId);
 }

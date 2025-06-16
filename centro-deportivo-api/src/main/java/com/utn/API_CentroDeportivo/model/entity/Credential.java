@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,7 +36,17 @@ public class Credential implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
+
+        if (user instanceof Admin) {
+            Admin admin = (Admin) user;
+            if (admin.getPermissionLevel() != null) {
+                authorities.add(new SimpleGrantedAuthority("PERMISSION_" + admin.getPermissionLevel().name()));
+            }
+        }
+
+        return authorities;
     }
 
     @Override

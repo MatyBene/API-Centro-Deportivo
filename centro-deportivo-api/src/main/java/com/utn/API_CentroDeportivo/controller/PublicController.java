@@ -1,12 +1,11 @@
 package com.utn.API_CentroDeportivo.controller;
 
 import com.utn.API_CentroDeportivo.model.dto.request.LoginRequestDTO;
-import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
+import com.utn.API_CentroDeportivo.model.dto.request.MemberRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.LoginResponseDTO;
 import com.utn.API_CentroDeportivo.service.IAuthService;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
 import com.utn.API_CentroDeportivo.service.IJwtService;
-import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -36,7 +33,7 @@ public class PublicController {
     private ICredentialService credentialService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> createMember(@Valid @RequestBody UserRequestDTO memberDTO) {
+    public ResponseEntity<String> createMember(@Valid @RequestBody MemberRequestDTO memberDTO) {
         authService.registerMember(memberDTO);
         return ResponseEntity.ok("El socio se creo correctamente");
     }

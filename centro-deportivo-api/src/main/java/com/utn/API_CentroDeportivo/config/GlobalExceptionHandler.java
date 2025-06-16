@@ -2,6 +2,7 @@ package com.utn.API_CentroDeportivo.config;
 
 import com.utn.API_CentroDeportivo.model.dto.response.ErrorResponseDTO;
 import com.utn.API_CentroDeportivo.model.exception.*;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -94,6 +95,49 @@ public class GlobalExceptionHandler {
                 "INVALID_TIME_FORMAT");
     }
 
+    @ExceptionHandler(InvalidRoleException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidRoleException(InvalidRoleException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("message", messageSource.getMessage("error.invalid.role.detail", null, locale));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.data.validation", null, locale),
+                details,
+                "INVALID_ROLE");
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(ConstraintViolationException ex, Locale locale) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getConstraintViolations().forEach(cv -> {
+            String field = cv.getPropertyPath().toString();
+            String message = cv.getMessage();
+            errors.put(field, message);
+        });
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.data.validation", null, locale),
+                errors,
+                "VALIDATION_FAILED");
+    }
+    @ExceptionHandler(EnrollmentNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleEnrollmentNotFoundException(EnrollmentNotFoundException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("message", messageSource.getMessage("error.enrollment.not.found.detail", null, locale));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.data.not.found", null, locale),
+                details,
+                "ENROLLMENT_NOT_FOUND");
+    }
+    @ExceptionHandler(MaxCapacityException.class)
+    public ResponseEntity<ErrorResponseDTO> handleMaxCapacity(MaxCapacityException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("message", messageSource.getMessage("error.max.capacity.detail", null, locale));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.max.capacity", null, locale),
+                details,
+                "MAX_CAPACITY");
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex, Locale locale) {
         Map<String, String> details = new HashMap<>();
@@ -115,4 +159,5 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(status).body(errorResponse);
     }
+
 }
