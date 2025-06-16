@@ -1,11 +1,9 @@
 package com.utn.API_CentroDeportivo.service.impl;
 
 import com.utn.API_CentroDeportivo.model.dto.response.EnrollmentDTO;
-import com.utn.API_CentroDeportivo.model.entity.Enrollment;
-import com.utn.API_CentroDeportivo.model.entity.Member;
-import com.utn.API_CentroDeportivo.model.entity.SportActivity;
+import com.utn.API_CentroDeportivo.model.entity.*;
 import com.utn.API_CentroDeportivo.model.enums.Status;
-import com.utn.API_CentroDeportivo.model.exception.MemberAlreadyEnrolledException;
+import com.utn.API_CentroDeportivo.model.exception.*;
 import com.utn.API_CentroDeportivo.model.repository.IEnrollmentRepository;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
@@ -58,6 +56,7 @@ public class EnrollmentService implements IEnrollmentService {
         enrollmentRepository.save(enrollment);
         memberService.updateMemberStatus(member.getId());
     }
+
     @Transactional
     @Override
     public void unsubscribeMemberFromActivity(String username, Long activityId) {
@@ -74,6 +73,7 @@ public class EnrollmentService implements IEnrollmentService {
             userRepository.save(member);
         }
     }
+
     public List<EnrollmentDTO> getEnrollmentsByUsername(String username) {
         Member member = (Member) credentialService.getUserByUsername(username);
         List<Enrollment> enrollments = enrollmentRepository.findByMemberId(member.getId());
@@ -86,4 +86,61 @@ public class EnrollmentService implements IEnrollmentService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    @Override
+    public void cancelEnrollment(Long instructorId, Long activityId, Long memberId) {
+
+        Enrollment enrollment = enrollmentRepository
+                .findByMemberIdAndActivityId(memberId, activityId)
+                .orElseThrow(() -> new EnrollmentNotFoundException("Inscripción no encontrada"));
+
+        SportActivity activity = enrollment.getActivity();
+        if (!activity.getInstructor().getId().equals(instructorId)) {
+            throw new UnauthorizedException("El instructor no tiene permiso para cancelar esta inscripción");
+        }
+
+        Member member = enrollment.getMember();
+
+        enrollmentRepository.delete(enrollment);
+
+        boolean hasOtherEnrollments = enrollmentRepository.existsByMemberId(member.getId());
+        if (!hasOtherEnrollments) {
+            member.setStatus(Status.INACTIVE);
+            userRepository.save(member);
+        }
+    }
+    @Transactional
+    public void enrollMemberToActivityByInstructor(String username, Long activityId, Long memberId) {
+        Instructor instructor = (Instructor) credentialService.getUserByUsername(username);
+
+        SportActivity activity = sportActivityService.getSportActivityEntityById(activityId)
+                .orElseThrow(() -> new SportActivityNotFoundException("Actividad no encontrada"));
+
+        if (!activity.getInstructor().getId().equals(instructor.getId())) {
+            throw new UnauthorizedException("No tienes permiso para inscribir en esta actividad");
+        }
+
+        if (activity.getEnrollments().size() >= activity.getMaxMembers()) {
+            throw new MaxCapacityException("La actividad alcanzó el cupo máximo");
+        }
+
+        if (enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId).isPresent()) {
+            throw new MemberAlreadyEnrolledException("El socio ya esta inscripto en esta actividad");
+        }
+
+        Member member = (Member) userRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("Socio no encontrado"));
+
+        Enrollment enrollment = Enrollment.builder()
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusDays(30))
+                .member(member)
+                .activity(activity)
+                .build();
+
+        enrollmentRepository.save(enrollment);
+        memberService.updateMemberStatus(memberId);
+    }
 }
+

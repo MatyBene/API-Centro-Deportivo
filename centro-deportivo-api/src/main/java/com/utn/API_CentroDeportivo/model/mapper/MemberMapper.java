@@ -8,6 +8,7 @@ import com.utn.API_CentroDeportivo.model.dto.response.MembersDetailsDTO;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MemberMapper {
 
@@ -20,6 +21,26 @@ public class MemberMapper {
         member.setPhone(memberDTO.getPhone());
         member.setEmail(memberDTO.getEmail());
         return member;
+    }
+    public static MembersDetailsDTO mapToMemberDetailsDTO(Member member) {
+        return MembersDetailsDTO.builder()
+                .name(member.getName())
+                .lastname(member.getLastname())
+                .dni(member.getDni())
+                .birthdate(member.getBirthdate())
+                .phone(member.getPhone())
+                .email(member.getEmail())
+                .username(member.getCredential().getUsername())
+                .role(member.getCredential().getRole())
+                .status(member.getStatus())
+                .enrollments(member.getEnrollments().stream()
+                        .map(enrollment -> EnrollmentDTO.builder()
+                                .activityName(enrollment.getActivity().getName())
+                                .startDate(enrollment.getStartDate())
+                                .endDate(enrollment.getEndDate())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     public static Member mapToMember(UserRequestDTO dto) {

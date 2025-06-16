@@ -119,6 +119,25 @@ public class GlobalExceptionHandler {
                 errors,
                 "VALIDATION_FAILED");
     }
+    @ExceptionHandler(EnrollmentNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleEnrollmentNotFoundException(EnrollmentNotFoundException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("message", messageSource.getMessage("error.enrollment.not.found.detail", null, locale));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.data.not.found", null, locale),
+                details,
+                "ENROLLMENT_NOT_FOUND");
+    }
+    @ExceptionHandler(MaxCapacityException.class)
+    public ResponseEntity<ErrorResponseDTO> handleMaxCapacity(MaxCapacityException ex, Locale locale) {
+        Map<String, String> details = new HashMap<>();
+        details.put("message", messageSource.getMessage("error.max.capacity.detail", null, locale));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                messageSource.getMessage("error.max.capacity", null, locale),
+                details,
+                "MAX_CAPACITY");
+    }
+
 
     @ExceptionHandler(InvalidFilterCombinationException.class)
     public ResponseEntity<ErrorResponseDTO> handleInvalidFilterCombination(InvalidFilterCombinationException ex, Locale locale) {
@@ -161,4 +180,5 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(status).body(errorResponse);
     }
+
 }
