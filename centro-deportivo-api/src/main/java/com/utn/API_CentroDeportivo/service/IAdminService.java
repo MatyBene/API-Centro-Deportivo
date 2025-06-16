@@ -16,4 +16,5 @@ public interface IAdminService {
     Page<AdminViewDTO> getUsers(Role role, Status status, PermissionLevel permission, Pageable pageable);
     Optional<UserDetailsDTO> findUserDetailsByUsername(String username);
     void deleteUserById(Long id);
+    void deleteUserByUsername(String username);
 }
