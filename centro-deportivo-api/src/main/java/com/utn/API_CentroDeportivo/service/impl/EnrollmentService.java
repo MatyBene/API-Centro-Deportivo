@@ -110,5 +110,37 @@ public class EnrollmentService implements IEnrollmentService {
             userRepository.save(member);
         }
     }
+    @Transactional
+    public void enrollMemberToActivityByInstructor(String username, Long activityId, Long memberId) {
+        Instructor instructor = (Instructor) credentialService.getUserByUsername(username);
+
+        SportActivity activity = sportActivityService.getSportActivityEntityById(activityId)
+                .orElseThrow(() -> new SportActivityNotFoundException("Actividad no encontrada"));
+
+        if (!activity.getInstructor().getId().equals(instructor.getId())) {
+            throw new UnauthorizedException("No tienes permiso para inscribir en esta actividad");
+        }
+
+        if (activity.getEnrollments().size() >= activity.getMaxMembers()) {
+            throw new MaxCapacityException("La actividad alcanzó el cupo máximo");
+        }
+
+        if (enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId).isPresent()) {
+            throw new MemberAlreadyEnrolledException("El socio ya está inscripto en esta actividad");
+        }
+
+        Member member = (Member) userRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("Socio no encontrado"));
+
+        Enrollment enrollment = Enrollment.builder()
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusDays(30))
+                .member(member)
+                .activity(activity)
+                .build();
+
+        enrollmentRepository.save(enrollment);
+        memberService.updateMemberStatus(memberId);
+    }
 }
 
