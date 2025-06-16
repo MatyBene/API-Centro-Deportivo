@@ -126,7 +126,7 @@ public class EnrollmentService implements IEnrollmentService {
         }
 
         if (enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId).isPresent()) {
-            throw new MemberAlreadyEnrolledException("El socio ya está inscripto en esta actividad");
+            throw new MemberAlreadyEnrolledException("El socio ya esta inscripto en esta actividad");
         }
 
         Member member = (Member) userRepository.findById(memberId)
