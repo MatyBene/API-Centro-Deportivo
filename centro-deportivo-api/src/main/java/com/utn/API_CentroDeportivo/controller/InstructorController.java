@@ -1,13 +1,16 @@
 package com.utn.API_CentroDeportivo.controller;
 
+import com.utn.API_CentroDeportivo.model.dto.request.MemberRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.InstructorDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.InstructorSummaryDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.MembersDetailsDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.SportActivityDetailsDTO;
 import com.utn.API_CentroDeportivo.model.entity.Instructor;
+import com.utn.API_CentroDeportivo.service.IAuthService;
 import com.utn.API_CentroDeportivo.service.IInstructorService;
 import com.utn.API_CentroDeportivo.service.IMemberService;
 import com.utn.API_CentroDeportivo.service.ISportActivityService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -32,6 +35,10 @@ public class InstructorController {
 
     @Autowired
     private IMemberService memberService;
+
+    @Autowired
+    private IAuthService authService;
+
 
     @GetMapping("/{id}")
     public ResponseEntity<InstructorSummaryDTO> getInstructor(@PathVariable Long id) {
@@ -84,5 +91,14 @@ public class InstructorController {
     @GetMapping("/members/{memberId}")
     public ResponseEntity<MembersDetailsDTO> getMemberDetails(@PathVariable Long memberId) {
         return ResponseEntity.ok(memberService.getMemberDetailsById(memberId));
+    }
+
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @PostMapping("/register-member")
+    public ResponseEntity<String> registerMemberByInstructor(
+            @Valid @RequestBody MemberRequestDTO memberDTO) {
+
+        authService.registerMember(memberDTO);
+        return ResponseEntity.ok("Socio registrado correctamente por el instructor");
     }
 }
