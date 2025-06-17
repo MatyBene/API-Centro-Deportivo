@@ -99,4 +99,18 @@ class CredentialServiceTest {
         assertFalse(result);
         verify(credentialRepository, times(1)).existsByUsername(nonExistentUsername);
     }
+
+    @Test
+    void getUserByUsername_WhenUserExists_ShouldReturnUserEntity() {
+        // Arrange
+        when(credentialRepository.findByUsername(existingUsername)).thenReturn(credential);
+
+        // Act
+        User foundUser = credentialService.getUserByUsername(existingUsername);
+
+        // Assert
+        assertNotNull(foundUser);
+        assertEquals(user.getId(), foundUser.getId());
+        assertEquals("Matias", foundUser.getName());
+    }
 }
