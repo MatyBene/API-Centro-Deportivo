@@ -1,10 +1,9 @@
-package com.utn.API_CentroDeportivo.service;
+package com.utn.API_CentroDeportivo.service.impl;
 
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.enums.Status;
 import com.utn.API_CentroDeportivo.model.exception.MemberNotFoundException;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
-import com.utn.API_CentroDeportivo.service.impl.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
