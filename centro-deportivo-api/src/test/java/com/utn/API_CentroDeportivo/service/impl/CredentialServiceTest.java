@@ -73,4 +73,30 @@ class CredentialServiceTest {
         System.out.println(exception.getMessage());
         assertTrue(exception.getMessage().contains("El nombre de usuario no existe: " + nonExistentUsername));
     }
+
+    @Test
+    void existsByUsername_WhenUsernameExists_ShouldReturnTrue() {
+        // Arrange
+        when(credentialRepository.existsByUsername(existingUsername)).thenReturn(true);
+
+        // Act
+        boolean result = credentialService.existsByUsername(existingUsername);
+
+        // Assert
+        assertTrue(result);
+        verify(credentialRepository, times(1)).existsByUsername(existingUsername);
+    }
+
+    @Test
+    void existsByUsername_WhenUsernameDoesNotExist_ShouldReturnFalse() {
+        // Arrange
+        when(credentialRepository.existsByUsername(nonExistentUsername)).thenReturn(false);
+
+        // Act
+        boolean result = credentialService.existsByUsername(nonExistentUsername);
+
+        // Assert
+        assertFalse(result);
+        verify(credentialRepository, times(1)).existsByUsername(nonExistentUsername);
+    }
 }
