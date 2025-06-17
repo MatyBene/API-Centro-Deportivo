@@ -5,12 +5,16 @@ import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.User;
 import com.utn.API_CentroDeportivo.model.repository.ICredentialRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CredentialServiceTest {
@@ -41,5 +45,32 @@ class CredentialServiceTest {
         credential.setUsername(existingUsername);
         credential.setPassword(password);
         credential.setUser(user);
+    }
+
+    @Test
+    void loadUserByUsername_WhenUsersExists_ShouldReturnUserDetails() {
+        // Arrange
+        when(credentialRepository.findByUsername(existingUsername)).thenReturn(credential);
+
+        // Act
+        UserDetails userDetails = credentialService.loadUserByUsername(existingUsername);
+
+        // Assert
+        assertNotNull(userDetails);
+        assertEquals(existingUsername, userDetails.getUsername());
+        verify(credentialRepository, times(1)).findByUsername(existingUsername);
+    }
+
+    @Test
+    void loadUserByUsername_WhenUserDoesNotExist_ShouldThrowUsernameNotFoundException() {
+        // Arrange
+        when(credentialRepository.findByUsername(nonExistentUsername)).thenReturn(null);
+
+        // Act & Assert
+        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> {
+            credentialService.loadUserByUsername(nonExistentUsername);
+        });
+        System.out.println(exception.getMessage());
+        assertTrue(exception.getMessage().contains("El nombre de usuario no existe: " + nonExistentUsername));
     }
 }
