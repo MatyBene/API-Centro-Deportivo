@@ -20,6 +20,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -115,156 +116,174 @@ class AdminServiceTest {
         userManager.setPermissionLevel(PermissionLevel.USER_MANAGER);
     }
 
-    @Test
-    void createUser_WhenRoleIsMember_ShouldSucceed() {
-        // Arrange
-        UserRequestDTO memberDto = userRequestBuilder.role(Role.MEMBER).build();
-        when(validator.validate(any(UserRequestDTO.class))).thenReturn(Collections.emptySet());
-        doNothing().when(authService).createAndSaveUser(any(User.class), any(Role.class));
+    @Nested
+    class CreateUserTests {
+        @Test
+        void whenRoleIsMember_ShouldSucceed() {
+            // Arrange
+            UserRequestDTO memberDto = userRequestBuilder.role(Role.MEMBER).build();
+            when(validator.validate(any(UserRequestDTO.class))).thenReturn(Collections.emptySet());
+            doNothing().when(authService).createAndSaveUser(any(User.class), any(Role.class));
 
-        // Act
-        adminService.createUser(memberDto);
+            // Act
+            adminService.createUser(memberDto);
 
-        // Assert
-        verify(authService, times(1)).createAndSaveUser(any(Member.class), eq(Role.MEMBER));
+            // Assert
+            verify(authService, times(1)).createAndSaveUser(any(Member.class), eq(Role.MEMBER));
+        }
+
+        @Test
+        void whenRoleIsInstructor_ShouldSucceed() {
+            // Arrange
+            UserRequestDTO instructorDto = userRequestBuilder
+                    .role(Role.INSTRUCTOR)
+                    .specialty("Yoga")
+                    .build();
+            when(validator.validate(any(UserRequestDTO.class))).thenReturn(Collections.emptySet());
+            when(validator.validate(any(UserRequestDTO.class), eq(InstructorValidation.class))).thenReturn(Collections.emptySet());
+            doNothing().when(authService).createAndSaveUser(any(User.class), any(Role.class));
+
+            // Act
+            adminService.createUser(instructorDto);
+
+            // Assert
+            verify(authService, times(1)).createAndSaveUser(any(Instructor.class), eq(Role.INSTRUCTOR));
+        }
+
+        @Test
+        void whenRoleIsAdmin_ShouldSucceed() {
+            // Arrange
+            UserRequestDTO adminDto = userRequestBuilder
+                    .role(Role.ADMIN)
+                    .permissionLevel(PermissionLevel.USER_MANAGER)
+                    .build();
+            when(validator.validate(any(UserRequestDTO.class))).thenReturn(Collections.emptySet());
+            when(validator.validate(any(UserRequestDTO.class), eq(AdminValidation.class))).thenReturn(Collections.emptySet());
+            doNothing().when(authService).createAndSaveUser(any(User.class), any(Role.class));
+
+            // Act
+            adminService.createUser(adminDto);
+
+            // Assert
+            verify(authService, times(1)).createAndSaveUser(any(Admin.class), eq(Role.ADMIN));
+        }
+
+        @Test
+        void whenDtoIsInvalid_ShouldThrowConstraintViolationException() {
+            // Arrange
+            Set<ConstraintViolation<UserRequestDTO>> violations = new HashSet<>();
+            violations.add(mock(ConstraintViolation.class));
+            when(validator.validate(any(UserRequestDTO.class))).thenReturn(violations);
+
+            // Act & Assert
+            assertThrows(ConstraintViolationException.class, () -> adminService.createUser(userRequestBuilder.build()));
+            verify(authService, never()).createAndSaveUser(any(), any());
+        }
     }
 
-    @Test
-    void createUser_WhenRoleIsInstructor_ShouldSucceed() {
-        // Arrange
-        UserRequestDTO instructorDto = userRequestBuilder
-                .role(Role.INSTRUCTOR)
-                .specialty("Yoga")
-                .build();
-        when(validator.validate(any(UserRequestDTO.class))).thenReturn(Collections.emptySet());
-        when(validator.validate(any(UserRequestDTO.class), eq(InstructorValidation.class))).thenReturn(Collections.emptySet());
-        doNothing().when(authService).createAndSaveUser(any(User.class), any(Role.class));
+    @Nested
+    class GetUsersTests {
+        @Test
+        void whenNoFiltersProvided_ShouldReturnAllUsers() {
+            // Arrange
+            Pageable pageable = PageRequest.of(0, 5);
+            Page<User> userPage = new PageImpl<>(Collections.singletonList(member));
+            when(userRepository.findUsersByFilters(null, null, null, pageable)).thenReturn(userPage);
 
-        // Act
-        adminService.createUser(instructorDto);
+            // Act
+            Page<AdminViewDTO> result = adminService.getUsers(null, null, null, pageable);
 
-        // Assert
-        verify(authService, times(1)).createAndSaveUser(any(Instructor.class), eq(Role.INSTRUCTOR));
+            // Assert
+            assertNotNull(result);
+            assertEquals(1, result.getTotalElements());
+            verify(userRepository, times(1)).findUsersByFilters(null, null, null, pageable);
+        }
+
+        @Test
+        void whenFilterCombinationIsInvalid_ShouldThrowException() {
+            // Arrange
+            Pageable pageable = PageRequest.of(0, 10);
+
+            // Act & Assert
+            assertThrows(InvalidFilterCombinationException.class, () -> {
+                adminService.getUsers(Role.INSTRUCTOR, Status.ACTIVE, null, pageable);
+            });
+        }
     }
 
-    @Test
-    void createUser_WhenRoleIsAdmin_ShouldSucceed() {
-        // Arrange
-        UserRequestDTO adminDto = userRequestBuilder
-                .role(Role.ADMIN)
-                .permissionLevel(PermissionLevel.USER_MANAGER)
-                .build();
-        when(validator.validate(any(UserRequestDTO.class))).thenReturn(Collections.emptySet());
-        when(validator.validate(any(UserRequestDTO.class), eq(AdminValidation.class))).thenReturn(Collections.emptySet());
-        doNothing().when(authService).createAndSaveUser(any(User.class), any(Role.class));
+    @Nested
+    class FindUserDetailsByUsernameTests {
+        @Test
+        void whenUserIsMember_ShouldReturnDetails() {
+            // Arrange
+            when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
+            when(userRepository.findById(memberId)).thenReturn(Optional.of(member));
+            when(enrollmentService.getEnrollmentsByUsername(memberUsername)).thenReturn(Collections.emptyList());
 
-        // Act
-        adminService.createUser(adminDto);
+            // Act
+            Optional<UserDetailsDTO> result = adminService.findUserDetailsByUsername(memberUsername);
 
-        // Assert
-        verify(authService, times(1)).createAndSaveUser(any(Admin.class), eq(Role.ADMIN));
+            // Assert
+            assertTrue(result.isPresent());
+            verify(userRepository, times(1)).findById(memberId);
+        }
+
+        @Test
+        void whenUserNotFound_ShouldThrowException() {
+            // Arrange
+            when(credentialService.getUserByUsername(anyString())).thenThrow(new UserNotFoundException("Usuario no encontrado."));
+
+            // Act & Assert
+            assertThrows(UserNotFoundException.class, () -> adminService.findUserDetailsByUsername("unknown"));
+        }
     }
 
-    @Test
-    void createUser_WhenDtoIsInvalid_ShouldThrowConstraintViolationException() {
-        // Arrange
-        Set<ConstraintViolation<UserRequestDTO>> violations = new HashSet<>();
-        violations.add(mock(ConstraintViolation.class));
-        when(validator.validate(any(UserRequestDTO.class))).thenReturn(violations);
+    @Nested
+    class DeleteUserTests {
+        @Nested
+        class ByIdTests {
+            @Test
+            void whenDeletingAsSuperAdmin_ShouldSucceed() {
+                // Arrange
+                when(securityContext.getAuthentication()).thenReturn(authentication);
+                SecurityContextHolder.setContext(securityContext);
+                when(authentication.getName()).thenReturn("superadmin");
 
-        // Act & Assert
-        assertThrows(ConstraintViolationException.class, () -> adminService.createUser(userRequestBuilder.build()));
-        verify(authService, never()).createAndSaveUser(any(), any());
-    }
+                when(credentialService.getUserByUsername("superadmin")).thenReturn(superAdmin);
+                when(userRepository.findById(memberId)).thenReturn(Optional.of(member));
 
-    @Test
-    void getUsers_WhenNoFiltersProvided_ShouldReturnAllUsers() {
-        // Arrange
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<User> userPage = new PageImpl<>(Collections.singletonList(member));
-        when(userRepository.findUsersByFilters(null, null, null, pageable)).thenReturn(userPage);
+                // Act
+                adminService.deleteUserById(memberId);
 
-        // Act
-        Page<AdminViewDTO> result = adminService.getUsers(null, null, null, pageable);
+                // Assert
+                verify(userRepository, times(1)).delete(member);
+            }
 
-        // Assert
-        assertNotNull(result);
-        assertEquals(1, result.getTotalElements());
-        verify(userRepository, times(1)).findUsersByFilters(null, null, null, pageable);
-    }
+            @Test
+            void whenAdminDeletesSelf_ShouldThrowAccessDeniedException() {
+                // Arrange
+                when(securityContext.getAuthentication()).thenReturn(authentication);
+                SecurityContextHolder.setContext(securityContext);
+                when(authentication.getName()).thenReturn("superadmin");
 
-    @Test
-    void getUsers_WhenFilterCombinationIsInvalid_ShouldThrowException() {
-        // Arrange
-        Pageable pageable = PageRequest.of(0, 10);
+                when(credentialService.getUserByUsername("superadmin")).thenReturn(superAdmin);
+                when(userRepository.findById(superAdminId)).thenReturn(Optional.of(superAdmin));
 
-        // Act & Assert
-        assertThrows(InvalidFilterCombinationException.class, () -> {
-            adminService.getUsers(Role.INSTRUCTOR, Status.ACTIVE, null, pageable);
-        });
-    }
+                // Act & Assert
+                assertThrows(AccessDeniedException.class, () -> adminService.deleteUserById(superAdminId));
+            }
+        }
 
-    @Test
-    void findUserDetailsByUsername_WhenUserIsMember_ShouldReturnDetails() {
-        // Arrange
-        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
-        when(userRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(enrollmentService.getEnrollmentsByUsername(memberUsername)).thenReturn(Collections.emptyList());
+        @Nested
+        class ByUsernameTests {
+            @Test
+            void whenUserNotFound_ShouldThrowException() {
+                // Arrange
+                when(credentialService.getUserByUsername("unknown")).thenThrow(new UserNotFoundException("Usuario no encontrado."));
 
-        // Act
-        Optional<UserDetailsDTO> result = adminService.findUserDetailsByUsername(memberUsername);
-
-        // Assert
-        assertTrue(result.isPresent());
-        verify(userRepository, times(1)).findById(memberId);
-    }
-
-    @Test
-    void findUserDetailsByUsername_WhenUserNotFound_ShouldThrowException() {
-        // Arrange
-        when(credentialService.getUserByUsername(anyString())).thenThrow(new UserNotFoundException("Usuario no encontrado."));
-
-        // Act & Assert
-        assertThrows(UserNotFoundException.class, () -> adminService.findUserDetailsByUsername("unknown"));
-    }
-
-    @Test
-    void deleteUserById_WhenDeletingAsSuperAdmin_ShouldSucceed() {
-        // Arrange
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-        when(authentication.getName()).thenReturn("superadmin");
-
-        when(credentialService.getUserByUsername("superadmin")).thenReturn(superAdmin);
-        when(userRepository.findById(memberId)).thenReturn(Optional.of(member));
-
-        // Act
-        adminService.deleteUserById(memberId);
-
-        // Assert
-        verify(userRepository, times(1)).delete(member);
-    }
-
-    @Test
-    void deleteUserById_WhenAdminDeletesSelf_ShouldThrowAccessDeniedException() {
-        // Arrange
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-        when(authentication.getName()).thenReturn("superadmin");
-
-        when(credentialService.getUserByUsername("superadmin")).thenReturn(superAdmin);
-        when(userRepository.findById(superAdminId)).thenReturn(Optional.of(superAdmin));
-
-        // Act & Assert
-        assertThrows(AccessDeniedException.class, () -> adminService.deleteUserById(superAdminId));
-    }
-
-    @Test
-    void deleteUserByUsername_WhenUserNotFound_ShouldThrowException() {
-        // Arrange
-        when(credentialService.getUserByUsername("unknown")).thenThrow(new UserNotFoundException("Usuario no encontrado."));
-
-        // Act & Assert
-        assertThrows(UserNotFoundException.class, () -> adminService.deleteUserByUsername("unknown"));
+                // Act & Assert
+                assertThrows(UserNotFoundException.class, () -> adminService.deleteUserByUsername("unknown"));
+            }
+        }
     }
 }
