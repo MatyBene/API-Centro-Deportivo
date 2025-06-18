@@ -4,6 +4,7 @@ import com.utn.API_CentroDeportivo.model.dto.response.InstructorSummaryDTO;
 import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
+import com.utn.API_CentroDeportivo.model.exception.InstructorNotFoundException;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,6 +93,36 @@ class InstructorServiceTest {
 
             // Assert
             assertFalse(result.isPresent());
+        }
+    }
+
+    @Nested
+    class FindByUsernameTests {
+        @Test
+        void WhenInstructorExists_ShouldReturnInstructorEntity() {
+            // Arrange
+            when(credentialService.getUserByUsername(instructorUsername)).thenReturn(instructor);
+            when(userRepository.findById(instructorId)).thenReturn(Optional.of(instructor));
+
+            // Act
+            Optional<Instructor> result = instructorService.findByUsername(instructorUsername);
+
+            // Assert
+            assertTrue(result.isPresent());
+            assertEquals(instructor, result.get());
+        }
+
+        @Test
+        void WhenUserNotFound_ShouldThrowInstructorNotFoundException() {
+            // Arrange
+            when(credentialService.getUserByUsername(instructorUsername)).thenReturn(instructor);
+            when(userRepository.findById(instructorId)).thenReturn(Optional.empty());
+
+            // Act & Assert
+            InstructorNotFoundException exception = assertThrows(InstructorNotFoundException.class, () -> {
+                instructorService.findByUsername(instructorUsername);
+            });
+            assertEquals("Instructor no encontrado", exception.getMessage());
         }
     }
 
