@@ -1,5 +1,6 @@
 package com.utn.API_CentroDeportivo.service.impl;
 
+import com.utn.API_CentroDeportivo.model.dto.response.EnrollmentDTO;
 import com.utn.API_CentroDeportivo.model.entity.Enrollment;
 import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.model.entity.Member;
@@ -21,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -237,6 +239,21 @@ class EnrollmentServiceTest {
         });
 
         verify(enrollmentRepository, never()).delete(any());
+    }
+
+    @Test
+    void getEnrollmentsByUsername_WhenEnrollmentsExist_ShouldReturnDtoList() {
+        // Arrange
+        when(enrollmentRepository.findByMemberId(memberId)).thenReturn(Collections.singletonList(enrollment));
+        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
+
+        // Act
+        List<EnrollmentDTO> result = enrollmentService.getEnrollmentsByUsername(memberUsername);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Yoga", result.get(0).getActivityName());
     }
 
 }
