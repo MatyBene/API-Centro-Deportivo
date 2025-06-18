@@ -103,7 +103,7 @@ class SportActivityServiceTest {
     @Nested
     class FindActivitiesByTimeRangeTests {
         @Test
-        void findActivitiesByTimeRange_WhenActivitiesExistInRange_ShouldReturnFilteredPageOfSummaryDTOs() {
+        void whenActivitiesExistInRange_ShouldReturnFilteredPageOfSummaryDTOs() {
             // Arrange
             String startTimeStr = "09:00";
             String endTimeStr = "12:00";
@@ -123,7 +123,7 @@ class SportActivityServiceTest {
         }
 
         @Test
-        void findActivitiesByTimeRange_WhenTimeFormatIsInvalid_ShouldThrowInvalidTimeFormatException() {
+        void whenTimeFormatIsInvalid_ShouldThrowInvalidTimeFormatException() {
             // Arrange
             String invalidTime = "formato-invalido";
             Pageable pageable = PageRequest.of(0, 5);
@@ -138,7 +138,7 @@ class SportActivityServiceTest {
     @Nested
     class GetActivityByIdTests {
         @Test
-        void getActivityById_WhenActivityExists_ShouldReturnOptionalWithDetailsDTO() {
+        void whenActivityExists_ShouldReturnOptionalWithDetailsDTO() {
             // Arrange
             when(sportActivityRepository.findById(activityId)).thenReturn(Optional.of(sportActivity));
 
@@ -153,7 +153,7 @@ class SportActivityServiceTest {
         }
 
         @Test
-        void getActivityById_WhenActivityNotFound_ShouldReturnEmptyOptional() {
+        void whenActivityNotFound_ShouldReturnEmptyOptional() {
             // Arrange
             when(sportActivityRepository.findById(activityId)).thenReturn(Optional.empty());
 
@@ -169,7 +169,7 @@ class SportActivityServiceTest {
     @Nested
     class GetCurrentMembersTests {
         @Test
-        void getCurrentMembers_WhenActivityExists_ShouldReturnMemberCount() {
+        void whenActivityExists_ShouldReturnMemberCount() {
             // Arrange
             when(sportActivityRepository.findById(activityId)).thenReturn(Optional.of(sportActivity));
 
@@ -182,7 +182,7 @@ class SportActivityServiceTest {
         }
 
         @Test
-        void getCurrentMembers_WhenActivityNotFound_ShouldReturnZero() {
+        void whenActivityNotFound_ShouldReturnZero() {
             // Arrange
             when(sportActivityRepository.findById(activityId)).thenReturn(Optional.empty());
 
@@ -191,6 +191,72 @@ class SportActivityServiceTest {
 
             // Assert
             assertEquals(0, count);
+            verify(sportActivityRepository, times(1)).findById(activityId);
+        }
+    }
+
+    @Nested
+    class GetActivitiesByInstructorTests {
+        @Test
+        void whenInstructorHasActivities_ShouldReturnListOfSummaryDTOs() {
+            // Arrange
+            when(sportActivityRepository.findByInstructor(instructor)).thenReturn(Collections.singletonList(sportActivity));
+
+            // Act
+            List<SportActivitySummaryDTO> result = sportActivityService.getActivitiesByInstructor(instructor);
+
+            // Assert
+            assertNotNull(result);
+            assertEquals(1, result.size());
+            assertEquals("Yoga", result.get(0).getName());
+            verify(sportActivityRepository, times(1)).findByInstructor(instructor);
+        }
+    }
+
+    @Nested
+    class GetActivitiesDetailsByInstructorTests {
+        @Test
+        void whenInstructorHasActivities_ShouldReturnListOfDetailsDTOs() {
+            // Arrange
+            when(sportActivityRepository.findByInstructor(instructor)).thenReturn(Collections.singletonList(sportActivity));
+
+            // Act
+            List<SportActivityDetailsDTO> result = sportActivityService.getActivitiesDetailsByInstructor(instructor);
+
+            // Assert
+            assertNotNull(result);
+            assertEquals(1, result.size());
+            assertEquals("Yoga", result.get(0).getName());
+            verify(sportActivityRepository, times(1)).findByInstructor(instructor);
+        }
+    }
+
+    @Nested
+    class GetSportActivityEntityByIdTests {
+        @Test
+        void whenActivityExists_ShouldReturnOptionalWithEntity() {
+            // Arrange
+            when(sportActivityRepository.findById(activityId)).thenReturn(Optional.of(sportActivity));
+
+            // Act
+            Optional<SportActivity> result = sportActivityService.getSportActivityEntityById(activityId);
+
+            // Assert
+            assertTrue(result.isPresent());
+            assertEquals(sportActivity, result.get());
+            verify(sportActivityRepository, times(1)).findById(activityId);
+        }
+
+        @Test
+        void whenActivityNotFound_ShouldThrowSportActivityNotFoundException() {
+            // Arrange
+            when(sportActivityRepository.findById(activityId)).thenReturn(Optional.empty());
+
+            // Act & Assert
+            SportActivityNotFoundException exception = assertThrows(SportActivityNotFoundException.class, () -> {
+                sportActivityService.getSportActivityEntityById(activityId);
+            });
+            assertEquals("Actividad no encontrada", exception.getMessage());
             verify(sportActivityRepository, times(1)).findById(activityId);
         }
     }
