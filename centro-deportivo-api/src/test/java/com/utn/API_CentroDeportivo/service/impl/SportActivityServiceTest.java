@@ -134,4 +134,35 @@ class SportActivityServiceTest {
             });
         }
     }
+
+    @Nested
+    class GetActivityByIdTests {
+        @Test
+        void getActivityById_WhenActivityExists_ShouldReturnOptionalWithDetailsDTO() {
+            // Arrange
+            when(sportActivityRepository.findById(activityId)).thenReturn(Optional.of(sportActivity));
+
+            // Act
+            Optional<SportActivityDetailsDTO> result = sportActivityService.getActivityById(activityId);
+
+            // Assert
+            assertTrue(result.isPresent());
+            assertEquals("Yoga", result.get().getName());
+            assertEquals(1, result.get().getCurrentMembers());
+            verify(sportActivityRepository, times(2)).findById(activityId);
+        }
+
+        @Test
+        void getActivityById_WhenActivityNotFound_ShouldReturnEmptyOptional() {
+            // Arrange
+            when(sportActivityRepository.findById(activityId)).thenReturn(Optional.empty());
+
+            // Act
+            Optional<SportActivityDetailsDTO> result = sportActivityService.getActivityById(activityId);
+
+            // Assert
+            assertFalse(result.isPresent());
+            verify(sportActivityRepository, times(1)).findById(activityId);
+        }
+    }
 }
