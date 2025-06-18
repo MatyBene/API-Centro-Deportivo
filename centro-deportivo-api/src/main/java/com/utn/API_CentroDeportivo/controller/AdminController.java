@@ -74,6 +74,18 @@ public class AdminController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users-loop")
+    public ResponseEntity<Page<AdminViewDTO>> getUsersWithLoop(
+            @RequestParam(required = false) Role role,
+            @RequestParam(required = false) Status status,
+            @RequestParam(required = false) PermissionLevel permission,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+
+        Page<AdminViewDTO> dtoPage = adminService.getUsersWithLoop(role, status, permission, pageable);
+        return ResponseEntity.ok(dtoPage);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/{username}")
     public ResponseEntity<?> getUserDetailsByUsername(@PathVariable String username) {
         return adminService.findUserDetailsByUsername(username)

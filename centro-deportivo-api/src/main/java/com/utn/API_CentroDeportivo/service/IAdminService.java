@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface IAdminService {
     void createUser(UserRequestDTO userDTO);
     Page<AdminViewDTO> getUsers(Role role, Status status, PermissionLevel permission, Pageable pageable);
+    Page<AdminViewDTO> getUsersWithLoop(Role role, Status status, PermissionLevel permission, Pageable pageable);
     Optional<UserDetailsDTO> findUserDetailsByUsername(String username);
     void deleteUserById(Long id);
     void deleteUserByUsername(String username);

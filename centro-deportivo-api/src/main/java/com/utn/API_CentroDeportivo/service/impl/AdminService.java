@@ -30,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -103,6 +104,26 @@ public class AdminService implements IAdminService {
             }
             throw new IllegalArgumentException("Tipo de usuario desconocido: " + user.getClass());
         });
+    }
+
+    @Override
+    public Page<AdminViewDTO> getUsersWithLoop(Role role, Status status, PermissionLevel permission, Pageable pageable) {
+        Page<? extends User> userPage = userRepository.findUsersByFilters(role, status, permission, pageable);
+        validateFilterCombination(role, status, permission);
+
+        List<AdminViewDTO> dtos = new ArrayList<>();
+        for (User user : userPage.getContent()) {
+            if (user instanceof Admin admin) {
+                dtos.add(AdminMapper.toAdminViewDTO(admin));
+            } else if (user instanceof Instructor instructor) {
+                dtos.add(InstructorMapper.toAdminViewDTO(instructor));
+            } else if (user instanceof Member member) {
+                dtos.add(MemberMapper.toAdminViewDTO(member));
+            } else {
+                throw new IllegalArgumentException("Tipo de usuario desconocido: " + user.getClass());
+            }
+        }
+        return new org.springframework.data.domain.PageImpl<>(dtos, pageable, userPage.getTotalElements());
     }
 
     @Override
