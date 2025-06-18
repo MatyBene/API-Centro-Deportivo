@@ -25,8 +25,8 @@ public class MemberController {
     private IEnrollmentService enrollmentService;
 
     @PreAuthorize("hasRole('MEMBER')")
-    @PostMapping("/enroll")
-    public ResponseEntity<String> enrollMemberInActivity(@RequestBody Long activityId) {
+    @PostMapping("/enroll/{activityId}")
+    public ResponseEntity<String> enrollMemberInActivity(@PathVariable Long activityId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         enrollmentService.enrollMemberToActivity(username, activityId);
