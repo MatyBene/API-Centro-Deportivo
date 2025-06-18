@@ -12,6 +12,10 @@ import java.time.LocalDate;
 @SuperBuilder
 @ToString
 public class EnrollmentRequestDTO {
+
+    @NotBlank(message = "El nombre de usuario es obligatorio")
+    private String username;
+
     @NotBlank(message = "El id de la actividad es obligatorio")
     private Long activityId;
 }

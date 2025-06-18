@@ -49,6 +49,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/public/**").permitAll()
                         .requestMatchers("/api/v1/activities/**").permitAll()
+                        .requestMatchers("/api/v1/members/**").hasRole("MEMBER")
+                        .requestMatchers("/api/v1/instructors/**").hasRole("INSTRUCTOR")
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider(credentialService))
