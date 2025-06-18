@@ -126,4 +126,24 @@ class MemberServiceTest {
         }
     }
 
+    @Nested
+    class UpdateMemberProfileTests {
+        @Test
+        void whenDtoHasNewData_ShouldUpdateMemberFields() {
+            // Arrange
+            when(credentialService.getUserByUsername(memberUsername)).thenReturn(userForCredential);
+            when(userRepository.findById(memberId)).thenReturn(Optional.of(member));
+            ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
+
+            // Act
+            memberService.updateMemberProfile(memberUsername, memberEditDTO);
+
+            // Assert
+            verify(userRepository, times(1)).save(memberCaptor.capture());
+            Member savedMember = memberCaptor.getValue();
+            assertEquals("New Name", savedMember.getName());
+            assertEquals("New Lastname", savedMember.getLastname());
+        }
+    }
+
 }
