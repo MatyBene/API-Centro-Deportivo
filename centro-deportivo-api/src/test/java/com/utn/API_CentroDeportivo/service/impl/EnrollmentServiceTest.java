@@ -5,8 +5,7 @@ import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
 import com.utn.API_CentroDeportivo.model.enums.Status;
-import com.utn.API_CentroDeportivo.model.exception.EnrollmentNotFoundException;
-import com.utn.API_CentroDeportivo.model.exception.MemberAlreadyEnrolledException;
+import com.utn.API_CentroDeportivo.model.exception.*;
 import com.utn.API_CentroDeportivo.model.repository.IEnrollmentRepository;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
@@ -144,6 +143,45 @@ class EnrollmentServiceTest {
 
         verify(enrollmentRepository, never()).delete(any());
         verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void enrollMemberToActivityByInstructor_WhenCapacityIsFull_ShouldThrowMaxCapacityException() {
+        // Arrange
+        sportActivity.setMaxMembers(0);
+        when(credentialService.getUserByUsername(instructorUsername)).thenReturn(instructor);
+        when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
+
+        // Act & Assert
+        assertThrows(MaxCapacityException.class, () -> {
+            enrollmentService.enrollMemberToActivityByInstructor(instructorUsername, activityId, memberId);
+        });
+    }
+
+    @Test
+    void enrollMemberToActivityByInstructor_WhenActivityNotFound_ShouldThrowSportActivityNotFoundException() {
+        // Arrange
+        when(credentialService.getUserByUsername(instructorUsername)).thenReturn(instructor);
+        when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(SportActivityNotFoundException.class, () -> {
+            enrollmentService.enrollMemberToActivityByInstructor(instructorUsername, activityId, memberId);
+        });
+    }
+
+    @Test
+    void enrollMemberToActivityByInstructor_WhenMemberNotFound_ShouldThrowMemberNotFoundException() {
+        // Arrange
+        when(credentialService.getUserByUsername(instructorUsername)).thenReturn(instructor);
+        when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
+        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
+        when(userRepository.findById(memberId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(MemberNotFoundException.class, () -> {
+            enrollmentService.enrollMemberToActivityByInstructor(instructorUsername, activityId, memberId);
+        });
     }
 
 }
