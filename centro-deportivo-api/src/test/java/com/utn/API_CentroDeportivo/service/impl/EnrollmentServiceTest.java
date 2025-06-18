@@ -5,6 +5,7 @@ import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
 import com.utn.API_CentroDeportivo.model.enums.Status;
+import com.utn.API_CentroDeportivo.model.exception.EnrollmentNotFoundException;
 import com.utn.API_CentroDeportivo.model.exception.MemberAlreadyEnrolledException;
 import com.utn.API_CentroDeportivo.model.repository.IEnrollmentRepository;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
@@ -14,6 +15,7 @@ import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -110,6 +112,38 @@ class EnrollmentServiceTest {
             enrollmentService.enrollMemberToActivity(memberUsername, activityId);
         });
         verify(enrollmentRepository, never()).save(any(Enrollment.class));
+    }
+
+    @Test
+    void unsubscribeMemberFromActivity_WhenIsLastEnrollment_ShouldSetStatusToInactive() {
+        // Arrange
+        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
+        when(enrollmentRepository.existsByMemberId(memberId)).thenReturn(false);
+        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
+        ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
+
+        // Act
+        enrollmentService.unsubscribeMemberFromActivity(memberUsername, activityId);
+
+        // Assert
+        verify(enrollmentRepository, times(1)).delete(enrollment);
+        verify(userRepository, times(1)).save(memberCaptor.capture());
+        assertEquals(Status.INACTIVE, memberCaptor.getValue().getStatus());
+    }
+
+    @Test
+    void unsubscribeMemberFromActivity_WhenEnrollmentNotFound_ShouldThrowEnrollmentNotFoundException() {
+        // Arrange
+        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
+        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(EnrollmentNotFoundException.class, () -> {
+            enrollmentService.unsubscribeMemberFromActivity(memberUsername, activityId);
+        });
+
+        verify(enrollmentRepository, never()).delete(any());
+        verify(userRepository, never()).save(any());
     }
 
 }
