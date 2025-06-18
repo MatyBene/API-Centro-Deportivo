@@ -190,4 +190,33 @@ class MemberServiceTest {
         }
     }
 
+    @Nested
+    class GetMemberByUsernameTests {
+        @Test
+        void whenMemberExists_ShouldReturnMemberDetailsDTO() {
+            // Arrange
+            when(userRepository.findById(memberId)).thenReturn(Optional.of(member));
+
+            // Act
+            MembersDetailsDTO result = memberService.getMemberDetailsById(memberId);
+
+            // Assert
+            assertNotNull(result);
+            assertEquals(memberUsername, result.getUsername());
+            assertEquals(nameOriginal, result.getName());
+            assertEquals(lastnameOriginal, result.getLastname());
+        }
+
+        @Test
+        void whenUserIsNotMember_ShouldThrowMemberNotFoundException() {
+            // Arrange
+            when(userRepository.findById(memberId)).thenReturn(Optional.of(new Instructor()));
+
+            // Act & Assert
+            assertThrows(MemberNotFoundException.class, () -> memberService.getMemberDetailsById(memberId));
+        }
+
+
+    }
+
 }
