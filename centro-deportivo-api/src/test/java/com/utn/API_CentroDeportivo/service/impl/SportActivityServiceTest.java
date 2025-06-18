@@ -9,6 +9,7 @@ import com.utn.API_CentroDeportivo.model.exception.InvalidTimeFormatException;
 import com.utn.API_CentroDeportivo.model.exception.SportActivityNotFoundException;
 import com.utn.API_CentroDeportivo.model.repository.ISportActivityRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,5 +57,25 @@ class SportActivityServiceTest {
         sportActivity.setInstructor(instructor);
         sportActivity.setMaxMembers(maxMembers);
         sportActivity.setEnrollments(Collections.singletonList(new Enrollment()));
+    }
+
+    @Nested
+    class GetActivitiesTests {
+        @Test
+        void whenCalled_ShouldReturnPageOfSummaryDTOs() {
+            // Arrange
+            Pageable pageable = PageRequest.of(0, 5);
+            Page<SportActivity> activityPage = new PageImpl<>(Collections.singletonList(sportActivity));
+            when(sportActivityRepository.findAll(pageable)).thenReturn(activityPage);
+
+            // Act
+            Page<SportActivitySummaryDTO> result = sportActivityService.getActivities(pageable);
+
+            // Assert
+            assertNotNull(result);
+            assertEquals(1, result.getTotalElements());
+            assertEquals("Yoga", result.getContent().get(0).getName());
+            verify(sportActivityRepository, times(1)).findAll(pageable);
+        }
     }
 }
