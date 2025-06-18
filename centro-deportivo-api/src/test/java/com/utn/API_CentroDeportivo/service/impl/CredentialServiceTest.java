@@ -73,7 +73,6 @@ class CredentialServiceTest {
             UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> {
                 credentialService.loadUserByUsername(nonExistentUsername);
             });
-            System.out.println(exception.getMessage());
             assertTrue(exception.getMessage().contains("El nombre de usuario no existe: " + nonExistentUsername));
         }
     }

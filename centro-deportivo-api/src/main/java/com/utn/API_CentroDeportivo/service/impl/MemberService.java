@@ -86,7 +86,6 @@ public class MemberService implements IMemberService {
     public Page<MembersDetailsDTO> getAllMembers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Member> members = memberRepository.findAll(pageable);
-        System.out.println("Cantidad de miembros: " + members.getTotalElements());
         return memberRepository.findAll(pageable)
                 .map(MemberMapper::mapToMemberDetailsDTO);
     }
