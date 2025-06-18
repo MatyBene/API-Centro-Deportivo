@@ -184,4 +184,59 @@ class EnrollmentServiceTest {
         });
     }
 
+    @Test
+    void cancelEnrollment_WhenIsLastEnrollment_ShouldDeleteAndSetMemberInactive() {
+        // Arrange
+        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
+        when(enrollmentRepository.existsByMemberId(memberId)).thenReturn(false);
+        ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
+
+        // Act
+        enrollmentService.cancelEnrollment(instructorId, activityId, memberId);
+
+        // Assert
+        verify(enrollmentRepository, times(1)).delete(enrollment);
+        verify(userRepository, times(1)).save(memberCaptor.capture());
+        assertEquals(Status.INACTIVE, memberCaptor.getValue().getStatus());
+    }
+
+    @Test
+    void cancelEnrollment_WhenHasOtherEnrollments_ShouldDeleteWithoutChangingStatus() {
+        // Arrange
+        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
+        when(enrollmentRepository.existsByMemberId(memberId)).thenReturn(true);
+
+        // Act
+        enrollmentService.cancelEnrollment(instructorId, activityId, memberId);
+
+        // Assert
+        verify(enrollmentRepository, times(1)).delete(enrollment);
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void cancelEnrollment_WhenInstructorIsNotAuthorized_ShouldThrowUnauthorizedException() {
+        // Arrange
+        Long unauthorizedInstructorId = 2L;
+        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
+
+        // Act & Assert
+        assertThrows(UnauthorizedException.class, () -> {
+            enrollmentService.cancelEnrollment(unauthorizedInstructorId, activityId, memberId);
+        });
+    }
+
+    @Test
+    void cancelEnrollment_WhenEnrollmentNotFound_ShouldThrowEnrollmentNotFoundException() {
+        // Arrange
+        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(EnrollmentNotFoundException.class, () -> {
+            enrollmentService.cancelEnrollment(instructorId, activityId, memberId);
+        });
+
+        verify(enrollmentRepository, never()).delete(any());
+    }
+
 }
