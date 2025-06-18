@@ -12,6 +12,7 @@ import com.utn.API_CentroDeportivo.model.repository.IMemberRepository;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -71,6 +72,33 @@ class MemberServiceTest {
 
         userForCredential = new Member();
         userForCredential.setId(memberId);
+    }
+
+    @Nested
+    class UpdateMemberStatusTests {
+        @Test
+        void whenMemberExists_ShouldUpdateStatusToActive() {
+            // Arrange
+            when(userRepository.findById(memberId)).thenReturn(Optional.of(member));
+            ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
+
+            // Act
+            memberService.updateMemberStatus(memberId);
+
+            // Assert
+            verify(userRepository, times(1)).save(memberCaptor.capture());
+            assertEquals(Status.ACTIVE, memberCaptor.getValue().getStatus());
+        }
+
+        @Test
+        void whenMemberNotFound_ShouldThrowMemberNotFoundException() {
+            // Arrange
+            when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+            // Act & Assert
+            assertThrows(MemberNotFoundException.class, () -> memberService.updateMemberStatus(memberId));
+            verify(userRepository, never()).save(any());
+        }
     }
 
 }
