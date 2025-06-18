@@ -99,4 +99,39 @@ class SportActivityServiceTest {
             verify(sportActivityRepository, times(1)).findByNameContainingIgnoreCase(name, pageable);
         }
     }
+
+    @Nested
+    class FindActivitiesByTimeRangeTests {
+        @Test
+        void findActivitiesByTimeRange_WhenActivitiesExistInRange_ShouldReturnFilteredPageOfSummaryDTOs() {
+            // Arrange
+            String startTimeStr = "09:00";
+            String endTimeStr = "12:00";
+            LocalTime startTime = LocalTime.parse(startTimeStr);
+            LocalTime endTime = LocalTime.parse(endTimeStr);
+            Pageable pageable = PageRequest.of(0, 5);
+            Page<SportActivity> activityPage = new PageImpl<>(Collections.singletonList(sportActivity));
+            when(sportActivityRepository.findByTimeRangeOverlap(startTime, endTime, pageable)).thenReturn(activityPage);
+
+            // Act
+            Page<SportActivitySummaryDTO> result = sportActivityService.findActivitiesByTimeRange(startTimeStr, endTimeStr, pageable);
+
+            // Assert
+            assertNotNull(result);
+            assertEquals(1, result.getContent().size());
+            verify(sportActivityRepository, times(1)).findByTimeRangeOverlap(startTime, endTime, pageable);
+        }
+
+        @Test
+        void findActivitiesByTimeRange_WhenTimeFormatIsInvalid_ShouldThrowInvalidTimeFormatException() {
+            // Arrange
+            String invalidTime = "formato-invalido";
+            Pageable pageable = PageRequest.of(0, 5);
+
+            // Act & Assert
+            assertThrows(InvalidTimeFormatException.class, () -> {
+                sportActivityService.findActivitiesByTimeRange(invalidTime, "12:00", pageable);
+            });
+        }
+    }
 }
