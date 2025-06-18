@@ -146,4 +146,30 @@ class MemberServiceTest {
         }
     }
 
+    @Nested
+    class DeleteMemberByUsernameTests {
+        @Test
+        void whenMemberExists_ShouldDeleteMember() {
+            // Arrange
+            when(credentialService.getUserByUsername(memberUsername)).thenReturn(userForCredential);
+            when(userRepository.findById(memberId)).thenReturn(Optional.of(member));
+
+            // Act
+            memberService.deleteMemberByUsername(memberUsername);
+
+            // Assert
+            verify(userRepository, times(1)).delete(member);
+        }
+
+        @Test
+        void whenMemberNotFound_ShouldThrowMemberNotFoundException() {
+            // Arrange
+            when(credentialService.getUserByUsername(memberUsername)).thenReturn(userForCredential);
+            when(userRepository.findById(memberId)).thenReturn(Optional.empty());
+
+            // Act & Assert
+            assertThrows(MemberNotFoundException.class, () -> memberService.deleteMemberByUsername(memberUsername));
+        }
+    }
+
 }
