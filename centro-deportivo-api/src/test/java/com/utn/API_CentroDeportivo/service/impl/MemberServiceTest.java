@@ -101,4 +101,29 @@ class MemberServiceTest {
         }
     }
 
+    @Nested
+    class GetMemberByIdTests {
+        @Test
+        void whenMemberExists_ShouldReturnMemberOptional() {
+            // Arrange
+            when(userRepository.findById(memberId)).thenReturn(Optional.of(member));
+
+            // Act
+            Optional<Member> result = memberService.getMemberById(memberId);
+
+            // Assert
+            assertTrue(result.isPresent());
+            assertEquals(member, result.get());
+        }
+
+        @Test
+        void whenMemberNotFound_ShouldThrowMemberNotFoundException() {
+            // Arrange
+            when(userRepository.findById(memberId)).thenReturn(Optional.empty());
+
+            // Act & Assert
+            assertThrows(MemberNotFoundException.class, () -> memberService.getMemberById(memberId));
+        }
+    }
+
 }
