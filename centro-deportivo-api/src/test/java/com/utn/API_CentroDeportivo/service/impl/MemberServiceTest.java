@@ -172,4 +172,22 @@ class MemberServiceTest {
         }
     }
 
+    @Nested
+    class GetMembersDetailsTests {
+        @Test
+        void getAllMembers_WhenCalled_ShouldReturnPageOfMemberDetailsDTO() {
+            // Arrange
+            Page<Member> memberPage = new PageImpl<>(Collections.singletonList(member));
+            when(memberRepository.findAll(any(Pageable.class))).thenReturn(memberPage);
+
+            // Act
+            Page<MembersDetailsDTO> result = memberService.getAllMembers(0, 5);
+
+            // Assert
+            assertNotNull(result);
+            assertEquals(1, result.getTotalElements());
+            assertEquals(memberUsername, result.getContent().get(0).getUsername());
+        }
+    }
+
 }
