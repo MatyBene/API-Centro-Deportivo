@@ -5,12 +5,14 @@ import com.utn.API_CentroDeportivo.model.entity.Instructor;
 import com.utn.API_CentroDeportivo.model.entity.Member;
 import com.utn.API_CentroDeportivo.model.entity.SportActivity;
 import com.utn.API_CentroDeportivo.model.enums.Status;
+import com.utn.API_CentroDeportivo.model.exception.MemberAlreadyEnrolledException;
 import com.utn.API_CentroDeportivo.model.repository.IEnrollmentRepository;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
 import com.utn.API_CentroDeportivo.service.IMemberService;
 import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,8 +20,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class EnrollmentServiceTest {
@@ -77,6 +81,35 @@ class EnrollmentServiceTest {
                 .activity(sportActivity)
                 .startDate(LocalDate.now())
                 .build();
+    }
+
+    @Test
+    void enrollMemberToActivity_WhenNotEnrolled_ShouldSucceed() {
+        // Arrange
+        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
+        when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
+        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
+
+        // Act
+        enrollmentService.enrollMemberToActivity(memberUsername, activityId);
+
+        // Assert
+        verify(enrollmentRepository, times(1)).save(any(Enrollment.class));
+        verify(memberService, times(1)).updateMemberStatus(memberId);
+    }
+
+    @Test
+    void enrollMemberToActivity_WhenAlreadyEnrolled_ShouldThrowMemberAlreadyEnrolledException() {
+        // Arrange
+        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
+        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
+        when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
+
+        // Act & Assert
+        assertThrows(MemberAlreadyEnrolledException.class, () -> {
+            enrollmentService.enrollMemberToActivity(memberUsername, activityId);
+        });
+        verify(enrollmentRepository, never()).save(any(Enrollment.class));
     }
 
 }
