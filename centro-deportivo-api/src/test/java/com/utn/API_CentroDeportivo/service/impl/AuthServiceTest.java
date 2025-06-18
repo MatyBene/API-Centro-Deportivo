@@ -11,6 +11,7 @@ import com.utn.API_CentroDeportivo.model.exception.FieldAlreadyExistsException;
 import com.utn.API_CentroDeportivo.model.repository.IUserRepository;
 import com.utn.API_CentroDeportivo.service.ICredentialService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -67,71 +68,79 @@ class AuthServiceTest {
         member.setCredential(credential);
     }
 
-    @Test
-    void registerMember_WhenDataIsValid_ShouldSaveUserWithInactiveStatus(){
-        // Arrange
-        when(userRepository.existsByDni(anyString())).thenReturn(false);
-        when(userRepository.existsByEmail(anyString())).thenReturn(false);
-        when(credentialService.existsByUsername(anyString())).thenReturn(false);
-        when(securityConfig.passwordEncoder()).thenReturn(passwordEncoder);
-        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+    @Nested
+    class RegisterMemberTests {
+        @Test
+        void whenDataIsValid_ShouldSaveUserWithInactiveStatus(){
+            // Arrange
+            when(userRepository.existsByDni(anyString())).thenReturn(false);
+            when(userRepository.existsByEmail(anyString())).thenReturn(false);
+            when(credentialService.existsByUsername(anyString())).thenReturn(false);
+            when(securityConfig.passwordEncoder()).thenReturn(passwordEncoder);
+            when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+            ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
-        // Act
-        authService.registerMember(memberRequestDTO);
+            // Act
+            authService.registerMember(memberRequestDTO);
 
-        // Assert
-        verify(userRepository, times(1)).save(userCaptor.capture());
-        User savedUser = userCaptor.getValue();
-        assertInstanceOf(Member.class, savedUser);
-        assertEquals(Status.INACTIVE, ((Member) savedUser).getStatus());
-        assertEquals("encodedPassword", savedUser.getCredential().getPassword());
+            // Assert
+            verify(userRepository, times(1)).save(userCaptor.capture());
+            User savedUser = userCaptor.getValue();
+            assertInstanceOf(Member.class, savedUser);
+            assertEquals(Status.INACTIVE, ((Member) savedUser).getStatus());
+            assertEquals("encodedPassword", savedUser.getCredential().getPassword());
+        }
     }
 
-    @Test
-    void createAndSaveUser_WhenDniExists_ShouldThrowFieldAlreadyExistsException(){
-        // Arrange
-        when(userRepository.existsByDni(anyString())).thenReturn(true);
 
-        // Act & Assert
-        FieldAlreadyExistsException exception = assertThrows(FieldAlreadyExistsException.class, () -> {
-            authService.createAndSaveUser(member, Role.MEMBER);
-        });
-        assertEquals("El campo ya está registrado", exception.getMessage());
-        assertEquals("dni", exception.getField());
-        verify(userRepository, never()).save(any(User.class));
+    @Nested
+    class CreateAndSaveUserTests {
+        @Test
+        void whenDniExists_ShouldThrowFieldAlreadyExistsException(){
+            // Arrange
+            when(userRepository.existsByDni(anyString())).thenReturn(true);
+
+            // Act & Assert
+            FieldAlreadyExistsException exception = assertThrows(FieldAlreadyExistsException.class, () -> {
+                authService.createAndSaveUser(member, Role.MEMBER);
+            });
+            assertEquals("El campo ya está registrado", exception.getMessage());
+            assertEquals("dni", exception.getField());
+            verify(userRepository, never()).save(any(User.class));
+        }
+
+        @Test
+        void whenEmailAlreadyExists_ShouldThrowFieldAlreadyExistsException() {
+            // Arrange
+            when(userRepository.existsByDni(anyString())).thenReturn(false);
+            when(userRepository.existsByEmail(anyString())).thenReturn(true);
+
+            // Act & Assert
+            FieldAlreadyExistsException exception = assertThrows(FieldAlreadyExistsException.class, () -> {
+                authService.createAndSaveUser(member, Role.MEMBER);
+            });
+            assertEquals("El campo ya está registrado", exception.getMessage());
+            assertEquals("email", exception.getField());
+            verify(userRepository, never()).save(any(User.class));
+        }
+
+        @Test
+        void whenUsernameAlreadyExists_ShouldThrowFieldAlreadyExistsException() {
+            // Arrange
+            when(userRepository.existsByDni(anyString())).thenReturn(false);
+            when(userRepository.existsByEmail(anyString())).thenReturn(false);
+            when(credentialService.existsByUsername(anyString())).thenReturn(true);
+
+            // Act & Assert
+            FieldAlreadyExistsException exception = assertThrows(FieldAlreadyExistsException.class, () -> {
+                authService.createAndSaveUser(member, Role.MEMBER);
+            });
+            assertEquals("El campo ya está registrado", exception.getMessage());
+            assertEquals("username", exception.getField());
+            verify(userRepository, never()).save(any(User.class));
+        }
     }
 
-    @Test
-    void createAndSaveUser_WhenEmailAlreadyExists_ShouldThrowFieldAlreadyExistsException() {
-        // Arrange
-        when(userRepository.existsByDni(anyString())).thenReturn(false);
-        when(userRepository.existsByEmail(anyString())).thenReturn(true);
-
-        // Act & Assert
-        FieldAlreadyExistsException exception = assertThrows(FieldAlreadyExistsException.class, () -> {
-            authService.createAndSaveUser(member, Role.MEMBER);
-        });
-        assertEquals("El campo ya está registrado", exception.getMessage());
-        assertEquals("email", exception.getField());
-        verify(userRepository, never()).save(any(User.class));
-    }
-
-    @Test
-    void createAndSaveUser_WhenUsernameAlreadyExists_ShouldThrowFieldAlreadyExistsException() {
-        // Arrange
-        when(userRepository.existsByDni(anyString())).thenReturn(false);
-        when(userRepository.existsByEmail(anyString())).thenReturn(false);
-        when(credentialService.existsByUsername(anyString())).thenReturn(true);
-
-        // Act & Assert
-        FieldAlreadyExistsException exception = assertThrows(FieldAlreadyExistsException.class, () -> {
-            authService.createAndSaveUser(member, Role.MEMBER);
-        });
-        assertEquals("El campo ya está registrado", exception.getMessage());
-        assertEquals("username", exception.getField());
-        verify(userRepository, never()).save(any(User.class));
-    }
 
 
 }
