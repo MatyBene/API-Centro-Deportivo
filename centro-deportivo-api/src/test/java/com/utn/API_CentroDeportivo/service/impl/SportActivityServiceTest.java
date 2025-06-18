@@ -78,4 +78,25 @@ class SportActivityServiceTest {
             verify(sportActivityRepository, times(1)).findAll(pageable);
         }
     }
+
+    @Nested
+    class FindActivitiesByNameTests {
+        @Test
+        void whenNameMatches_ShouldReturnFilteredPageOfSummaryDTOs() {
+            // Arrange
+            String name = "Yoga";
+            Pageable pageable = PageRequest.of(0, 5);
+            Page<SportActivity> activityPage = new PageImpl<>(Collections.singletonList(sportActivity));
+            when(sportActivityRepository.findByNameContainingIgnoreCase(name, pageable)).thenReturn(activityPage);
+
+            // Act
+            Page<SportActivitySummaryDTO> result = sportActivityService.findActivitiesByName(name, pageable);
+
+            // Assert
+            assertNotNull(result);
+            assertEquals(1, result.getContent().size());
+            assertEquals(name, result.getContent().get(0).getName());
+            verify(sportActivityRepository, times(1)).findByNameContainingIgnoreCase(name, pageable);
+        }
+    }
 }
