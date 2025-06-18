@@ -165,4 +165,33 @@ class SportActivityServiceTest {
             verify(sportActivityRepository, times(1)).findById(activityId);
         }
     }
+
+    @Nested
+    class GetCurrentMembersTests {
+        @Test
+        void getCurrentMembers_WhenActivityExists_ShouldReturnMemberCount() {
+            // Arrange
+            when(sportActivityRepository.findById(activityId)).thenReturn(Optional.of(sportActivity));
+
+            // Act
+            int count = sportActivityService.getCurrentMembers(activityId);
+
+            // Assert
+            assertEquals(1, count);
+            verify(sportActivityRepository, times(1)).findById(activityId);
+        }
+
+        @Test
+        void getCurrentMembers_WhenActivityNotFound_ShouldReturnZero() {
+            // Arrange
+            when(sportActivityRepository.findById(activityId)).thenReturn(Optional.empty());
+
+            // Act
+            int count = sportActivityService.getCurrentMembers(activityId);
+
+            // Assert
+            assertEquals(0, count);
+            verify(sportActivityRepository, times(1)).findById(activityId);
+        }
+    }
 }
