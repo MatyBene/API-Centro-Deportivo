@@ -215,8 +215,21 @@ class MemberServiceTest {
             // Act & Assert
             assertThrows(MemberNotFoundException.class, () -> memberService.getMemberDetailsById(memberId));
         }
+    }
 
+    @Nested
+    class SaveMemberTests {
+        @Test
+        void whenCalled_ShouldCallRepositorySave() {
+            // Arrange
+            Member newMember = new Member();
 
+            // Act
+            memberService.saveMember(newMember);
+
+            // Assert
+            verify(userRepository, times(1)).save(newMember);
+        }
     }
 
 }
