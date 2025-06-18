@@ -13,6 +13,7 @@ import com.utn.API_CentroDeportivo.service.ICredentialService;
 import com.utn.API_CentroDeportivo.service.IMemberService;
 import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -86,174 +87,189 @@ class EnrollmentServiceTest {
                 .build();
     }
 
-    @Test
-    void enrollMemberToActivity_WhenNotEnrolled_ShouldSucceed() {
-        // Arrange
-        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
-        when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
-        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
+    @Nested
+    class EnrollMemberToActivityTests {
+        @Test
+        void whenNotEnrolled_ShouldSucceed() {
+            // Arrange
+            when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
+            when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
+            when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
 
-        // Act
-        enrollmentService.enrollMemberToActivity(memberUsername, activityId);
-
-        // Assert
-        verify(enrollmentRepository, times(1)).save(any(Enrollment.class));
-        verify(memberService, times(1)).updateMemberStatus(memberId);
-    }
-
-    @Test
-    void enrollMemberToActivity_WhenAlreadyEnrolled_ShouldThrowMemberAlreadyEnrolledException() {
-        // Arrange
-        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
-        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
-        when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
-
-        // Act & Assert
-        assertThrows(MemberAlreadyEnrolledException.class, () -> {
+            // Act
             enrollmentService.enrollMemberToActivity(memberUsername, activityId);
-        });
-        verify(enrollmentRepository, never()).save(any(Enrollment.class));
+
+            // Assert
+            verify(enrollmentRepository, times(1)).save(any(Enrollment.class));
+            verify(memberService, times(1)).updateMemberStatus(memberId);
+        }
+
+        @Test
+        void whenAlreadyEnrolled_ShouldThrowMemberAlreadyEnrolledException() {
+            // Arrange
+            when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
+            when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
+            when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
+
+            // Act & Assert
+            assertThrows(MemberAlreadyEnrolledException.class, () -> {
+                enrollmentService.enrollMemberToActivity(memberUsername, activityId);
+            });
+            verify(enrollmentRepository, never()).save(any(Enrollment.class));
+        }
     }
 
-    @Test
-    void unsubscribeMemberFromActivity_WhenIsLastEnrollment_ShouldSetStatusToInactive() {
-        // Arrange
-        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
-        when(enrollmentRepository.existsByMemberId(memberId)).thenReturn(false);
-        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
-        ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
+    @Nested
+    class UnsubscribeMemberFromActivityTests {
+        @Test
+        void whenIsLastEnrollment_ShouldSetStatusToInactive() {
+            // Arrange
+            when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
+            when(enrollmentRepository.existsByMemberId(memberId)).thenReturn(false);
+            when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
+            ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
 
-        // Act
-        enrollmentService.unsubscribeMemberFromActivity(memberUsername, activityId);
-
-        // Assert
-        verify(enrollmentRepository, times(1)).delete(enrollment);
-        verify(userRepository, times(1)).save(memberCaptor.capture());
-        assertEquals(Status.INACTIVE, memberCaptor.getValue().getStatus());
-    }
-
-    @Test
-    void unsubscribeMemberFromActivity_WhenEnrollmentNotFound_ShouldThrowEnrollmentNotFoundException() {
-        // Arrange
-        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
-        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(EnrollmentNotFoundException.class, () -> {
+            // Act
             enrollmentService.unsubscribeMemberFromActivity(memberUsername, activityId);
-        });
 
-        verify(enrollmentRepository, never()).delete(any());
-        verify(userRepository, never()).save(any());
+            // Assert
+            verify(enrollmentRepository, times(1)).delete(enrollment);
+            verify(userRepository, times(1)).save(memberCaptor.capture());
+            assertEquals(Status.INACTIVE, memberCaptor.getValue().getStatus());
+        }
+
+        @Test
+        void whenEnrollmentNotFound_ShouldThrowEnrollmentNotFoundException() {
+            // Arrange
+            when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
+            when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
+
+            // Act & Assert
+            assertThrows(EnrollmentNotFoundException.class, () -> {
+                enrollmentService.unsubscribeMemberFromActivity(memberUsername, activityId);
+            });
+
+            verify(enrollmentRepository, never()).delete(any());
+            verify(userRepository, never()).save(any());
+        }
     }
 
-    @Test
-    void enrollMemberToActivityByInstructor_WhenCapacityIsFull_ShouldThrowMaxCapacityException() {
-        // Arrange
-        sportActivity.setMaxMembers(0);
-        when(credentialService.getUserByUsername(instructorUsername)).thenReturn(instructor);
-        when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
+    @Nested
+    class EnrollMemberToActivityByInstructorTests {
+        @Test
+        void whenCapacityIsFull_ShouldThrowMaxCapacityException() {
+            // Arrange
+            sportActivity.setMaxMembers(0);
+            when(credentialService.getUserByUsername(instructorUsername)).thenReturn(instructor);
+            when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
 
-        // Act & Assert
-        assertThrows(MaxCapacityException.class, () -> {
-            enrollmentService.enrollMemberToActivityByInstructor(instructorUsername, activityId, memberId);
-        });
+            // Act & Assert
+            assertThrows(MaxCapacityException.class, () -> {
+                enrollmentService.enrollMemberToActivityByInstructor(instructorUsername, activityId, memberId);
+            });
+        }
+
+        @Test
+        void whenActivityNotFound_ShouldThrowSportActivityNotFoundException() {
+            // Arrange
+            when(credentialService.getUserByUsername(instructorUsername)).thenReturn(instructor);
+            when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.empty());
+
+            // Act & Assert
+            assertThrows(SportActivityNotFoundException.class, () -> {
+                enrollmentService.enrollMemberToActivityByInstructor(instructorUsername, activityId, memberId);
+            });
+        }
+
+        @Test
+        void whenMemberNotFound_ShouldThrowMemberNotFoundException() {
+            // Arrange
+            when(credentialService.getUserByUsername(instructorUsername)).thenReturn(instructor);
+            when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
+            when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
+            when(userRepository.findById(memberId)).thenReturn(Optional.empty());
+
+            // Act & Assert
+            assertThrows(MemberNotFoundException.class, () -> {
+                enrollmentService.enrollMemberToActivityByInstructor(instructorUsername, activityId, memberId);
+            });
+        }
     }
 
-    @Test
-    void enrollMemberToActivityByInstructor_WhenActivityNotFound_ShouldThrowSportActivityNotFoundException() {
-        // Arrange
-        when(credentialService.getUserByUsername(instructorUsername)).thenReturn(instructor);
-        when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.empty());
+    @Nested
+    class CancelEnrollmentTests {
+        @Test
+        void whenIsLastEnrollment_ShouldDeleteAndSetMemberInactive() {
+            // Arrange
+            when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
+            when(enrollmentRepository.existsByMemberId(memberId)).thenReturn(false);
+            ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
 
-        // Act & Assert
-        assertThrows(SportActivityNotFoundException.class, () -> {
-            enrollmentService.enrollMemberToActivityByInstructor(instructorUsername, activityId, memberId);
-        });
-    }
-
-    @Test
-    void enrollMemberToActivityByInstructor_WhenMemberNotFound_ShouldThrowMemberNotFoundException() {
-        // Arrange
-        when(credentialService.getUserByUsername(instructorUsername)).thenReturn(instructor);
-        when(sportActivityService.getSportActivityEntityById(activityId)).thenReturn(Optional.of(sportActivity));
-        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
-        when(userRepository.findById(memberId)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(MemberNotFoundException.class, () -> {
-            enrollmentService.enrollMemberToActivityByInstructor(instructorUsername, activityId, memberId);
-        });
-    }
-
-    @Test
-    void cancelEnrollment_WhenIsLastEnrollment_ShouldDeleteAndSetMemberInactive() {
-        // Arrange
-        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
-        when(enrollmentRepository.existsByMemberId(memberId)).thenReturn(false);
-        ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
-
-        // Act
-        enrollmentService.cancelEnrollment(instructorId, activityId, memberId);
-
-        // Assert
-        verify(enrollmentRepository, times(1)).delete(enrollment);
-        verify(userRepository, times(1)).save(memberCaptor.capture());
-        assertEquals(Status.INACTIVE, memberCaptor.getValue().getStatus());
-    }
-
-    @Test
-    void cancelEnrollment_WhenHasOtherEnrollments_ShouldDeleteWithoutChangingStatus() {
-        // Arrange
-        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
-        when(enrollmentRepository.existsByMemberId(memberId)).thenReturn(true);
-
-        // Act
-        enrollmentService.cancelEnrollment(instructorId, activityId, memberId);
-
-        // Assert
-        verify(enrollmentRepository, times(1)).delete(enrollment);
-        verify(userRepository, never()).save(any());
-    }
-
-    @Test
-    void cancelEnrollment_WhenInstructorIsNotAuthorized_ShouldThrowUnauthorizedException() {
-        // Arrange
-        Long unauthorizedInstructorId = 2L;
-        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
-
-        // Act & Assert
-        assertThrows(UnauthorizedException.class, () -> {
-            enrollmentService.cancelEnrollment(unauthorizedInstructorId, activityId, memberId);
-        });
-    }
-
-    @Test
-    void cancelEnrollment_WhenEnrollmentNotFound_ShouldThrowEnrollmentNotFoundException() {
-        // Arrange
-        when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(EnrollmentNotFoundException.class, () -> {
+            // Act
             enrollmentService.cancelEnrollment(instructorId, activityId, memberId);
-        });
 
-        verify(enrollmentRepository, never()).delete(any());
+            // Assert
+            verify(enrollmentRepository, times(1)).delete(enrollment);
+            verify(userRepository, times(1)).save(memberCaptor.capture());
+            assertEquals(Status.INACTIVE, memberCaptor.getValue().getStatus());
+        }
+
+        @Test
+        void whenHasOtherEnrollments_ShouldDeleteWithoutChangingStatus() {
+            // Arrange
+            when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
+            when(enrollmentRepository.existsByMemberId(memberId)).thenReturn(true);
+
+            // Act
+            enrollmentService.cancelEnrollment(instructorId, activityId, memberId);
+
+            // Assert
+            verify(enrollmentRepository, times(1)).delete(enrollment);
+            verify(userRepository, never()).save(any());
+        }
+
+        @Test
+        void whenInstructorIsNotAuthorized_ShouldThrowUnauthorizedException() {
+            // Arrange
+            Long unauthorizedInstructorId = 2L;
+            when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.of(enrollment));
+
+            // Act & Assert
+            assertThrows(UnauthorizedException.class, () -> {
+                enrollmentService.cancelEnrollment(unauthorizedInstructorId, activityId, memberId);
+            });
+        }
+
+        @Test
+        void whenEnrollmentNotFound_ShouldThrowEnrollmentNotFoundException() {
+            // Arrange
+            when(enrollmentRepository.findByMemberIdAndActivityId(memberId, activityId)).thenReturn(Optional.empty());
+
+            // Act & Assert
+            assertThrows(EnrollmentNotFoundException.class, () -> {
+                enrollmentService.cancelEnrollment(instructorId, activityId, memberId);
+            });
+
+            verify(enrollmentRepository, never()).delete(any());
+        }
     }
 
-    @Test
-    void getEnrollmentsByUsername_WhenEnrollmentsExist_ShouldReturnDtoList() {
-        // Arrange
-        when(enrollmentRepository.findByMemberId(memberId)).thenReturn(Collections.singletonList(enrollment));
-        when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
 
-        // Act
-        List<EnrollmentDTO> result = enrollmentService.getEnrollmentsByUsername(memberUsername);
+    @Nested
+    class GetEnrollmentsByUsernameTests {
+        @Test
+        void whenEnrollmentsExist_ShouldReturnDtoList() {
+            // Arrange
+            when(enrollmentRepository.findByMemberId(memberId)).thenReturn(Collections.singletonList(enrollment));
+            when(credentialService.getUserByUsername(memberUsername)).thenReturn(member);
 
-        // Assert
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals("Yoga", result.get(0).getActivityName());
+            // Act
+            List<EnrollmentDTO> result = enrollmentService.getEnrollmentsByUsername(memberUsername);
+
+            // Assert
+            assertNotNull(result);
+            assertEquals(1, result.size());
+            assertEquals("Yoga", result.get(0).getActivityName());
+        }
     }
-
 }
