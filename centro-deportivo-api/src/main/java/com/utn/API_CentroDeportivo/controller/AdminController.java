@@ -3,6 +3,7 @@ package com.utn.API_CentroDeportivo.controller;
 import com.utn.API_CentroDeportivo.model.dto.request.EnrollmentRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.request.UserRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.AdminViewDTO;
+import com.utn.API_CentroDeportivo.model.dto.response.UserDetailsDTO;
 import com.utn.API_CentroDeportivo.model.enums.PermissionLevel;
 import com.utn.API_CentroDeportivo.model.enums.Role;
 import com.utn.API_CentroDeportivo.model.enums.Status;
@@ -348,9 +349,7 @@ public class AdminController {
                             description = "Detalles del usuario recuperados exitosamente.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    // Se usa Object porque el servicio puede devolver diferentes DTOs.
-                                    // Si siempre devuelve AdminViewDTO, se podría especificar: schema = @Schema(implementation = AdminViewDTO.class)
-                                    schema = @Schema(type = "object", example = "{\"id\": 1, \"username\": \"admin_user\", \"email\": \"admin@example.com\", \"role\": \"ADMIN\"}")
+                                    schema = @Schema(implementation = AdminViewDTO.class)
                             )
                     ),
                     @ApiResponse(
@@ -373,7 +372,7 @@ public class AdminController {
     )
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/{username}")
-    public ResponseEntity<?> getUserDetailsByUsername(@PathVariable String username) {
+    public ResponseEntity<UserDetailsDTO> getUserDetailsByUsername(@PathVariable String username) {
         return adminService.findUserDetailsByUsername(username)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

@@ -33,10 +33,6 @@ public class EnrollmentController {
     @Operation(
             summary = "Remover un miembro de una actividad",
             description = "Permite a un instructor remover a un miembro específico de una actividad deportiva. Requiere los IDs de la actividad y del miembro.",
-            parameters = {
-                    @Parameter(description = "ID de la actividad", example = "1", required = true),
-                    @Parameter(description = "ID del miembro a remover", example = "5", required = true)
-            },
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -77,10 +73,6 @@ public class EnrollmentController {
     @Operation(
             summary = "Inscribir un miembro a una actividad gestionada por el instructor",
             description = "Permite a un instructor inscribir a un miembro específico en una de las actividades que él/ella gestiona.",
-            parameters = {
-                    @Parameter(description = "ID de la actividad", example = "10", required = true),
-                    @Parameter(description = "ID del miembro a inscribir", example = "7", required = true)
-            },
             responses = {
                     @ApiResponse(
                             responseCode = "200",
