@@ -1,6 +1,5 @@
 package com.utn.API_CentroDeportivo.controller;
 
-import com.utn.API_CentroDeportivo.model.dto.request.EnrollmentRequestDTO;
 import com.utn.API_CentroDeportivo.model.dto.request.MemberEditDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.EnrollmentDTO;
 import com.utn.API_CentroDeportivo.service.IEnrollmentService;
@@ -11,17 +10,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -38,7 +34,7 @@ public class MemberController {
     @Operation(
             summary = "Inscribir al miembro en una actividad",
             description = "Permite al miembro autenticado inscribirse en una actividad deportiva específica.",
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "ID de la actividad a la que se desea inscribir",
                     required = true,
                     content = @Content(mediaType = "application/json", schema = @Schema(type = "integer", format = "int64", example = "1"))
@@ -121,7 +117,7 @@ public class MemberController {
     @Operation(
             summary = "Actualizar perfil de miembro",
             description = "Permite al miembro autenticado actualizar su información de perfil.",
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Datos del perfil a actualizar",
                     required = true,
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = MemberEditDTO.class))

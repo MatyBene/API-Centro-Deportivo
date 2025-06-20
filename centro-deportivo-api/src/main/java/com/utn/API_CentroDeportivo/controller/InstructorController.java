@@ -1,8 +1,6 @@
 package com.utn.API_CentroDeportivo.controller;
 
-
 import com.utn.API_CentroDeportivo.model.dto.request.MemberRequestDTO;
-import com.utn.API_CentroDeportivo.model.dto.response.InstructorDetailsDTO;
 
 import com.utn.API_CentroDeportivo.model.dto.response.InstructorSummaryDTO;
 import com.utn.API_CentroDeportivo.model.dto.response.MembersDetailsDTO;
@@ -15,7 +13,6 @@ import com.utn.API_CentroDeportivo.service.ISportActivityService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,13 +22,11 @@ import java.util.List;
 import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @RequestMapping("/api/v1/instructors")
@@ -252,7 +247,7 @@ public class InstructorController {
     @Operation(
             summary = "Registrar un nuevo miembro (por instructor)",
             description = "Permite a un instructor autenticado registrar un nuevo miembro en el sistema. Se crea una nueva cuenta de miembro.",
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Datos del miembro a registrar (nombre, apellido, email, contraseña, etc.)",
                     required = true,
                     content = @Content(

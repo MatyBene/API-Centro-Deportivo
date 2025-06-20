@@ -24,7 +24,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 
 @RestController
@@ -43,7 +42,7 @@ public class AdminController {
     @Operation(
             summary = "Crear un nuevo miembro",
             description = "Permite al administrador crear una nueva cuenta de miembro en el sistema con los datos proporcionados.",
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Objeto JSON con los datos del nuevo miembro (ej. nombre, apellido, email, contraseña).",
                     required = true,
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserRequestDTO.class))
@@ -86,7 +85,7 @@ public class AdminController {
     @Operation(
             summary = "Crear un nuevo instructor",
             description = "Permite al administrador crear una nueva cuenta de instructor en el sistema. Requiere los permisos 'PERMISSION_USER_MANAGER' o 'PERMISSION_SUPER_ADMIN'.",
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Objeto JSON con los datos del nuevo instructor (ej. nombre, apellido, email, contraseña).",
                     required = true,
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserRequestDTO.class))
@@ -129,7 +128,7 @@ public class AdminController {
     @Operation(
             summary = "Crear un nuevo administrador",
             description = "Permite a un administrador con permisos de 'SUPER_ADMIN' crear una nueva cuenta de administrador en el sistema.",
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Objeto JSON con los datos del nuevo administrador (ej. nombre, apellido, email, contraseña).",
                     required = true,
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserRequestDTO.class))
@@ -172,7 +171,7 @@ public class AdminController {
     @Operation(
             summary = "Inscribir un miembro en una actividad",
             description = "Permite al administrador inscribir a un miembro existente en una actividad deportiva específica. Requiere los permisos 'PERMISSION_USER_MANAGER' o 'PERMISSION_SUPER_ADMIN'.",
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Objeto JSON con el nombre de usuario (username) del miembro y el ID de la actividad.",
                     required = true,
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = EnrollmentRequestDTO.class))

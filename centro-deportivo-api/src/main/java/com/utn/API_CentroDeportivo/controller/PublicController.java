@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +39,7 @@ public class PublicController {
     @Operation(
             summary = "Registrar un nuevo miembro",
             description = "Permite a un usuario registrarse como nuevo miembro en el sistema. Se crea una nueva cuenta de miembro.",
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Datos del miembro a registrar (nombre, apellido, email, contraseña, etc.)",
                     required = true,
                     content = @Content(
@@ -78,7 +77,7 @@ public class PublicController {
     @Operation(
             summary = "Iniciar sesión de usuario",
             description = "Permite a un usuario autenticarse en el sistema y obtener un token JWT para acceder a recursos protegidos.",
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Credenciales de usuario (nombre de usuario y contraseña)",
                     required = true,
                     content = @Content(
