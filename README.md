@@ -113,6 +113,12 @@ La API está completamente documentada utilizando **Swagger/OpenAPI**. Una vez q
 
   * **URL de Swagger UI:** `http://localhost:8080/swagger-ui/index.html`
 
+## 🔗 Colección de Postman
+
+Puedes probar y explorar los endpoints de la API utilizando la siguiente colección de Postman:
+
+  * **Colección de Postman:** [API REST para Centro Deportivo](https://centro-deportivo-api.postman.co/workspace/Centro-deportivo-API-Workspace~81414ee8-6e61-43f3-8c65-69df369210b7/collection/30693559-0aa4612f-5429-4ae7-a0e3-bf29d8ec97da?action=share&creator=30693559)
+
 ## 👨‍💻 Autores
 
   * [Bassi Servant, Tomas](https://github.com/tomasbassi)
