@@ -6,23 +6,23 @@
                 <a routerLink="/">Inicio</a>
             </li>
             
-            <!-- @if (!authService.isLoggedIn()) { -->
+            @if (!authService.isLoggedIn()) {
                 <li>
                     <a routerLink="public/login">Iniciar sesión</a>
                 </li>
                 <li>
                     <a routerLink="/public/register">Registrarse</a>
                 </li>
-            <!-- } -->
+            }
             
-            <!-- @if (authService.isLoggedIn()) { -->
+            @if (authService.isLoggedIn()) {
                 <li>
                     <a routerLink="/members/profile">Perfil</a>
                 </li>
                 <li>
                     <button (click)="logout()">Cerrar sesión</button>
                 </li>
-            <!-- } -->
+            }
         </ul>
     </nav>
 </header>
