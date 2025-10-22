@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MemberService } from '../../services/member-service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FieldError } from '../../components/field-error/field-error';
 
 @Component({
   selector: 'app-form-page',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FieldError],
   templateUrl: './form-page.html',
   styleUrl: './form-page.css'
 })
@@ -30,7 +31,7 @@ export class FormPage implements OnInit{
       phone: ['', [Validators.required, Validators.maxLength(15)]],
       email: ['', [Validators.required, Validators.email]],
       username: ['', Validators.required],
-      password: ['', [Validators.required, Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/)]]
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/)]]
     });
 
     // this.userId = this.route.snapshot.params['id'];

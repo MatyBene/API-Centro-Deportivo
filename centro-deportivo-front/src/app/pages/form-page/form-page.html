@@ -8,17 +8,13 @@
         <fieldset>
             <label for="name">Nombre</label>
             <input type="text" id="name" formControlName="name">
-            @if (name?.invalid && name?.touched) {
-                <p>El nombre es obligatorio</p>
-            }
+            <app-field-error [control]="name"></app-field-error>
         </fieldset>
 
         <fieldset>
             <label for="lastname">Apellido</label>
             <input type="text" id="lastname" formControlName="lastname">
-            @if (lastname?.invalid && lastname?.touched) {
-                <p>El apellido es obligatorio</p>
-            }
+            <app-field-error [control]="lastname"></app-field-error>
         </fieldset>
     </div>
 
@@ -26,24 +22,13 @@
         <fieldset>
             <label for="dni">DNI</label>
             <input type="text" id="dni" formControlName="dni">
-            @if (dni?.hasError('required') && dni?.touched) {
-                <p>El DNI es obligatorio</p>
-            } @else if (dni?.hasError('minlength')) {
-                <p>Debe tener mínimo 8 caracteres</p>
-            }
-            @if (serverErrors['dni']) {
-                <p>{{serverErrors['dni']}}</p>
-            }
+            <app-field-error [control]="dni" [serverError]="serverErrors['dni']"></app-field-error>
         </fieldset>
 
         <fieldset>
             <label for="birthdate">Fecha de nacimiento</label>
             <input type="date" id="birthdate" formControlName="birthdate">
-            @if (birthdate?.hasError('required') && birthdate?.touched) {
-                <p>La fecha de nacimiento es obligatoria</p>
-            } @else if(birthdate?.hasError('pattern')) {
-                <p>Formato de fecha inválido</p>
-            }
+            <app-field-error [control]="birthdate"></app-field-error>
         </fieldset>
     </div>
 
@@ -51,24 +36,13 @@
         <fieldset>
             <label for="phone">Celular</label>
             <input type="text" id="phone" formControlName="phone">
-            @if (phone?.hasError('required') && phone?.touched) {
-                <p>El número de contacto es obligatorio</p>
-            } @else if (phone?.hasError('maxlength')) {
-                <p>Debe tener máximo 15 caracteres</p>
-            }
+            <app-field-error [control]="phone"></app-field-error>
         </fieldset>
 
         <fieldset>
             <label for="email">Email</label>
             <input type="email" id="email" formControlName="email">
-            @if (email?.hasError('required') && email?.touched) {
-                <p>El email es obligatorio</p>
-            } @else if (email?.hasError('email')) {
-                <p>El email debe tener un formato válido</p>
-            }
-            @if (serverErrors['email']) {
-                <p>{{serverErrors['email']}}</p>
-            }
+            <app-field-error [control]="email" [serverError]="serverErrors['email']"></app-field-error>
         </fieldset>
     </div>
 
@@ -76,22 +50,15 @@
         <fieldset>
             <label for="username">Nombre de usuario</label>
             <input type="text" id="username" formControlName="username">
-            @if (username?.invalid && username?.touched) {
-                <p>El nombre de usuario es obligatorio</p>
-            }
-            @if (serverErrors['username']) {
-                <p>{{serverErrors['username']}}</p>
-            }
+            <app-field-error [control]="username" [serverError]="serverErrors['username']"></app-field-error>
         </fieldset>
 
         <fieldset>
             <label for="password">Contraseña</label>
             <input type="password" id="password" formControlName="password">
-            @if (password?.hasError('required') && password?.touched) {
-                <p>La contraseña es obligatoria</p>
-            } @else if (password?.hasError('pattern')) {
-                <p>La contraseña debe contener al menos: 1 mayúscula, 1 minúscula, 1 número, 1 carácter especial y no tener espacios</p>
-            }
+            <app-field-error [control]="password" [customErrors]="{
+                'pattern': 'La contraseña debe contener al menos: 1 mayúscula, 1 minúscula, 1 número, 1 carácter especial y no tener espacios'
+            }"></app-field-error>
         </fieldset>
     </div>
 
