@@ -20,6 +20,7 @@ export class FieldError {
     const errors = this.control.errors;
     const errorMessages: { [key: string]: string } = {
       'required': 'Este campo es obligatorio',
+      'whitespace': 'Este campo no puede contener solo espacios en blanco',
       'email': 'El email debe tener un formato válido',
       'minlength': `Debe tener mínimo ${errors['minlength']?.requiredLength} caracteres`,
       'maxlength': `Debe tener máximo ${errors['maxlength']?.requiredLength} caracteres`,
@@ -27,7 +28,9 @@ export class FieldError {
       ...this.customErrors
     };
 
-    const firstError = Object.keys(errors)[0];
+    const priority = ['required', 'whitespace', 'pattern', 'minlength', 'maxlength', 'email'];
+    const firstError = priority.find(k => errors[k]) || Object.keys(errors)[0];
+
     return errorMessages[firstError] || 'Error de validación';
   }
 }

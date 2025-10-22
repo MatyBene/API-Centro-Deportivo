@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MemberService } from '../../services/member-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FieldError } from '../../components/field-error/field-error';
+import { CustomValidators } from '../../utils/custom-validators';
 
 @Component({
   selector: 'app-form-page',
@@ -24,13 +25,13 @@ export class FormPage implements OnInit{
 
   ngOnInit(): void {
     this.userForm = this.fb.group({
-      name: ['', Validators.required],
-      lastname: ['', Validators.required],
-      dni: ['', [Validators.required, Validators.minLength(8)]],
+      name: ['', [Validators.required, CustomValidators.noWhitespace]],
+      lastname: ['', [Validators.required, CustomValidators.noWhitespace]],
+      dni: ['', [Validators.required, Validators.minLength(8), CustomValidators.noWhitespace]],
       birthdate: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
-      phone: ['', [Validators.required, Validators.maxLength(15)]],
+      phone: ['', [Validators.required, Validators.maxLength(15), CustomValidators.noWhitespace]],
       email: ['', [Validators.required, Validators.email]],
-      username: ['', Validators.required],
+      username: ['', [Validators.required, CustomValidators.noWhitespace]],
       password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/)]]
     });
 
@@ -57,7 +58,14 @@ export class FormPage implements OnInit{
   get password() { return this.userForm.get('password'); }
 
   onSubmit(): void {
-    this.memberService.register(this.userForm.value).subscribe({
+    const formValue = { ...this.userForm.value };
+    Object.keys(formValue).forEach(key => {
+      if (typeof formValue[key] === 'string') {
+        formValue[key] = formValue[key].trim();
+      }
+    });
+
+    this.memberService.register(formValue).subscribe({
       next: (data) => {
         this.router.navigate(['/public/login']);
       },
