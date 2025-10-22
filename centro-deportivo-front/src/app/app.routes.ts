@@ -1,8 +1,15 @@
 import { Routes } from '@angular/router';
 import { HomePage } from './pages/home-page/home-page';
 import { FormPage } from './pages/form-page/form-page';
+import { LoginPage } from './pages/login-page/login-page';
+import { ProfilePage } from './pages/profile-page/profile-page';
+import { guestGuard } from './guards/guest-guard';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
     {path: '', component: HomePage},
-    {path: 'public/register', component: FormPage}
+    {path: 'public/login', component: LoginPage, canActivate: [guestGuard]},
+    {path: 'public/register', component: FormPage, canActivate: [guestGuard]},
+
+    {path: 'members/profile', component: ProfilePage, canActivate: [authGuard]}
 ];
