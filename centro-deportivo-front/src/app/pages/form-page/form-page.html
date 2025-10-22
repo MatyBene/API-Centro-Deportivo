@@ -1,0 +1,66 @@
+<section class="title-section">
+    <h1>REGISTRO DE NUEVO MIEMBRO</h1>
+    <p>Completa el siguiente formulario para unirte a nuestra comunidad. Forjamos campeones y te ayudamos a alcanzar tus objetivos deportivos.</p>
+</section>
+
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+        <fieldset>
+            <label for="name">Nombre</label>
+            <input type="text" id="name" formControlName="name">
+            <app-field-error [control]="name"></app-field-error>
+        </fieldset>
+
+        <fieldset>
+            <label for="lastname">Apellido</label>
+            <input type="text" id="lastname" formControlName="lastname">
+            <app-field-error [control]="lastname"></app-field-error>
+        </fieldset>
+    </div>
+
+    <div class="form-row">
+        <fieldset>
+            <label for="dni">DNI</label>
+            <input type="text" id="dni" formControlName="dni">
+            <app-field-error [control]="dni" [serverError]="serverErrors['dni']"></app-field-error>
+        </fieldset>
+
+        <fieldset>
+            <label for="birthdate">Fecha de nacimiento</label>
+            <input type="date" id="birthdate" formControlName="birthdate">
+            <app-field-error [control]="birthdate"></app-field-error>
+        </fieldset>
+    </div>
+
+    <div class="form-row">
+        <fieldset>
+            <label for="phone">Celular</label>
+            <input type="text" id="phone" formControlName="phone">
+            <app-field-error [control]="phone"></app-field-error>
+        </fieldset>
+
+        <fieldset>
+            <label for="email">Email</label>
+            <input type="email" id="email" formControlName="email">
+            <app-field-error [control]="email" [serverError]="serverErrors['email']"></app-field-error>
+        </fieldset>
+    </div>
+
+    <div class="form-row">
+        <fieldset>
+            <label for="username">Nombre de usuario</label>
+            <input type="text" id="username" formControlName="username">
+            <app-field-error [control]="username" [serverError]="serverErrors['username']"></app-field-error>
+        </fieldset>
+
+        <fieldset>
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" formControlName="password">
+            <app-field-error [control]="password" [customErrors]="{
+                'pattern': 'La contraseña debe contener al menos: 1 mayúscula, 1 minúscula, 1 número, 1 carácter especial y no tener espacios'
+            }"></app-field-error>
+        </fieldset>
+    </div>
+
+    <button type="submit" [disabled]="userForm.invalid">Crear cuenta</button>
+</form>
