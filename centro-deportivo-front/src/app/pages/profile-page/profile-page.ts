@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { TokenPayLoad } from '../../models/Auth';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-profile-page',
@@ -6,6 +8,12 @@ import { Component } from '@angular/core';
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.css'
 })
-export class ProfilePage {
+export class ProfilePage implements OnInit{
+  decodedToken!: TokenPayLoad | null;
 
+  constructor(public authService: AuthService){}
+
+  ngOnInit(): void {
+      this.decodedToken = this.authService.getDecodedToken();
+  }
 }
