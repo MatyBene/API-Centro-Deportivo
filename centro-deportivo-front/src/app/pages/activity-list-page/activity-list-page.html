@@ -1,22 +1,25 @@
 <section class="title-section">
     <h1>LISTADO DE ACTIVIDADES</h1>
-
-    @if (isLoading) {
-        <h1>Cargando actividades...</h1>
-    }
 </section>
 
-<section>
+@if (isLoading) {
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Cargando actividades...</p>
+    </div>
+}
+
+<section class="activities-container" [class.fade-in]="!isLoading">
     @if (!isLoading && activities.length > 0) {
         @for (activity of activities; track $index) {
             <app-activity-summary-item [activity] = 'activity'></app-activity-summary-item>
         }
-    } @else {
-        <p>No hay actividades disponibles</p>
+    } @else if (!isLoading) {
+        <p class="no-activities">No hay actividades disponibles</p>
     }
 </section>
 
-<section>
+<section class="pagination-container" [class.visible]="!isLoading">
     @if (!isLoading && totalPages > 1) {
         <app-pagination
             [currentPage]="currentPage"

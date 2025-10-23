@@ -25,15 +25,28 @@ export class ActivityListPage implements OnInit{
 
   loadActivities(){
     this.isLoading = true;
+    const startTime = Date.now();
+    const minLoadingTime = 300;
+    
     this.activityService.getActivities(this.currentPage, this.pageSize).subscribe({
       next: (data) => {
-        this.activities = data.content;
-        this.totalPages = data.totalPages;
-        this.isLoading = false;
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+        
+        setTimeout(() => {
+          this.activities = data.content;
+          this.totalPages = data.totalPages;
+          this.isLoading = false;
+        }, remainingTime);
       },
       error: (e) => {
         console.log('Error: ', e);
-        this.isLoading = false;
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+        
+        setTimeout(() => {
+          this.isLoading = false;
+        }, remainingTime);
       }
     })
   }
