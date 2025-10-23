@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class LoginPage {
   loginForm: FormGroup;
-  isLoading = false;
+  isLoading: boolean = false;
   errorMessage: string = '';
   
 
