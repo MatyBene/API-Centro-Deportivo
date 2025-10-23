@@ -8,6 +8,7 @@ public class SportActivityMapper {
 
     public static SportActivitySummaryDTO mapToSportActivitySummaryDTO(SportActivity activity) {
         SportActivitySummaryDTO activitySummaryDTO = new SportActivitySummaryDTO();
+        activitySummaryDTO.setId(activity.getId());
         activitySummaryDTO.setName(activity.getName());
         activitySummaryDTO.setMaxMembers(activity.getMaxMembers());
         activitySummaryDTO.setInstructorName(activity.getInstructor().getName());
