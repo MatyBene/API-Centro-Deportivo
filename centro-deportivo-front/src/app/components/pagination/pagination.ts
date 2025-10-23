@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-pagination',
@@ -7,14 +7,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './pagination.css'
 })
 export class Pagination {
-  @Input() currentPage!: number;
-  @Input() totalPages!: number;
-  @Input() hasPreviousPage!: boolean;
-  @Input() hasNextPage!: boolean;
+  currentPage = input<number>(0);
+  totalPages = input<number>();
+  hasPreviousPage = input<boolean>();
+  hasNextPage = input<boolean>();
 
-  @Output() previousPageEvent = new EventEmitter<void>();
-  @Output() nextPageEvent = new EventEmitter<void>();
-
+  previousPageEvent = output<void>();
+  nextPageEvent = output<void>();
   onPreviousPage() {
     this.previousPageEvent.emit();
   }

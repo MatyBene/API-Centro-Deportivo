@@ -17,6 +17,15 @@ export class ActivityService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<PageableResponse<SportActivitySummary>>(this.URL, {params})
+    return this.http.get<PageableResponse<SportActivitySummary>>(this.URL, {params});
+  }
+
+  getByName(name: string, page: number, size: number) {
+    const params = new HttpParams()
+      .set('name', name)
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<PageableResponse<SportActivitySummary>>(`${this.URL}/search`, {params});
   }
 }

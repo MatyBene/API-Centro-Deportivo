@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, Input } from '@angular/core';
 import SportActivitySummary from '../../models/SportActivitySummary';
 import { Router } from '@angular/router';
 
@@ -9,11 +9,11 @@ import { Router } from '@angular/router';
   styleUrl: './activity-summary-item.css'
 })
 export class ActivitySummaryItem {
-  @Input({required: true}) activity!: SportActivitySummary;
+  activity = input<SportActivitySummary>();
 
   constructor(private router: Router) {};
 
   goToDetail() {
-    this.router.navigate(['/activity-list', this.activity.id]);
+    this.router.navigate(['/activity-list', this.activity()?.id]);
   }
 }
