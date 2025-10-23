@@ -1,4 +1,4 @@
-import { Component, input, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import SportActivitySummary from '../../models/SportActivitySummary';
 import { Router } from '@angular/router';
 
