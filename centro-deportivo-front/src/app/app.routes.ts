@@ -5,11 +5,14 @@ import { LoginPage } from './pages/login-page/login-page';
 import { ProfilePage } from './pages/profile-page/profile-page';
 import { guestGuard } from './guards/guest-guard';
 import { authGuard } from './guards/auth-guard';
+import { ActivityListPage } from './pages/activity-list-page/activity-list-page';
 
 export const routes: Routes = [
     {path: '', component: HomePage},
     {path: 'public/login', component: LoginPage, canActivate: [guestGuard]},
     {path: 'public/register', component: FormPage, canActivate: [guestGuard]},
+
+    {path: 'activity-list', component: ActivityListPage},
 
     {path: 'members/profile', component: ProfilePage, canActivate: [authGuard]}
 ];

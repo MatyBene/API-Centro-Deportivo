@@ -5,6 +5,16 @@
             <li>
                 <a routerLink="/">Inicio</a>
             </li>
+
+            @if (authService.getUserRole() === 'MEMBER' || authService.getUserRole() === 'INSTRUCTOR' ) {
+                <li>
+                    <a routerLink="/activity-list">Mis actividades</a>
+                </li>
+            } @else {
+                <li>
+                    <a routerLink="/activity-list">Actividades</a>
+                </li>
+            }
             
             @if (!authService.isLoggedIn()) {
                 <li>
