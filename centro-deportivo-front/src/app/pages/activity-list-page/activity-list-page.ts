@@ -3,10 +3,11 @@ import { ActivityService } from '../../services/activity-service';
 import SportActivitySummary from '../../models/SportActivitySummary';
 import { ActivitySummaryItem } from '../../components/activity-summary-item/activity-summary-item';
 import { Pagination } from '../../components/pagination/pagination';
+import { SearchBox } from '../../components/search-box/search-box';
 
 @Component({
   selector: 'app-activity-list-page',
-  imports: [ActivitySummaryItem, Pagination],
+  imports: [ActivitySummaryItem, Pagination, SearchBox],
   templateUrl: './activity-list-page.html',
   styleUrl: './activity-list-page.css'
 })
@@ -16,6 +17,7 @@ export class ActivityListPage implements OnInit{
   pageSize: number = 5;
   totalPages!: number;
   isLoading: boolean = false;
+  currentSearchTerm: string = '';
 
   constructor(private activityService: ActivityService){}
 
@@ -28,7 +30,11 @@ export class ActivityListPage implements OnInit{
     const startTime = Date.now();
     const minLoadingTime = 300;
     
-    this.activityService.getActivities(this.currentPage, this.pageSize).subscribe({
+    const request = this.currentSearchTerm.trim() 
+      ? this.activityService.getByName(this.currentSearchTerm, this.currentPage, this.pageSize)
+      : this.activityService.getActivities(this.currentPage, this.pageSize);
+
+    request.subscribe({
       next: (data) => {
         const elapsedTime = Date.now() - startTime;
         const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
@@ -76,5 +82,11 @@ export class ActivityListPage implements OnInit{
 
   get hasPreviousPage(): boolean {
     return this.currentPage > 0;
+  }
+
+  onSearch(searchTerm: string) {
+    this.currentSearchTerm = searchTerm;
+    this.currentPage = 0;
+    this.loadActivities();
   }
 }

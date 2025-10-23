@@ -8,7 +8,7 @@ import { AbstractControl } from '@angular/forms';
   styleUrl: './field-error.css'
 })
 export class FieldError {
-  control = input<AbstractControl>();
+  control = input<AbstractControl | null>();
   serverError = input<string>();
   customErrors = input<{[key: string]: string}>({});
 

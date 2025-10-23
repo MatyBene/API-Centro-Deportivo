@@ -2,11 +2,7 @@
     <h1>LISTADO DE ACTIVIDADES</h1>
 </section>
 
-<section>
-    <label for="search">Buscar actividad: </label>
-    <input type="search" id="search">
-    <button>Buscar</button>
-</section>
+<app-search-box (searchEvent)="onSearch($event)"></app-search-box>
 
 @if (isLoading) {
     <div class="loading-container">
