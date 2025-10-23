@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import SportActivitySummary from '../../models/SportActivitySummary';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-activity-summary-item',
@@ -9,4 +10,10 @@ import SportActivitySummary from '../../models/SportActivitySummary';
 })
 export class ActivitySummaryItem {
   @Input({required: true}) activity!: SportActivitySummary;
+
+  constructor(private router: Router) {};
+
+  goToDetail() {
+    this.router.navigate(['/activity-list', this.activity.id]);
+  }
 }
