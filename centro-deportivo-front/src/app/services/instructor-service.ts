@@ -11,10 +11,8 @@ export class InstructorService {
  
   private readonly URL = `${environment.apiUrl}/instructors`;
   
-  constructor(private http: HttpClient) { }
-
- 
-  getInstructor(id: number): Observable<Instructor> {
+    constructor(private http: HttpClient) { }
+    getInstructor(id: number): Observable<Instructor> {
     return this.http.get<Instructor>(`${this.URL}/${id}`);
   }
 }
