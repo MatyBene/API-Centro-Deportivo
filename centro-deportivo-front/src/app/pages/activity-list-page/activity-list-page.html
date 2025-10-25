@@ -2,9 +2,18 @@
     <h1>LISTADO DE ACTIVIDADES</h1>
 </section>
 
-<app-search-box (searchEvent)="onSearch($event)"></app-search-box>
+<div class="filter-toggle-container">
+    <button class="filter-toggle-btn" (click)="toggleFilters()">
+        {{ showFilters ? 'Ocultar Filtros' : 'Buscar Actividad' }}
+    </button>
+</div>
 
-<app-time-range-search-box (searchEvent)="onTimeRangeSearch($event)"></app-time-range-search-box>
+@if (showFilters) {
+    <div class="filters-container">
+        <app-search-box (searchEvent)="onSearch($event)"></app-search-box>
+        <app-time-range-search-box (searchEvent)="onTimeRangeSearch($event)"></app-time-range-search-box>
+    </div>
+}
 
 @if (isLoading) {
     <div class="loading-container">

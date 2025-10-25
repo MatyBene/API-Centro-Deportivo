@@ -20,6 +20,7 @@ export class ActivityListPage implements OnInit{
   isLoading: boolean = false;
   currentSearchTerm: string = '';
   currentTimeRange!: {startTime: string, endTime: string};
+  showFilters: boolean = false;
 
   constructor(private activityService: ActivityService){}
 
@@ -112,5 +113,9 @@ export class ActivityListPage implements OnInit{
     this.currentSearchTerm = '';
     this.currentPage = 0;
     this.loadActivities();
+  }
+
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
   }
 }
