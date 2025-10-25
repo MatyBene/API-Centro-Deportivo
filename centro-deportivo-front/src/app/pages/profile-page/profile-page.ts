@@ -14,6 +14,6 @@ export class ProfilePage implements OnInit{
   constructor(public authService: AuthService){}
 
   ngOnInit(): void {
-      this.decodedToken = this.authService.getDecodedToken();
+    this.decodedToken = this.authService.getDecodedToken();
   }
 }
