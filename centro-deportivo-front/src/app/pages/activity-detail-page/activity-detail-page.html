@@ -1,1 +1,34 @@
-<p>activity-detail-page works!</p>
+<section class = "title-section">
+    <h1>DETALLE DE ACTIVIDAD</h1>
+</section>
+
+@if (isLoading){
+    <div class = "loading-container">
+        <div class = "loading-spinner"></div>
+        <p class = "loading-text">Cargando detalles de actividad...</p>
+    </div>
+}
+
+@if (error) {
+    <div class = "error-message-container">
+        <p class = "error-message">{{error}}</p>
+        <button [routerLink]="['/activity-list']" class = "back-to-list-btn">Volver al listado</button>
+    </div>
+}
+
+@if (activity && !isLoading){
+    <section class = "detail-container">
+        <div class = "activity-detail-card">
+            <h2 class="activity-name">{{ activity.name }}</h2>
+            <div class="detail-grid">
+                <div class = "detail-item">
+                    <strong>Cupo máximo: </strong> <span>{{activity.maxMembers}}</span>
+                </div>
+                <div>
+                    <strong>Instructor: </strong> <span>{{activity.instructorName}}</span>
+                </div>
+            </div>
+            <button [routerLink]="['/activity-list']" class="back-to-list-btn">Volver al Listado</button>
+        </div>
+    </section>
+}

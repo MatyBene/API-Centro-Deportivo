@@ -38,4 +38,9 @@ export class ActivityService {
     
       return this.http.get<PageableResponse<SportActivitySummary>>(`${this.URL}/search-by-time`, {params});
   }
+  
+  getActivity(id : number){
+    return this.http.get<SportActivitySummary>(`${this.URL}/${id}`);
+  }
+  
 }
