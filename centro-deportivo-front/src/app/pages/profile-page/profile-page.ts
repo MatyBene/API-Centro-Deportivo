@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { TokenPayLoad } from '../../models/Auth';
 import { AuthService } from '../../services/auth-service';
+import { Member } from '../../models/Member';
+import { MemberService } from '../../services/member-service';
 
 @Component({
   selector: 'app-profile-page',
@@ -9,11 +10,20 @@ import { AuthService } from '../../services/auth-service';
   styleUrl: './profile-page.css'
 })
 export class ProfilePage implements OnInit{
-  decodedToken!: TokenPayLoad | null;
+  member!: Member;
 
-  constructor(public authService: AuthService){}
+  constructor(public authService: AuthService, public memberService: MemberService){}
 
   ngOnInit(): void {
-    this.decodedToken = this.authService.getDecodedToken();
+    this.showUser();
+  }
+
+  showUser() {
+    if(this.authService.getUserRole() === 'MEMBER') {
+      this.memberService.getMember().subscribe({
+        next: (data) => {this.member = data},
+        error: (e) => {console.log('ERROR: ', e)}
+      })
+    }
   }
 }
