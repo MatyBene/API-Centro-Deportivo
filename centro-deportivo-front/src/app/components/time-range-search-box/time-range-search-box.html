@@ -1,1 +1,7 @@
-<p>time-range-search-box works!</p>
+<section>
+    <label for="startTime">Hora de inicio: </label>
+    <input type="time" id="startTime" [value]="startTime()" (input)="startTime.set($any($event.target).value)">
+
+    <label for="endTime">Hora de fin: </label>
+    <input type="time" id="endTime" [value]="endTime()" (input)="endTime.set($any($event.target).value)">
+</section>

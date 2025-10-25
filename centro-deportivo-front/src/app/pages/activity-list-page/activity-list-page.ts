@@ -4,10 +4,11 @@ import SportActivitySummary from '../../models/SportActivitySummary';
 import { ActivitySummaryItem } from '../../components/activity-summary-item/activity-summary-item';
 import { Pagination } from '../../components/pagination/pagination';
 import { SearchBox } from '../../components/search-box/search-box';
+import { TimeRangeSearchBox } from "../../components/time-range-search-box/time-range-search-box";
 
 @Component({
   selector: 'app-activity-list-page',
-  imports: [ActivitySummaryItem, Pagination, SearchBox],
+  imports: [ActivitySummaryItem, Pagination, SearchBox, TimeRangeSearchBox],
   templateUrl: './activity-list-page.html',
   styleUrl: './activity-list-page.css'
 })
