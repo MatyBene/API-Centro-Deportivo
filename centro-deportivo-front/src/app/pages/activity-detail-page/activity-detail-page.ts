@@ -10,7 +10,7 @@ import { ActivityService } from '../../services/activity-service';
   templateUrl: './activity-detail-page.html',
   styleUrl: './activity-detail-page.css'
 })
-export class ActivityDetailPage implements OnInit{
+export class ActivityDetailPage implements OnInit {
   activity! : SportActivitySummary;
   isLoading: boolean = true;
   error: string | null = null;
