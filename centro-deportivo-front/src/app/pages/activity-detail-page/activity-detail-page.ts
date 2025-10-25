@@ -33,7 +33,7 @@ export class ActivityDetailPage implements OnInit {
       this.isLoading = true;
       this.activityService.getActivity(id).subscribe({
         next: (data) => {
-          this.activity = data,
+          this.activity = data;
           this.isLoading = false;
         },
         error: (e) => {
@@ -47,7 +47,10 @@ export class ActivityDetailPage implements OnInit {
         this.isLoading = false;
     }
   }
-  getInstructor(instructorId: number): void{
-    this.router.navigate(['/instructors', instructorId])
+  getInstructor(instructorId: number): void {
+    this.router.navigate(['/instructors', instructorId]).then(() => {
+    }).catch(error => {
+      console.error('Error en la navegación:', error);
+    });
   }
 }

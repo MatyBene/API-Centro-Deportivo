@@ -1,1 +1,46 @@
-<p>instructor-detail-page works!</p>
+@if (instructor) {
+<section class="title-section">
+    <h1 class="instructor-title">{{ instructor.name }} {{ instructor.lastname }}</h1>
+</section>
+}
+
+@if (isLoading) {
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Cargando detalles del instructor...</p>
+    </div>
+}
+
+@if (error) {
+    <div class="error-message-container">
+        <p class="error-message">{{ error }}</p>
+        <button [routerLink]="['/activity-list']" class="button-base back-to-list-btn">
+            Volver al Listado
+        </button>
+    </div>
+}
+
+@if (instructor && !isLoading) {
+    <section class="detail-container fade-in">
+        <div class="instructor-detail-card activity-detail-card">
+            
+            <div class="detail-grid">
+                
+                <div class="detail-item full-width">
+                    <strong>Especialidad: </strong> <span>{{ instructor.specialty }}</span>
+                </div>
+                
+                <div class="detail-item full-width">
+                    <strong>Actividades: </strong> <span>{{ instructor.activityCount }}</span>
+                </div>
+                
+                </div>
+            
+            <div class="button-group">
+                <button [routerLink]="['/activity-list']" class="button-base back-to-list-btn">
+                    Volver al Listado
+                </button>
+            </div>
+        </div>
+    </section>
+}

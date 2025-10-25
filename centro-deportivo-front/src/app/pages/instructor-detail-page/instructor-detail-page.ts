@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core'; 
-import { ActivatedRoute } from '@angular/router'; 
+import { ActivatedRoute, RouterLink } from '@angular/router'; 
 import { InstructorService } from '../../services/instructor-service'; 
 import Instructor from '../../models/Instructor'; 
 import { CommonModule } from '@angular/common'; 
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
-  selector: 'app-instructor-detail-page',
-  standalone: true, 
-  imports: [CommonModule],
-  templateUrl: './instructor-detail-page.html',
-  styleUrl: './instructor-detail-page.css'
+  selector: 'app-instructor-detail-page',
+  standalone: true, 
+  imports: [CommonModule, RouterLink],
+  providers: [InstructorService],
+  templateUrl: './instructor-detail-page.html',
+  styleUrl: './instructor-detail-page.css'
 })
 export class InstructorDetailPage implements OnInit { 
   
@@ -44,6 +46,7 @@ export class InstructorDetailPage implements OnInit {
         }
       });
     } else {
+      console.error('ID inválido:', idParam);
       this.error = 'ID de instructor no válido.';
       this.isLoading = false;
     }

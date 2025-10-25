@@ -1,0 +1,26 @@
+.instructor-title {
+    font-family: 'AlimamaBold', sans-serif;
+    font-size: 56px;
+    color: #c9a83e; 
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 4px 4px 0 #000;
+    margin-bottom: 20px;
+    -webkit-text-stroke: 1px #d12c2c; 
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .instructor-title { 
+        font-size: 42px; 
+        text-shadow: 3px 3px 0 #000; 
+        -webkit-text-stroke: 0.8px #d12c2c; 
+    }
+}
+
+@media (max-width: 480px) {
+    .instructor-title { 
+        font-size: 32px; 
+        text-shadow: 2px 2px 0 #000; 
+    }
+}

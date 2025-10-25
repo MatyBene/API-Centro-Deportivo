@@ -1,23 +1,17 @@
-<section class="title-section">
-    <h2 class="activity-name">{{ activity.name }}</h2>
-</section>
-
-@if (isLoading){
-    <div class = "loading-container">
-        <div class = "loading-spinner"></div>
-        <p class = "loading-text">Cargando detalles de actividad...</p>
+@if (isLoading) {
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Cargando detalles de actividad...</p>
     </div>
-}
-
-@if (error) {
-    <div class = "error-message-container">
-        <p class = "error-message">{{error}}</p>
-        <button [routerLink]="['/activity-list']" class = "btn">Volver al listado</button>
+} @else if (error) {
+    <div class="error-message-container">
+        <p class="error-message">{{error}}</p>
+        <button [routerLink]="['/activity-list']" class="btn">Volver al listado</button>
     </div>
-}
-
-
-@if (activity && !isLoading) {
+} @else if (activity) {
+    <section class="title-section">
+        <h2 class="activity-name">{{ activity.name }}</h2>
+    </section>
     <section class = "detail-container fade-in">
         <div class = "activity-detail-card">
             <div class="detail-grid">
@@ -27,6 +21,10 @@
                     <a (click)="getInstructor(activity.instructorId)" class="instructor-link">
                         {{activity.instructorName}}
                     </a>
+                </div>
+                <div class="detail-item">
+                    <strong>ID Instructor:</strong> 
+                    <span>{{activity.instructorId}}</span>
                 </div>
                 <div class="detail-item">
                     <strong>Cupo Actual: </strong> <span>{{activity.currentMembers}}</span>
