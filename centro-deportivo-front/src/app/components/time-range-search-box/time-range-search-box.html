@@ -4,4 +4,6 @@
 
     <label for="endTime">Hora de fin: </label>
     <input type="time" id="endTime" [value]="endTime()" (input)="endTime.set($any($event.target).value)">
+
+    <button (click)="onSearch()">Buscar</button>
 </section>

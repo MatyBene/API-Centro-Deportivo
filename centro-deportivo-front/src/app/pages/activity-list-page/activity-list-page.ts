@@ -19,6 +19,7 @@ export class ActivityListPage implements OnInit{
   totalPages!: number;
   isLoading: boolean = false;
   currentSearchTerm: string = '';
+  currentTimeRange!: {startTime: string, endTime: string};
 
   constructor(private activityService: ActivityService){}
 
@@ -30,10 +31,25 @@ export class ActivityListPage implements OnInit{
     this.isLoading = true;
     const startTime = Date.now();
     const minLoadingTime = 300;
-    
-    const request = this.currentSearchTerm.trim() 
-      ? this.activityService.getByName(this.currentSearchTerm, this.currentPage, this.pageSize)
-      : this.activityService.getActivities(this.currentPage, this.pageSize);
+
+    let request;
+
+    if (this.currentTimeRange) {
+      request = this.activityService.getByTimeRange(
+        this.currentTimeRange.startTime, 
+        this.currentTimeRange.endTime, 
+        this.currentPage, 
+        this.pageSize
+      );
+    } else if (this.currentSearchTerm.trim()) {
+      request = this.activityService.getByName(
+        this.currentSearchTerm, 
+        this.currentPage, 
+        this.pageSize
+      );
+    } else {
+      request = this.activityService.getActivities(this.currentPage, this.pageSize);
+    }
 
     request.subscribe({
       next: (data) => {
@@ -87,6 +103,13 @@ export class ActivityListPage implements OnInit{
 
   onSearch(searchTerm: string) {
     this.currentSearchTerm = searchTerm;
+    this.currentPage = 0;
+    this.loadActivities();
+  }
+
+  onTimeRangeSearch(timeRange: {startTime: string, endTime: string}) {
+    this.currentTimeRange = timeRange;
+    this.currentSearchTerm = '';
     this.currentPage = 0;
     this.loadActivities();
   }

@@ -4,7 +4,7 @@
 
 <app-search-box (searchEvent)="onSearch($event)"></app-search-box>
 
-<app-time-range-search-box></app-time-range-search-box>
+<app-time-range-search-box (searchEvent)="onTimeRangeSearch($event)"></app-time-range-search-box>
 
 @if (isLoading) {
     <div class="loading-container">
