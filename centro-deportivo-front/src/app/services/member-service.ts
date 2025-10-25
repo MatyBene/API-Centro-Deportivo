@@ -18,4 +18,8 @@ export class MemberService {
   getMember() {
     return this.http.get<Member>(`${this.URL}/members/profile`);
   }
+
+  deleteMember() {
+    return this.http.delete(`${this.URL}/members/me`, {responseType: 'text'});
+  }
 }
