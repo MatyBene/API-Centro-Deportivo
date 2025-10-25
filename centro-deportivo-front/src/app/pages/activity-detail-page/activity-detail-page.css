@@ -131,6 +131,10 @@
     box-shadow: 3px 3px 0 #444;
 }
 
+.detail-item.full-width {
+    grid-column: 1 / -1; 
+}
+
 .detail-item strong, .detail-grid > div strong {
     
     color: #c9a83e;
@@ -141,78 +145,120 @@
     letter-spacing: 1px;
 }
 
+.detail-item.full-width:last-of-type { 
+    min-height: 100px; 
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+}
+
 .detail-item span, .detail-grid > div span {
-    /* Estilo del valor */
     color: #fff;
     display: inline-block;
 }
 
-
-.back-to-list-btn {
-    background-color: #d12c2c;
+.button-base {
+    /* Estilos de Fondo, Texto y Borde Comunes */
+    background-color: #d12c2c; /* Rojo base (Darse de baja / Volver al Listado) */
     color: #fff;
-    border: 3px solid #c9a83e;
+    border: 3px solid #c9a83e; /* Borde dorado */
     padding: 15px 40px;
     font-size: 18px;
     text-transform: uppercase;
     font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 6px 6px 0 #000;
     letter-spacing: 2px;
     font-family: 'MiSans', sans-serif;
-    display: block;
-    width: 100%;
+    
+    /* Interactividad */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 6px 6px 0 #000; /* Sombra base */
+    
+    /* 🚀 Propiedades de FLEX ITEM: Crucial para el layout en .button-group */
+    flex-grow: 1; 
+    max-width: 250px; /* Limita el ancho en pantallas grandes */
+    display: inline-flex; 
+    justify-content: center;
+    align-items: center;
+    width: auto; /* Dejar que Flexbox maneje el ancho */
 }
 
-.back-to-list-btn:hover {
-    background-color: #c9a83e;
+/* Efecto Hover (Común) */
+.button-base:hover {
+    background-color: #c9a83e; /* Fondo dorado al hacer hover */
     color: #000;
     transform: translateY(-3px);
     box-shadow: 8px 8px 0 #000;
 }
 
-.back-to-list-btn:active {
+/* Efecto Active/Presionado (Común) */
+.button-base:active {
     transform: translateY(-1px);
     box-shadow: 4px 4px 0 #000;
 }
 
 
-.error-message-container {
-    text-align: center;
-    padding: 30px;
-    max-width: 600px;
-    margin: 50px auto;
+/* Botón de Inscripción (Verde) */
+.subscribe-btn {
+    background-color: #38a169; /* Color de éxito/Inscribirse */
 }
 
-.error-message {
-    font-size: 20px;
-    color: #c9a83e;
-    background-color: rgba(0, 0, 0, 0.8);
-    border: 3px solid #c9a83e;
-    padding: 30px;
-    margin: 0 auto 20px;
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 2px;
-    box-shadow: 6px 6px 0 #000;
-    position: relative;
+/* Botón Darse de Baja (Usa el rojo base de .button-base) */
+.unsubscribe-btn:hover {
+    background-color: #a02020; /* Oscurece un poco el rojo al hacer hover */
 }
 
 
+/* El .back-to-list-btn y .action-btn (cuando es darse de baja) simplemente
+   usan los colores y estilos definidos en .button-base. */
+
+
+
+
+
+
+/* =======================================================
+   3. LAYOUT DE BOTONES (.button-group)
+   ======================================================= */
+
+.button-group {
+    /* MODO ESCRITORIO (PANTALLA COMPLETA): FILA */
+    display: flex;
+    flex-direction: row; /* ⬅️ CRÍTICO: Botones uno al lado del otro */
+    gap: 15px;
+    margin-top: 40px;
+    justify-content: center; 
+}
+
+/* =======================================================
+   4. MEDIA QUERIES (CAMBIO A COLUMNA EN MÓVILES)
+   ======================================================= */
 
 @media (max-width: 768px) {
+    /* 🚀 CAMBIO CLAVE: Cambiar la dirección a columna en móviles */
+    .button-group {
+        flex-direction: column; /* Botones apilados (uno debajo del otro) */
+        gap: 10px;
+    }
     
-    .title-section h1 { font-size: 42px; text-shadow: 3px 3px 0 #000; -webkit-text-stroke: 0.8px #c9a83e; }
-    .activity-detail-card { padding: 25px; box-shadow: 6px 6px 0 #d12c2c; }
-    .activity-name { font-size: 28px; }
-    .detail-grid { grid-template-columns: 1fr; } /* Se vuelve una sola columna */
+    /* Forzar el 100% de ancho en modo columna para todos los botones */
+    .button-base {
+        max-width: 100%; /* Ocupa todo el ancho disponible */
+        width: 100%;
+    }
+    
+    /* Nota: Mantenemos el cambio anterior para el grid en móviles */
+    .detail-grid { grid-template-columns: 1fr; } 
+    
+    /* ... otros estilos de 768px ... */
 }
 
 @media (max-width: 480px) {
-    
-    .title-section h1 { font-size: 32px; text-shadow: 2px 2px 0 #000; }
-    .activity-detail-card { padding: 20px; box-shadow: 4px 4px 0 #d12c2c; }
-    .activity-name { font-size: 24px; margin-bottom: 20px; }
-    .back-to-list-btn { padding: 10px 25px; font-size: 16px; }
+    /* Reducción de padding y fuente para pantallas muy pequeñas */
+    .button-base { 
+        padding: 10px 25px; 
+        font-size: 16px; 
+    }
+    /* ... otros estilos de 480px ... */
 }
+

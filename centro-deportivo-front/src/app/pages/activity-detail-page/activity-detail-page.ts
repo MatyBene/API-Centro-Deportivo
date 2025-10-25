@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import SportActivitySummary from '../../models/SportActivitySummary';
 import { ActivityService } from '../../services/activity-service';
+import SportActivity from '../../models/SportActivity';
 
 @Component({
   selector: 'app-activity-detail-page',
@@ -11,7 +11,7 @@ import { ActivityService } from '../../services/activity-service';
   styleUrl: './activity-detail-page.css'
 })
 export class ActivityDetailPage implements OnInit {
-  activity! : SportActivitySummary;
+  activity! : SportActivity;
   isLoading: boolean = true;
   error: string | null = null;
 
@@ -32,7 +32,7 @@ export class ActivityDetailPage implements OnInit {
       this.isLoading = true;
       this.activityService.getActivity(id).subscribe({
         next: (data) => {
-          this.activity = data;
+          this.activity = data,
           this.isLoading = false;
         },
         error: (e) => {

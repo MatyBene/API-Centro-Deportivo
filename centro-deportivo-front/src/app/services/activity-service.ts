@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { PageableResponse } from '../models/Pageable';
 import SportActivitySummary from '../models/SportActivitySummary';
+import SportActivity from '../models/SportActivity';
 
 @Injectable({
   providedIn: 'root'
@@ -39,8 +40,7 @@ export class ActivityService {
       return this.http.get<PageableResponse<SportActivitySummary>>(`${this.URL}/search-by-time`, {params});
   }
   
-  getActivity(id : number){
-    return this.http.get<SportActivitySummary>(`${this.URL}/${id}`);
+  getActivity(id: number){
+    return this.http.get<SportActivity>(`${this.URL}/${id}`)
   }
-  
 }
