@@ -17,6 +17,25 @@ export class ActivityService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<PageableResponse<SportActivitySummary>>(this.URL, {params})
+    return this.http.get<PageableResponse<SportActivitySummary>>(this.URL, {params});
+  }
+
+  getByName(name: string, page: number, size: number) {
+    const params = new HttpParams()
+      .set('name', name)
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<PageableResponse<SportActivitySummary>>(`${this.URL}/search`, {params});
+  }
+
+  getByTimeRange(startTime: string, endTime: string, page: number, size: number) {
+    const params = new HttpParams()
+      .set('startTime', startTime)
+      .set('endTime', endTime)
+      .set('page', page.toString())
+      .set('size', size.toString());
+    
+      return this.http.get<PageableResponse<SportActivitySummary>>(`${this.URL}/search-by-time`, {params});
   }
 }
