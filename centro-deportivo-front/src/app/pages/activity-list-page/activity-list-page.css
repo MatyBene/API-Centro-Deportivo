@@ -71,6 +71,13 @@
 .filters-container {
     animation: slideDown 0.3s ease-out;
     margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
 }
 
 @keyframes slideDown {
@@ -212,6 +219,9 @@
 
     .filters-container {
         margin-bottom: 25px;
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0 15px;
     }
 
     .loading-container {
@@ -286,6 +296,9 @@
 
     .filters-container {
         margin-bottom: 20px;
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0 10px;
     }
 
     .loading-container {
