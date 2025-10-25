@@ -97,6 +97,15 @@ public class MemberService implements IMemberService {
 
         return MemberMapper.mapToMemberDetailsDTO(member);
     }
+
+    @Override
+    public MembersDetailsDTO getMemberDetailsByUsername(String username) {
+        Member member = (Member) userRepository.findById(credentialService.getUserByUsername(username).getId())
+                .orElseThrow(() -> new MemberNotFoundException("Socio no encontrado"));
+
+        return MemberMapper.mapToMemberDetailsDTO(member);
+    }
+
     @Override
     public void saveMember(User member) {
         userRepository.save(member);

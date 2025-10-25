@@ -1,4 +1,5 @@
 export interface Member {
+    id: number,
     name: string,
     lastname: string,
     dni: string,
