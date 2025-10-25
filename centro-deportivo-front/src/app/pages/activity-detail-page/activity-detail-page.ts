@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ActivityService } from '../../services/activity-service';
 import SportActivity from '../../models/SportActivity';
 
@@ -17,7 +17,8 @@ export class ActivityDetailPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private activityService : ActivityService
+    private activityService : ActivityService,
+    private router: Router
   ){}
 
   ngOnInit(): void {
@@ -46,6 +47,7 @@ export class ActivityDetailPage implements OnInit {
         this.isLoading = false;
     }
   }
-
-
+  getInstructor(instructorId: number): void{
+    this.router.navigate(['/instructors', instructorId])
+  }
 }
