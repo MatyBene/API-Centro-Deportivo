@@ -28,4 +28,8 @@ export class MemberService {
   getEnrolledActivities(): Observable<EnrolledActivitySummary[]> {
     return this.http.get<EnrolledActivitySummary[]>(`${this.URL}/members/activities`);
   }
+
+  unsubscribeFromActivity(activityId: number): Observable<void> {
+    return this.http.delete<void>(`${this.URL}/members/activities/${activityId}`);
+  }
 }
