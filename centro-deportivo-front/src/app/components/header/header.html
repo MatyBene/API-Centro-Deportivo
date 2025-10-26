@@ -6,9 +6,9 @@
                 <a routerLink="/">Inicio</a>
             </li>
 
-            @if (authService.getUserRole() === 'MEMBER' || authService.getUserRole() === 'INSTRUCTOR' ) {
+            @if (authService.getUserRole() === 'INSTRUCTOR') {
                 <li>
-                    <a routerLink="/activity-list">Mis actividades</a>
+                    <a routerLink="/activity-list/my-activities">Mis actividades</a>
                 </li>
             } @else {
                 <li>
@@ -18,7 +18,7 @@
             
             @if (!authService.isLoggedIn()) {
                 <li>
-                    <a routerLink="public/login">Iniciar sesión</a>
+                    <a routerLink="/public/login">Iniciar sesión</a>
                 </li>
                 <li>
                     <a routerLink="/public/register">Registrarse</a>
@@ -27,7 +27,7 @@
             
             @if (authService.isLoggedIn()) {
                 <li>
-                    <a routerLink="/members/profile">Perfil</a>
+                    <a routerLink="/profile">Perfil</a>
                 </li>
                 <li>
                     <button (click)="logout()">Cerrar sesión</button>

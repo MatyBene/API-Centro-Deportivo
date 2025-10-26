@@ -7,7 +7,7 @@ import { guestGuard } from './guards/guest-guard';
 import { authGuard } from './guards/auth-guard';
 import { ActivityListPage } from './pages/activity-list-page/activity-list-page';
 import { ActivityDetailPage } from './pages/activity-detail-page/activity-detail-page';
-import { InstructorDetailPage } from './pages/instructor-detail-page/instructor-detail-page';
+import { InstructorActivitiesPage } from './pages/instructor-activities-page/instructor-activities-page';
 
 export const routes: Routes = [
     {path: '', component: HomePage},
@@ -15,7 +15,8 @@ export const routes: Routes = [
     {path: 'public/register', component: FormPage, canActivate: [guestGuard]},
 
     {path: 'activity-list', component: ActivityListPage},
+    {path: 'activity-list/my-activities', component: InstructorActivitiesPage, canActivate: [authGuard]},
     {path: 'activity-list/:id', component: ActivityDetailPage},
-    {path: 'instructors/:id', component: InstructorDetailPage, canActivate: [authGuard]},
-    {path: 'members/profile', component: ProfilePage, canActivate: [authGuard]}
+
+    {path: 'profile', component: ProfilePage, canActivate: [authGuard]}
 ];
