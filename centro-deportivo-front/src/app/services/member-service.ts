@@ -26,6 +26,6 @@ export class MemberService {
   }
 
   getEnrolledActivities(): Observable<SportActivitySummary[]> {
-    return this.http.get<SportActivitySummary[]>(`${this.URL}/members/my-activities`);
+    return this.http.get<SportActivitySummary[]>(`${this.URL}/members/activities`);
   }
 }
