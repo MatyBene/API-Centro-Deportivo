@@ -17,5 +17,6 @@ export const routes: Routes = [
     {path: 'activity-list', component: ActivityListPage},
     {path: 'activity-list/my-activities', component: InstructorActivitiesPage, canActivate: [authGuard]},
     {path: 'activity-list/:id', component: ActivityDetailPage},
+
     {path: 'profile', component: ProfilePage, canActivate: [authGuard]}
 ];
