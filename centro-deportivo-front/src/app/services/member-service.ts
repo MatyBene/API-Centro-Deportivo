@@ -7,11 +7,19 @@ import { Member } from '../models/Member';
   providedIn: 'root'
 })
 export class MemberService {
-  private readonly URL = `${environment.apiUrl}/public/register`;
+  private readonly URL = environment.apiUrl;
 
   constructor(private http: HttpClient){}
 
   register(member: Member){
-    return this.http.post(this.URL, member, {responseType: 'text'});
+    return this.http.post(`${this.URL}/public/register`, member, {responseType: 'text'});
+  }
+
+  getMember() {
+    return this.http.get<Member>(`${this.URL}/members/profile`);
+  }
+
+  deleteMember() {
+    return this.http.delete(`${this.URL}/members/me`, {responseType: 'text'});
   }
 }

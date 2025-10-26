@@ -1,13 +1,12 @@
-@if (decodedToken) {
-    <h2>
-        {{decodedToken.sub}}
-    </h2>
+<section>
+    @if (member) {
+        <p>
+            {{member.name}}
+        </p>
+        <p>
+            {{member.username}}
+        </p>
+    }
 
-    <h3>
-        {{decodedToken.rol[0].authority}}
-    </h3>
-
-    
-} @else {
-    <p>No devolvio token</p>
-}
+    <button (click)="removeMember()">Eliminar cuenta</button>
+</section>
