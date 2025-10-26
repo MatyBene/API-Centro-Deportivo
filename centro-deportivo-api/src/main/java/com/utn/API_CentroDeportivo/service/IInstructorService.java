@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface IInstructorService {
     Optional<InstructorSummaryDTO> getInstructorSummaryById(long id);
     Optional<Instructor> findByUsername(String username);
+    Optional<InstructorDetailsDTO> getInstructorDetailsById(Long id);
 }
