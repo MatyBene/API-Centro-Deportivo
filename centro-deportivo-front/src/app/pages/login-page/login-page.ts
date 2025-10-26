@@ -34,10 +34,7 @@ export class LoginPage {
       this.authService.login(username, password).subscribe({
         next: (data) => {
           this.isLoading = false;
-          alert('El usuario ingreso correctamente');
-          console.log(this.authService.getUserRole());
-          this.router.navigate(['/members/profile']);
-          console.log('Login exitoso', data);
+          this.router.navigate(['/profile']);
         },
         error: (error) => {
           this.isLoading = false;

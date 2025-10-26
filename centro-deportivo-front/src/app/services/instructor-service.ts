@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 })
 export class InstructorService {
 
-  private readonly URL = `${environment.apiUrl}/activities`;  
+  private readonly URL = `${environment.apiUrl}`;  
   constructor(private http: HttpClient) { }
    
   getActivitiesByInstructor(): Observable<SportActivitySummary[]> {  
