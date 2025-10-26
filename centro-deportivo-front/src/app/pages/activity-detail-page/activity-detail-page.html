@@ -18,9 +18,14 @@
             
                 <div class="detail-item">
                     <strong>Instructor: </strong> 
-                    <a (click)="getInstructor(activity.instructorId)" class="instructor-link">
-                        {{activity.instructorName}}
-                    </a>
+                    @if (authService.isLoggedIn()) {
+                        <a (click)="getInstructor(activity.instructorId)" class="instructor-link">
+                            {{activity.instructorName}}
+                        </a>
+                    } @else {
+                        <span>{{activity.instructorName}}</span>
+                    }
+                    
                 </div>
                 <div class="detail-item">
                     <strong>ID Instructor:</strong> 

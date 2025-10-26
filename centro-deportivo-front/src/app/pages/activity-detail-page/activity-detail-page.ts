@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ActivityService } from '../../services/activity-service';
 import SportActivity from '../../models/SportActivity';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-activity-detail-page',
@@ -18,7 +19,8 @@ export class ActivityDetailPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private activityService : ActivityService,
-    private router: Router
+    private router: Router, 
+    public authService: AuthService
   ){}
 
   ngOnInit(): void {
