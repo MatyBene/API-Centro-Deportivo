@@ -157,108 +157,91 @@
     display: inline-block;
 }
 
+.instructor-link {
+    color: #fff; 
+    text-decoration: none; 
+    font-weight: bold;
+    cursor: pointer; 
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.instructor-link:hover {
+    color: #c9a83e; 
+    text-decoration: underline; 
+}
+
 .button-base {
-    /* Estilos de Fondo, Texto y Borde Comunes */
-    background-color: #d12c2c; /* Rojo base (Darse de baja / Volver al Listado) */
+    
+    background-color: #d12c2c; 
     color: #fff;
-    border: 3px solid #c9a83e; /* Borde dorado */
+    border: 3px solid #c9a83e; 
     padding: 15px 40px;
     font-size: 18px;
     text-transform: uppercase;
     font-weight: bold;
     letter-spacing: 2px;
     font-family: 'MiSans', sans-serif;
-    
-    /* Interactividad */
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 6px 6px 0 #000; /* Sombra base */
-    
-    /* 🚀 Propiedades de FLEX ITEM: Crucial para el layout en .button-group */
+    box-shadow: 6px 6px 0 #000; 
     flex-grow: 1; 
-    max-width: 250px; /* Limita el ancho en pantallas grandes */
+    max-width: 250px; 
     display: inline-flex; 
     justify-content: center;
     align-items: center;
-    width: auto; /* Dejar que Flexbox maneje el ancho */
+    width: auto; 
 }
 
-/* Efecto Hover (Común) */
 .button-base:hover {
-    background-color: #c9a83e; /* Fondo dorado al hacer hover */
+    background-color: #c9a83e; 
     color: #000;
     transform: translateY(-3px);
     box-shadow: 8px 8px 0 #000;
 }
 
-/* Efecto Active/Presionado (Común) */
+
 .button-base:active {
     transform: translateY(-1px);
     box-shadow: 4px 4px 0 #000;
 }
 
-
-/* Botón de Inscripción (Verde) */
 .subscribe-btn {
-    background-color: #38a169; /* Color de éxito/Inscribirse */
+    background-color: #38a169; 
 }
 
-/* Botón Darse de Baja (Usa el rojo base de .button-base) */
+
 .unsubscribe-btn:hover {
-    background-color: #a02020; /* Oscurece un poco el rojo al hacer hover */
+    background-color: #a02020; 
 }
 
-
-/* El .back-to-list-btn y .action-btn (cuando es darse de baja) simplemente
-   usan los colores y estilos definidos en .button-base. */
-
-
-
-
-
-
-/* =======================================================
-   3. LAYOUT DE BOTONES (.button-group)
-   ======================================================= */
 
 .button-group {
-    /* MODO ESCRITORIO (PANTALLA COMPLETA): FILA */
+    
     display: flex;
-    flex-direction: row; /* ⬅️ CRÍTICO: Botones uno al lado del otro */
+    flex-direction: row; 
     gap: 15px;
     margin-top: 40px;
     justify-content: center; 
 }
 
-/* =======================================================
-   4. MEDIA QUERIES (CAMBIO A COLUMNA EN MÓVILES)
-   ======================================================= */
-
 @media (max-width: 768px) {
-    /* 🚀 CAMBIO CLAVE: Cambiar la dirección a columna en móviles */
     .button-group {
-        flex-direction: column; /* Botones apilados (uno debajo del otro) */
+        flex-direction: column; 
         gap: 10px;
     }
     
-    /* Forzar el 100% de ancho en modo columna para todos los botones */
+   
     .button-base {
-        max-width: 100%; /* Ocupa todo el ancho disponible */
+        max-width: 100%; 
         width: 100%;
     }
-    
-    /* Nota: Mantenemos el cambio anterior para el grid en móviles */
     .detail-grid { grid-template-columns: 1fr; } 
-    
-    /* ... otros estilos de 768px ... */
 }
 
 @media (max-width: 480px) {
-    /* Reducción de padding y fuente para pantallas muy pequeñas */
     .button-base { 
         padding: 10px 25px; 
         font-size: 16px; 
     }
-    /* ... otros estilos de 480px ... */
 }
 

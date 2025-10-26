@@ -18,4 +18,6 @@ public class SportActivityDetailsDTO extends SportActivitySummaryDTO{
     private String startTime;
     private String endTime;
     private List<Day> classDays;
+    private Long instructorId;
+    private String instructorName;
 }

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ActivityService } from '../../services/activity-service';
 import SportActivity from '../../models/SportActivity';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-activity-detail-page',
@@ -17,7 +18,9 @@ export class ActivityDetailPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private activityService : ActivityService
+    private activityService : ActivityService,
+    private router: Router, 
+    public authService: AuthService
   ){}
 
   ngOnInit(): void {
@@ -32,7 +35,7 @@ export class ActivityDetailPage implements OnInit {
       this.isLoading = true;
       this.activityService.getActivity(id).subscribe({
         next: (data) => {
-          this.activity = data,
+          this.activity = data;
           this.isLoading = false;
         },
         error: (e) => {
@@ -46,6 +49,10 @@ export class ActivityDetailPage implements OnInit {
         this.isLoading = false;
     }
   }
-
-
+  getInstructor(instructorId: number): void {
+    this.router.navigate(['/instructors', instructorId]).then(() => {
+    }).catch(error => {
+      console.error('Error en la navegación:', error);
+    });
+  }
 }
