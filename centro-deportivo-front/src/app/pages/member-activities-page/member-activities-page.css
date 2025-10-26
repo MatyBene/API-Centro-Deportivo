@@ -195,6 +195,64 @@
     background-color: #d12c2c;
 }
 
+.unenrollment-message-container {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.unenrollment-message {
+    padding: 15px;
+    background-color: #1a1a1a;
+    border: 2px solid #c9a83e;
+    color: #c9a83e;
+    font-weight: bold;
+    box-shadow: 4px 4px 0 #000;
+}
+
+.activity-details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; 
+    margin-bottom: 20px; 
+}
+
+.detail-item-small {
+    font-size: 15px;
+    background-color: #1a1a1a;
+    padding: 8px 12px;
+    border-left: 3px solid #c9a83e; 
+}
+
+.detail-item-small strong {
+    color: #d12c2c; 
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+
+.button-group-card.multiple-buttons {
+    display: flex; 
+    gap: 10px; 
+}
+
+.button-group-card.multiple-buttons .button-base {
+    flex: 1 1 50%; 
+}
+
+.unsubscribe-btn {
+    background-color: #555; 
+    border-color: #c9a83e;
+}
+
+.unsubscribe-btn:hover {
+    background-color: #d12c2c; 
+    color: #fff;
+    box-shadow: 6px 6px 0 #000;
+}
+
 
 @media (max-width: 768px) {
     .activities-container {
