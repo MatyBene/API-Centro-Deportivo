@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import SportActivitySummary from '../../models/SportActivitySummary';
 import { MemberService } from '../../services/member-service';
 import { RouterLink } from '@angular/router';
+import EnrolledActivitySummary from '../../models/EnrolledActivitySummary';
 
 @Component({
   selector: 'app-member-activities-page',
@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 })
 export class MemberActivitiesPageComponent implements OnInit {
 
-  activities: SportActivitySummary[] = [];
+  activities: EnrolledActivitySummary[] = [];
   isLoading: boolean = true;
   error: string | null = null;
 

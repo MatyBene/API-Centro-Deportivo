@@ -82,6 +82,7 @@ public class EnrollmentService implements IEnrollmentService {
         return enrollments.stream()
                 .map(enrollment -> EnrollmentDTO.builder()
                         .activityName(enrollment.getActivity().getName())
+                        .activityId(enrollment.getActivity().getId())
                         .startDate(enrollment.getStartDate())
                         .endDate(enrollment.getEndDate())
                         .build())
