@@ -47,6 +47,9 @@ export class MemberActivitiesPageComponent implements OnInit {
       next: (response) => {
         this.unenrollmentMessage = `¡Te has dado de baja de ${activityName} con éxito!`; 
         this.loadActivities(); 
+        setTimeout(() => {
+           this.unenrollmentMessage = null;
+        }, 5000);
       },
       error: (e) => {
         console.error('Error al darse de baja:', e);
