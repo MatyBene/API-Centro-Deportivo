@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Member } from '../models/Member';
+import { Observable } from 'rxjs';
+import EnrolledActivitySummary from '../models/EnrolledActivitySummary';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +23,9 @@ export class MemberService {
 
   deleteMember() {
     return this.http.delete(`${this.URL}/members/me`, {responseType: 'text'});
+  }
+
+  getEnrolledActivities(): Observable<EnrolledActivitySummary[]> {
+    return this.http.get<EnrolledActivitySummary[]>(`${this.URL}/members/activities`);
   }
 }
