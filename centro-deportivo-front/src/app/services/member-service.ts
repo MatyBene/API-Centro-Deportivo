@@ -30,6 +30,6 @@ export class MemberService {
   }
 
   unsubscribeFromActivity(activityId: number): Observable<void> {
-    return this.http.delete<void>(`${this.URL}/members/activities/${activityId}`);
+    return this.http.delete<void>(`${this.URL}/members/activities/${activityId}`, {responseType: 'text' as 'json'});
   }
 }
