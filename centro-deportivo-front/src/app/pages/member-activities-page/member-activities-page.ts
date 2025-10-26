@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import SportActivitySummary from '../../models/SportActivitySummary';
 import { MemberService } from '../../services/member-service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-member-activities-page',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './member-activities-page.html',
   styleUrl: './member-activities-page.css'
 })
@@ -27,6 +28,9 @@ export class MemberActivitiesPageComponent implements OnInit {
         this.activities = data;
         this.isLoading = false;
         this.error = null;
+        if (data && data.length > 0) {
+        console.log('Estructura del primer objeto de actividad/inscripción:', data[0]);
+      }
       },
       error: (e) => {
         console.error('Error al cargar actividades:', e);
