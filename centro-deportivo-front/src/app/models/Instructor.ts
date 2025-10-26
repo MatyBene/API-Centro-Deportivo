@@ -1,7 +1,10 @@
+import SportActivitySummary from "./SportActivitySummary";
+
 export default interface Instructor {
     id: number; 
     name: string;
     lastname: string;
     specialty: string;
-    activityCount: number; 
+    birthdate: string;
+    activities: SportActivitySummary[]
 }
