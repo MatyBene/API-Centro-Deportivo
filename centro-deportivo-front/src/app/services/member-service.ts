@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Member } from '../models/Member';
 import { Observable } from 'rxjs';
 import EnrolledActivitySummary from '../models/EnrolledActivitySummary';
+import { LoginResponse } from '../models/Auth';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +36,9 @@ export class MemberService {
 
   subscribeToActivity(activityId: number) {
     return this.http.post<void>(`${this.URL}/members/enroll/${activityId}`, {}, {responseType: 'text' as 'json'});
+  }
+
+  putMember(member: Member) {
+    return this.http.put(`${this.URL}/members/profile`, member, {responseType: 'text'});
   }
 }
