@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ActivityService } from '../../services/activity-service';
 import SportActivity from '../../models/SportActivity';
 import { AuthService } from '../../services/auth-service';
+import { MemberService } from '../../services/member-service';
 
 @Component({
   selector: 'app-activity-detail-page',
@@ -15,12 +16,15 @@ export class ActivityDetailPage implements OnInit {
   activity! : SportActivity;
   isLoading: boolean = true;
   error: string | null = null;
+  isEnrolled: boolean = false;
+  activityId!: number;
 
   constructor(
     private route: ActivatedRoute,
     private activityService : ActivityService,
     private router: Router, 
-    public authService: AuthService
+    public authService: AuthService,
+    private memberService: MemberService
   ){}
 
   ngOnInit(): void {
@@ -32,10 +36,12 @@ export class ActivityDetailPage implements OnInit {
     const id = idParam ? +idParam : null;
 
     if (id){
+      this.activityId = id;
       this.isLoading = true;
       this.activityService.getActivity(id).subscribe({
         next: (data) => {
           this.activity = data;
+          this.checkIfEnrolled();
           this.isLoading = false;
         },
         error: (e) => {
@@ -49,10 +55,51 @@ export class ActivityDetailPage implements OnInit {
         this.isLoading = false;
     }
   }
+
+  checkIfEnrolled(): void {
+    if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'MEMBER' && this.activityId) {
+      this.memberService.getEnrolledActivities().subscribe({
+        next: (activities) => {
+          this.isEnrolled = activities.some(activity => activity.activityId === this.activityId);
+        },
+        error: (e) => {
+          console.log('Error al verificar inscripción: ', e);
+          this.isEnrolled = false;
+        }
+      });
+    } else {
+      this.isEnrolled = false;
+    }
+  }
+
   getInstructor(instructorId: number): void {
     this.router.navigate(['/instructors', instructorId]).then(() => {
     }).catch(error => {
       console.error('Error en la navegación:', error);
     });
+  }
+
+  enrollToActivity() {  
+    this.memberService.subscribeToActivity(this.activityId).subscribe({
+      next: () => {
+        this.isEnrolled = true;
+        this.loadActivityDetail();
+      },
+      error: (e) => {
+        console.log('Error al inscribirse:', e);
+      }
+    });
+  }
+
+  unenrollToActivity() {
+    this.memberService.unsubscribeFromActivity(this.activityId).subscribe({
+      next: () => {
+        this.isEnrolled = false;
+        this.loadActivityDetail();
+      },
+      error: (e) => {
+        console.log('Error al desuscribirse:', e)
+      }
+    })
   }
 }

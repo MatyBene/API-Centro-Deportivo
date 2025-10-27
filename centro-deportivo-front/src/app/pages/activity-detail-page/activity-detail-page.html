@@ -28,16 +28,12 @@
                     
                 </div>
                 <div class="detail-item">
-                    <strong>ID Instructor:</strong> 
-                    <span>{{activity.instructorId}}</span>
-                </div>
-                <div class="detail-item">
                     <strong>Cupo Actual: </strong> <span>{{activity.currentMembers}}</span>
                 </div>
                 <div class="detail-item">
                     <strong>Hora Inicio: </strong> <span>{{activity.startTime}}</span>
                 </div>
-                                <div class="detail-item">
+                <div class="detail-item">
                     <strong>Cupo Maximo: </strong> <span>{{activity.maxMembers}}</span>
                 </div>
                 <div class="detail-item">
@@ -60,10 +56,16 @@
                 
             </div>
             <div class = "button-group">
-            <button class= "button-base action-btn subscribe-btn">Inscribirse</button>
-            <button class="button-base action-btn unsubscribe-btn">Darse de baja</button>
-            
-            <button [routerLink]="['/activity-list']" class="button-base back-to-list-btn">Volver al Listado</button>
+                
+                @if (authService.isLoggedIn() && authService.getUserRole() === 'MEMBER') {
+                    @if (isEnrolled) {
+                        <button class="button-base action-btn unsubscribe-btn" (click)="unenrollToActivity()">Darse de baja</button>
+                    } @else if(activity.currentMembers < activity.maxMembers) {
+                        <button class="button-base action-btn subscribe-btn" (click)="enrollToActivity()">Inscribirse</button>
+                    }
+                }
+                
+                <button [routerLink]="['/activity-list']" class="button-base back-to-list-btn">Volver al Listado</button>
             </div>    
         </div>
     </section>
