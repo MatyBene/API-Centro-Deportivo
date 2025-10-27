@@ -24,5 +24,6 @@ export const routes: Routes = [
 
     {path: 'instructors/:id', component: InstructorDetailPage},
 
-    {path: 'profile', component: ProfilePage, canActivate: [authGuard]}
+    {path: 'profile', component: ProfilePage, canActivate: [authGuard]},
+    {path: 'profile/edit', component: FormPage, canActivate: [authGuard]}
 ];
