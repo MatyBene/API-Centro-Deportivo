@@ -7,5 +7,6 @@ export interface Member {
     phone: string,
     email: string,
     username: string,
-    password: string   
+    password: string,
+    status: string
 }
