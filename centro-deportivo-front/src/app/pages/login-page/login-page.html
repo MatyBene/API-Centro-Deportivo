@@ -1,0 +1,22 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    
+    <fieldset>
+        <label for="username">Nombre de usuario</label>
+        <input type="text" id="username" placeholder="Ingresa tu usuario" formControlName="username">
+    </fieldset>
+
+    <fieldset>
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" placeholder="Ingresa tu contraseña" formControlName="password">
+    </fieldset>
+
+    @if (errorMessage) {
+        <div>
+            {{ errorMessage }}
+        </div>
+    }
+
+    <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'INICIANDO SESIÓN...' : 'INICIAR SESIÓN' }}
+    </button>
+</form>
