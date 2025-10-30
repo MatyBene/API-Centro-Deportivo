@@ -10,6 +10,7 @@ import { ActivityDetailPage } from './pages/activity-detail-page/activity-detail
 import { InstructorActivitiesPage } from './pages/instructor-activities-page/instructor-activities-page';
 import { MemberActivitiesPageComponent } from './pages/member-activities-page/member-activities-page';
 import { InstructorDetailPage } from './pages/instructor-detail-page/instructor-detail-page';
+import { MembersListPage } from './pages/members-list-page/members-list-page';
 
 export const routes: Routes = [
     {path: '', component: HomePage},
@@ -21,9 +22,9 @@ export const routes: Routes = [
     {path: 'activity-list/:id', component: ActivityDetailPage},
 
     {path: 'my-activities', component: MemberActivitiesPageComponent, canActivate: [authGuard]},
-
+    {path: 'instructors/members', component: MembersListPage, canActivate: [authGuard]},
     {path: 'instructors/:id', component: InstructorDetailPage},
-
     {path: 'profile', component: ProfilePage, canActivate: [authGuard]},
-    {path: 'profile/edit', component: FormPage, canActivate: [authGuard]}
+    {path: 'profile/edit', component: FormPage, canActivate: [authGuard]},
+    
 ];
