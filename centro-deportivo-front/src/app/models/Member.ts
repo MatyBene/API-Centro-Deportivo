@@ -1,4 +1,5 @@
 export interface Member {
+    id: number,
     name: string,
     lastname: string,
     dni: string,
@@ -6,5 +7,6 @@ export interface Member {
     phone: string,
     email: string,
     username: string,
-    password: string   
+    password: string,
+    status: string
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MemberService } from '../../services/member-service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { FieldError } from '../../components/field-error/field-error';
 import { CustomValidators } from '../../utils/custom-validators';
 
@@ -13,29 +13,40 @@ import { CustomValidators } from '../../utils/custom-validators';
 })
 export class FormPage implements OnInit{
   userForm!: FormGroup;
-  userId?: string;
+  isEditMode: boolean = false;
   serverErrors: { [key: string]: string } = {};
 
   constructor(
     private memberService: MemberService,
     private fb: FormBuilder,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ){}
 
   ngOnInit(): void {
-    this.userForm = this.fb.group({
-      name: ['', [Validators.required, CustomValidators.noWhitespace]],
-      lastname: ['', [Validators.required, CustomValidators.noWhitespace]],
-      dni: ['', [Validators.required, Validators.minLength(8), CustomValidators.noWhitespace]],
-      birthdate: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
-      phone: ['', [Validators.required, Validators.maxLength(15), CustomValidators.noWhitespace]],
-      email: ['', [Validators.required, Validators.email]],
-      username: ['', [Validators.required, CustomValidators.noWhitespace]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/)]]
-    });
+    this.isEditMode = this.router.url.includes('/profile/edit');
 
-    // this.userId = this.route.snapshot.params['id'];
+    if (this.isEditMode) {
+      this.userForm = this.fb.group({
+        name: ['', [Validators.required, CustomValidators.noWhitespace]],
+        lastname: ['', [Validators.required, CustomValidators.noWhitespace]],
+        dni: ['', [Validators.required, Validators.minLength(8), CustomValidators.noWhitespace]],
+        birthdate: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
+        phone: ['', [Validators.required, Validators.maxLength(15), CustomValidators.noWhitespace]],
+        email: ['', [Validators.required, Validators.email]]
+      });
+      this.loadMemberData();
+    } else {
+      this.userForm = this.fb.group({
+        name: ['', [Validators.required, CustomValidators.noWhitespace]],
+        lastname: ['', [Validators.required, CustomValidators.noWhitespace]],
+        dni: ['', [Validators.required, Validators.minLength(8), CustomValidators.noWhitespace]],
+        birthdate: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
+        phone: ['', [Validators.required, Validators.maxLength(15), CustomValidators.noWhitespace]],
+        email: ['', [Validators.required, Validators.email]],
+        username: ['', [Validators.required, CustomValidators.noWhitespace]],
+        password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/)]]
+      });
+    }
 
     this.userForm.valueChanges.subscribe(() => {
       Object.keys(this.userForm.controls).forEach(key => {
@@ -45,7 +56,24 @@ export class FormPage implements OnInit{
         }
       });
     });
+  }
 
+  loadMemberData(): void {
+    this.memberService.getMember().subscribe({
+      next: (member) => {
+        this.userForm.patchValue({
+          name: member.name,
+          lastname: member.lastname,
+          dni: member.dni,
+          birthdate: member.birthdate,
+          phone: member.phone,
+          email: member.email
+        });
+      },
+      error: (e) => {
+        console.log('Error al cargar datos del member:', e);
+      }
+    });
   }
 
   get name() { return this.userForm.get('name'); }
@@ -65,25 +93,40 @@ export class FormPage implements OnInit{
       }
     });
 
-    this.memberService.register(formValue).subscribe({
-      next: (data) => {
-        this.router.navigate(['/public/login']);
-      },
-      error: (e) => {
-        let errorData = e.error;
-        if (typeof e.error === 'string') {
-          try {
-            errorData = JSON.parse(e.error);
-          } catch (parseError) {
-            console.log('No se pudo parsear el error');
-          }
+    if (this.isEditMode) {
+      this.memberService.putMember(formValue).subscribe({
+        next: () => {
+          this.router.navigate(['/profile']);
+        },
+        error: (e) => {
+          console.log('Error al actualizar perfil:', e);
+          this.handleServerError(e);
         }
-        
-        if (errorData?.details?.field && errorData?.details?.message) {
-          this.serverErrors[errorData.details.field] = errorData.details.message;
-          console.log("Errores actualizados:", this.serverErrors);
+      });
+    } else {
+      this.memberService.register(formValue).subscribe({
+        next: () => {
+          this.router.navigate(['/public/login']);
+        },
+        error: (e) => {
+          this.handleServerError(e);
         }
+      });
+    }
+  }
+
+  handleServerError(e: any) {
+    let errorData = e.error;
+    if (typeof e.error === 'string') {
+      try {
+        errorData = JSON.parse(e.error);
+      } catch (parseError) {
+        console.log('No se pudo parsear el error');
       }
-    });
+    }
+    
+    if (errorData?.details?.field && errorData?.details?.message) {
+      this.serverErrors[errorData.details.field] = errorData.details.message;
+    }
   }
 }
