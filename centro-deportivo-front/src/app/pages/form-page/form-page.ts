@@ -4,6 +4,7 @@ import { MemberService } from '../../services/member-service';
 import { Router } from '@angular/router';
 import { FieldError } from '../../components/field-error/field-error';
 import { CustomValidators } from '../../utils/custom-validators';
+import { AdminService } from '../../services/admin-service';
 
 @Component({
   selector: 'app-form-page',
@@ -14,16 +15,19 @@ import { CustomValidators } from '../../utils/custom-validators';
 export class FormPage implements OnInit{
   userForm!: FormGroup;
   isEditMode: boolean = false;
+  isAdminRegisterMode: boolean = false;
   serverErrors: { [key: string]: string } = {};
 
   constructor(
     private memberService: MemberService,
+    private adminService: AdminService,
     private fb: FormBuilder,
     private router: Router
   ){}
 
   ngOnInit(): void {
     this.isEditMode = this.router.url.includes('/profile/edit');
+    this.isAdminRegisterMode = this.router.url.includes('/admin/register');
 
     if (this.isEditMode) {
       this.userForm = this.fb.group({
@@ -44,7 +48,8 @@ export class FormPage implements OnInit{
         phone: ['', [Validators.required, Validators.maxLength(15), CustomValidators.noWhitespace]],
         email: ['', [Validators.required, Validators.email]],
         username: ['', [Validators.required, CustomValidators.noWhitespace]],
-        password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/)]]
+        password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/)]],
+        role: ['MEMBER', Validators.required]
       });
     }
 
@@ -84,6 +89,7 @@ export class FormPage implements OnInit{
   get email() { return this.userForm.get('email'); }
   get username() { return this.userForm.get('username'); }
   get password() { return this.userForm.get('password'); }
+  get role() { return this.userForm.get('role'); }
 
   onSubmit(): void {
     const formValue = { ...this.userForm.value };
@@ -103,6 +109,8 @@ export class FormPage implements OnInit{
           this.handleServerError(e);
         }
       });
+    } else if(this.isAdminRegisterMode) {
+      this.registerUserByRole(formValue);
     } else {
       this.memberService.register(formValue).subscribe({
         next: () => {
@@ -112,6 +120,27 @@ export class FormPage implements OnInit{
           this.handleServerError(e);
         }
       });
+    }
+  }
+
+  registerUserByRole(formValue: any) {
+    const role = formValue.role;
+
+    switch(role) {
+      case 'MEMBER':
+        this.adminService.registerMember(formValue).subscribe({
+          next: () => {this.router.navigate(['/'])}, // REDIRIGIR AL PERFIL DEL SOCIO
+          error: (e) => {this.handleServerError(e);}
+        });
+        break;
+
+      case 'INSTRUCTOR':
+        console.log('REGISTRAR INSTRUCTOR');
+        break;
+      
+      case 'ADMIN':
+        console.log('REGISTRAR INSTRUCTOR');
+        break;
     }
   }
 

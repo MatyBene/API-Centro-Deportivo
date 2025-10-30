@@ -46,6 +46,18 @@
         </fieldset>
     </div>
 
+    @if (isAdminRegisterMode) {
+        <fieldset>
+            <label for="role">Tipo de usuario</label>
+            <select id="role" formControlName="role">
+            <option value="MEMBER">Socio</option>
+            <option value="INSTRUCTOR">Instructor</option>
+            <option value="ADMIN">Administrador</option>
+            </select>
+            <app-field-error [control]="role"></app-field-error>
+        </fieldset>
+    }
+
     @if (!isEditMode) {
         <div class="form-row">
             <fieldset>
