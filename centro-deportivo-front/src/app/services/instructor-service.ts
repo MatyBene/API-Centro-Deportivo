@@ -20,4 +20,6 @@ export class InstructorService {
   getInstructor(id: number): Observable<Instructor> {
     return this.http.get<Instructor>(`${this.URL}/${id}/details`);
   }
+  
+  
 }
