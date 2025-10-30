@@ -49,9 +49,22 @@ export class FormPage implements OnInit{
         email: ['', [Validators.required, Validators.email]],
         username: ['', [Validators.required, CustomValidators.noWhitespace]],
         password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/)]],
-        role: ['MEMBER', Validators.required]
+        role: ['MEMBER', Validators.required],
+        specialty: ['']
       });
     }
+
+    this.userForm.get('role')?.valueChanges.subscribe(role => {
+      const specialtyControl = this.userForm.get('specialty');
+      
+      if (role === 'INSTRUCTOR') {
+        specialtyControl?.setValidators([Validators.required, CustomValidators.noWhitespace]);
+      } else {
+        specialtyControl?.clearValidators();
+      }
+      
+      specialtyControl?.updateValueAndValidity();
+    });
 
     this.userForm.valueChanges.subscribe(() => {
       Object.keys(this.userForm.controls).forEach(key => {
@@ -81,15 +94,16 @@ export class FormPage implements OnInit{
     });
   }
 
-  get name() { return this.userForm.get('name'); }
-  get lastname() { return this.userForm.get('lastname'); }
-  get dni() { return this.userForm.get('dni'); }
-  get birthdate() { return this.userForm.get('birthdate'); }
-  get phone() { return this.userForm.get('phone'); }
-  get email() { return this.userForm.get('email'); }
-  get username() { return this.userForm.get('username'); }
-  get password() { return this.userForm.get('password'); }
-  get role() { return this.userForm.get('role'); }
+  get name() { return this.userForm.get('name') }
+  get lastname() { return this.userForm.get('lastname') }
+  get dni() { return this.userForm.get('dni') }
+  get birthdate() { return this.userForm.get('birthdate') }
+  get phone() { return this.userForm.get('phone') }
+  get email() { return this.userForm.get('email') }
+  get username() { return this.userForm.get('username') }
+  get password() { return this.userForm.get('password') }
+  get role() { return this.userForm.get('role') }
+  get specialty() { return this.userForm.get('specialty') }
 
   onSubmit(): void {
     const formValue = { ...this.userForm.value };
@@ -130,12 +144,15 @@ export class FormPage implements OnInit{
       case 'MEMBER':
         this.adminService.registerMember(formValue).subscribe({
           next: () => {this.router.navigate(['/'])}, // REDIRIGIR AL PERFIL DEL SOCIO
-          error: (e) => {this.handleServerError(e);}
+          error: (e) => {this.handleServerError(e)}
         });
         break;
 
       case 'INSTRUCTOR':
-        console.log('REGISTRAR INSTRUCTOR');
+        this.adminService.registerInstructor(formValue).subscribe({
+          next: () => {this.router.navigate(['/'])}, // REDIRIGIR AL PERFIL DEL INSTRUCTOR
+          error: (e) => {this.handleServerError(e)}
+        })
         break;
       
       case 'ADMIN':

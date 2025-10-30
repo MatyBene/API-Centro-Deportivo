@@ -59,6 +59,14 @@
     }
 
     @if (!isEditMode) {
+        @if (isAdminRegisterMode && role?.value === 'INSTRUCTOR') {
+            <fieldset>
+                <label for="specialty">Especialidad</label>
+                <input type="text" id="specialty" formControlName="specialty">
+                <app-field-error [control]="specialty"></app-field-error>
+            </fieldset>
+        }
+
         <div class="form-row">
             <fieldset>
                 <label for="username">Nombre de usuario</label>

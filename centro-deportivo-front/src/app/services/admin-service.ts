@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Admin } from '../models/Admin';
 import { Member } from '../models/Member';
+import Instructor from '../models/Instructor';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,9 @@ export class AdminService {
 
   registerMember(member: Member) {
     return this.http.post(`${this.URL}/create-member`, member, {responseType: 'text'});
+  }
+
+  registerInstructor(instructor: Instructor) {
+    return this.http.post(`${this.URL}/create-instructor`, instructor, {responseType: 'text'});
   }
 }
