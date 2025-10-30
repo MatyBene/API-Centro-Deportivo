@@ -1,12 +1,3 @@
-¡Claro! Utilizando la estructura de paginación que ya tienes, adaptaremos el HTML para mostrar una tabla detallada de socios y sus inscripciones, que es el formato ideal para la gestión por parte de un instructor.
-
-Aquí está el código completo para tu archivo members-list-page.component.html, junto con el CSS necesario para la tabla.
-
-1. HTML Completo (members-list-page.component.html) 🖥️
-Reemplazaremos la sección de filtros y la lista de tarjetas (activities-container) con una tabla. Mantendremos el loading y la paginación tal como los tenías.
-
-HTML
-
 <section class="title-section">
     <h1>LISTADO DE SOCIOS</h1>
 </section>
@@ -19,6 +10,7 @@ HTML
 }
 
 <section class="members-container" [class.fade-in]="!isLoading">
+    
     @if (!isLoading && members.length > 0) {
         
         <div class="table-responsive">
@@ -53,7 +45,7 @@ HTML
                                 </span>
                             </td>
                             <td class="enrollments-cell">
-                                @if (member.enrollments.length > 0) {
+                                @if (member.enrollments && member.enrollments.length > 0) {
                                     <ul class="enrollment-list">
                                         @for (enrollment of member.enrollments; track $index) {
                                             <li class="enrollment-item">{{ enrollment.activityName }}</li>
@@ -70,15 +62,16 @@ HTML
         </div>
         
     } @else if (!isLoading) {
-        <p class="no-members">No se encontraron socios en la base de datos.</p>
+        <p class="no-members no-activities">No se encontraron socios en la base de datos.</p>
     }
 </section>
 
 <section class="pagination-container" [class.visible]="!isLoading">
     @if (!isLoading && totalPages > 1) { 
         <div class="pagination-controls">
+            
             <button (click)="prevPage()" [disabled]="currentPage === 0" class="page-btn">
-                <i class="fas fa-chevron-left"></i> Anterior
+                Anterior
             </button>
 
             <span class="page-info">
@@ -87,7 +80,7 @@ HTML
             </span>
 
             <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1" class="page-btn">
-                Siguiente <i class="fas fa-chevron-right"></i>
+                Siguiente
             </button>
         </div>
     }
