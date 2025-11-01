@@ -136,6 +136,10 @@
     transition: all 0.3s ease;
     box-shadow: 3px 3px 0 #000;
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
 }
 
 .activity-item::before {
@@ -152,8 +156,11 @@
 .activity-item:hover {
     background-color: rgba(201, 168, 62, 0.1);
     border-color: #d12c2c;
-    transform: translateX(5px);
     box-shadow: 5px 5px 0 #000;
+}
+
+.activity-info-wrapper {
+    flex: 1;
 }
 
 .activity-name {
@@ -176,6 +183,34 @@
     color: #c9a83e;
     font-weight: 600;
     letter-spacing: 0.5px;
+}
+
+.btn-unenroll {
+    background-color: #8b0000;
+    color: #fff;
+    border: 2px solid #d12c2c;
+    padding: 10px 20px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 3px 3px 0 #000;
+    letter-spacing: 1.5px;
+    font-family: 'MiSans', sans-serif;
+    white-space: nowrap;
+}
+
+.btn-unenroll:hover {
+    background-color: #d12c2c;
+    border-color: #c9a83e;
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 0 #000;
+}
+
+.btn-unenroll:active {
+    transform: translateY(0);
+    box-shadow: 2px 2px 0 #000;
 }
 
 .no-activities {
@@ -255,6 +290,12 @@
         font-size: 13px;
     }
 
+    .btn-unenroll {
+        padding: 8px 16px;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
     .no-activities {
         padding: 15px 25px 25px;
     }
@@ -332,6 +373,9 @@
         padding: 10px 12px;
         border-width: 2px;
         box-shadow: 2px 2px 0 #000;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
     }
 
     .activity-item::before {
@@ -356,6 +400,21 @@
 
     .activity-detail {
         font-size: 12px;
+    }
+
+    .btn-unenroll {
+        width: 100%;
+        padding: 10px 16px;
+        font-size: 13px;
+        box-shadow: 2px 2px 0 #000;
+    }
+
+    .btn-unenroll:hover {
+        box-shadow: 3px 3px 0 #000;
+    }
+
+    .btn-unenroll:active {
+        box-shadow: 1px 1px 0 #000;
     }
 
     .no-activities {

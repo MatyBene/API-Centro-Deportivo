@@ -4,7 +4,7 @@
 
 <section class="profile-container">
     @if (member) {
-        <app-member-profile-card [member]="member"></app-member-profile-card>
+        <app-member-profile-card [member]="member" (memberUpdated)="loadUser()"></app-member-profile-card>
     }
 
     @if (instructor) {

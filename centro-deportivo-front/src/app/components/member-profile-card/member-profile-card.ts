@@ -1,6 +1,6 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Member } from '../../models/Member';
-import { RouterLink } from '@angular/router';
+import { AdminService } from '../../services/admin-service';
 
 @Component({
   selector: 'app-member-profile-card',
@@ -10,4 +10,16 @@ import { RouterLink } from '@angular/router';
 })
 export class MemberProfileCard {
   member = input.required<Member>();
+  memberUpdated = output<void>();
+
+  constructor(private adminService: AdminService) {}
+
+  unerollment(activityId: string) {
+    this.adminService.unenrollMemberToActivity(activityId, this.member().username).subscribe({
+      next: () => {
+        this.memberUpdated.emit();
+      },
+      error: (e) => {console.log(e)}
+    })
+  }
 }
