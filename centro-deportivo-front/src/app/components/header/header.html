@@ -18,6 +18,9 @@
 
             @if(authService.getUserRole() === 'ADMIN') {
                 <li>
+                    <a routerLink="/users">Usuarios</a>
+                </li>
+                <li>
                     <a routerLink="/admin/register">Registrar</a>
                 </li>
             }

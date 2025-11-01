@@ -1,3 +1,5 @@
+import EnrolledActivitySummary from "./EnrolledActivitySummary"
+
 export interface Member {
     id: number,
     name: string,
@@ -8,5 +10,7 @@ export interface Member {
     email: string,
     username: string,
     password: string,
-    status: string
+    status: string,
+    role: string,
+    enrollments?: EnrolledActivitySummary[]
 }

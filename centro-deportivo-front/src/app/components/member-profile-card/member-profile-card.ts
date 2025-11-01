@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-member-profile-card',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './member-profile-card.html',
   styleUrl: './member-profile-card.css'
 })

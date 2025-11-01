@@ -51,4 +51,8 @@ export class AdminService {
     
     return this.http.get<PageableResponse<Member | Instructor | Admin>>(`${this.URL}/users`, {params});
   }
+
+  getUserDetail(username: string) {
+    return this.http.get<Member | Instructor | Admin>(`${this.URL}/users/${username}`);
+  }
 }
