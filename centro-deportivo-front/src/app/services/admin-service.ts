@@ -55,4 +55,8 @@ export class AdminService {
   getUserDetail(username: string) {
     return this.http.get<Member | Instructor | Admin>(`${this.URL}/users/${username}`);
   }
+
+  deleteUser(username: string) {
+    return this.http.delete(`${this.URL}/users/username/${username}`, {responseType: 'text'});
+  }
 }
