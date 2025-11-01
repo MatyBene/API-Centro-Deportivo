@@ -44,11 +44,17 @@
             <div class="activities-list">
                 @for (enrollment of member().enrollments; track enrollment.activityId) {
                     <div class="activity-item">
-                        <div class="activity-name">{{enrollment.activityName}}</div>
-                        <div class="activity-info">
-                            <span class="activity-detail">Inicio: {{enrollment.startDate}}</span>
-                            <span class="activity-detail">Fin: {{enrollment.endDate}}</span>
+                        <div class="activity-info-wrapper">
+                            <div class="activity-name">{{enrollment.activityName}}</div>
+                            <div class="activity-info">
+                                <span class="activity-detail">Inicio: {{enrollment.startDate}}</span>
+                                <span class="activity-detail">Fin: {{enrollment.endDate}}</span>
+                            </div>
                         </div>
+
+                        <button class="btn-unenroll" (click)="unerollment(enrollment.activityId.toString())">
+                            Dar de baja
+                        </button>
                     </div>
                 }
             </div>

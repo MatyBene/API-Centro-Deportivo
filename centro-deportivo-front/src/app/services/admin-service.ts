@@ -34,6 +34,10 @@ export class AdminService {
     return this.http.post(`${this.URL}/enroll-member`, {username, activityId}, {responseType: 'text'})
   }
 
+  unenrollMemberToActivity(activityId: string, username: string) {
+    return this.http.delete(`${this.URL}/activity/${activityId}/member/${username}`, {responseType: 'text'});
+  }
+
   getUsers(page: number, size: number, role?: string, status?: string, permission?: string) {
     let params = new HttpParams()
       .set('page', page.toString())
