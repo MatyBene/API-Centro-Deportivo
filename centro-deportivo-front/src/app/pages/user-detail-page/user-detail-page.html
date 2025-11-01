@@ -1,0 +1,17 @@
+<section class="title-section">
+    <h1>PERFIL DE USUARIO</h1>
+</section>
+
+<section class="profile-container">
+    @if (member) {
+        <app-member-profile-card [member]="member"></app-member-profile-card>
+    }
+
+    @if (instructor) {
+        <app-instructor-profile-card [instructor]="instructor"></app-instructor-profile-card>
+    }
+
+    @if (admin) {
+        <app-admin-profile-card [admin]="admin"></app-admin-profile-card>
+    }
+</section>
