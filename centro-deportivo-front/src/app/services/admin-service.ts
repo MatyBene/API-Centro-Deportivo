@@ -34,10 +34,21 @@ export class AdminService {
     return this.http.post(`${this.URL}/enroll-member`, {username, activityId}, {responseType: 'text'})
   }
 
-  getUsers(page: number, size: number) {
-    const params = new HttpParams()
+  getUsers(page: number, size: number, role?: string, status?: string, permission?: string) {
+    let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
+    
+    if (role) {
+      params = params.set('role', role);
+    }
+    if (status) {
+      params = params.set('status', status);
+    }
+    if (permission) {
+      params = params.set('permission', permission);
+    }
+    
     return this.http.get<PageableResponse<Member | Instructor | Admin>>(`${this.URL}/users`, {params});
   }
 }

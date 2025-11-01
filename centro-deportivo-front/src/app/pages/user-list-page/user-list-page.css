@@ -68,18 +68,6 @@
     box-shadow: 4px 4px 0 #000;
 }
 
-.filters-container {
-    animation: slideDown 0.3s ease-out;
-    margin-bottom: 30px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 20px;
-}
-
 @keyframes slideDown {
     from {
         opacity: 0;
@@ -217,13 +205,6 @@
         box-shadow: 6px 6px 0 #000;
     }
 
-    .filters-container {
-        margin-bottom: 25px;
-        grid-template-columns: 1fr;
-        gap: 0;
-        padding: 0 15px;
-    }
-
     .loading-container {
         padding: 40px 20px;
         min-height: 300px;
@@ -292,13 +273,6 @@
 
     .filter-toggle-btn:active {
         box-shadow: 3px 3px 0 #000;
-    }
-
-    .filters-container {
-        margin-bottom: 20px;
-        grid-template-columns: 1fr;
-        gap: 0;
-        padding: 0 10px;
     }
 
     .loading-container {

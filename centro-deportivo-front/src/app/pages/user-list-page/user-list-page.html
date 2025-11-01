@@ -2,6 +2,16 @@
     <h1>USUARIOS</h1>
 </section>
 
+<div class="filter-toggle-container">
+    <button class="filter-toggle-btn" (click)="toggleFilters()">
+        {{ showFilters ? 'Ocultar Filtros' : 'Ver filtros' }}
+    </button>
+</div>
+
+@if (showFilters) {
+    <app-user-filters (filterChange)="onFilterChange($event)" (clearFilters)="onClearFilters()"></app-user-filters>
+}
+
 @if (isLoading) {
     <div class="loading-container">
         <div class="loading-spinner"></div>
