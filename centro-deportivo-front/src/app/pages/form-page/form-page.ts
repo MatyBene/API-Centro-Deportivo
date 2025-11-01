@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { FieldError } from '../../components/field-error/field-error';
 import { CustomValidators } from '../../utils/custom-validators';
 import { AdminService } from '../../services/admin-service';
+import { Admin } from '../../models/Admin';
 
 @Component({
   selector: 'app-form-page',
@@ -16,6 +17,7 @@ export class FormPage implements OnInit{
   userForm!: FormGroup;
   isEditMode: boolean = false;
   isAdminRegisterMode: boolean = false;
+  currentAdmin: Admin | null = null;
   serverErrors: { [key: string]: string } = {};
 
   constructor(
@@ -28,6 +30,13 @@ export class FormPage implements OnInit{
   ngOnInit(): void {
     this.isEditMode = this.router.url.includes('/profile/edit');
     this.isAdminRegisterMode = this.router.url.includes('/admin/register');
+
+    if (this.isAdminRegisterMode) {
+      this.adminService.getAdmin().subscribe({
+        next: (admin) => {this.currentAdmin = admin},
+        error: (e) => {console.log('Error al obtener admin:', e)}
+      });
+    }
 
     if (this.isEditMode) {
       this.userForm = this.fb.group({
@@ -50,20 +59,28 @@ export class FormPage implements OnInit{
         username: ['', [Validators.required, CustomValidators.noWhitespace]],
         password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/)]],
         role: ['MEMBER', Validators.required],
-        specialty: ['']
+        specialty: [''],
+        permissionLevel: [null]
       });
     }
 
     this.userForm.get('role')?.valueChanges.subscribe(role => {
       const specialtyControl = this.userForm.get('specialty');
+      const permissionLevelControl = this.userForm.get('permissionLevel');
       
       if (role === 'INSTRUCTOR') {
         specialtyControl?.setValidators([Validators.required, CustomValidators.noWhitespace]);
+        permissionLevelControl?.clearValidators();
+      } else if (role === 'ADMIN') {
+        permissionLevelControl?.setValidators([Validators.required]);
+        specialtyControl?.clearValidators();
       } else {
         specialtyControl?.clearValidators();
+        permissionLevelControl?.clearValidators();
       }
       
       specialtyControl?.updateValueAndValidity();
+      permissionLevelControl?.updateValueAndValidity();
     });
 
     this.userForm.valueChanges.subscribe(() => {
@@ -104,6 +121,7 @@ export class FormPage implements OnInit{
   get password() { return this.userForm.get('password') }
   get role() { return this.userForm.get('role') }
   get specialty() { return this.userForm.get('specialty') }
+  get permissionLevel() { return this.userForm.get('permissionLevel') }
 
   onSubmit(): void {
     const formValue = { ...this.userForm.value };
@@ -126,6 +144,7 @@ export class FormPage implements OnInit{
     } else if(this.isAdminRegisterMode) {
       this.registerUserByRole(formValue);
     } else {
+      console.log('Datos enviados al backend:', formValue);
       this.memberService.register(formValue).subscribe({
         next: () => {
           this.router.navigate(['/public/login']);
@@ -142,21 +161,27 @@ export class FormPage implements OnInit{
 
     switch(role) {
       case 'MEMBER':
+        console.log('FORM MEMBER: ', formValue);
         this.adminService.registerMember(formValue).subscribe({
-          next: () => {this.router.navigate(['/'])}, // REDIRIGIR AL PERFIL DEL SOCIO
+          next: () => {this.router.navigate(['/'])}, // REDIRIGIR AL PERFIL DEL SOCIO CREADO
           error: (e) => {this.handleServerError(e)}
         });
         break;
 
       case 'INSTRUCTOR':
         this.adminService.registerInstructor(formValue).subscribe({
-          next: () => {this.router.navigate(['/'])}, // REDIRIGIR AL PERFIL DEL INSTRUCTOR
-          error: (e) => {this.handleServerError(e)}
+          next: () => {this.router.navigate(['/'])}, // REDIRIGIR AL PERFIL DEL INSTRUCTOR CREADO
+          error: (e) => {
+            console.log('ERROR: ', e)
+            this.handleServerError(e)}
         })
         break;
       
       case 'ADMIN':
-        console.log('REGISTRAR INSTRUCTOR');
+        this.adminService.registerAdmin(formValue).subscribe({
+          next: () => {this.router.navigate(['/'])}, // REDIRIGIR AL PERFIL DEL ADMINISTRADOR CREADO
+          error: (e) => {this.handleServerError(e)}
+        })
         break;
     }
   }

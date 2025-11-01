@@ -24,4 +24,8 @@ export class AdminService {
   registerInstructor(instructor: Instructor) {
     return this.http.post(`${this.URL}/create-instructor`, instructor, {responseType: 'text'});
   }
+
+  registerAdmin(admin: Admin) {
+    return this.http.post(`${this.URL}/create-admin`, admin, {responseType: 'text'});
+  }
 }
