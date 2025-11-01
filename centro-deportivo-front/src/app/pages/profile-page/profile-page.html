@@ -1,17 +1,12 @@
 <section>
     @if (member) {
-        <p>
-            {{member.name}}
-        </p>
-        <p>
-            {{member.username}}
-        </p>
-        <p>
-            {{member.status}}
-        </p>
+        <app-member-profile-card [member]="member"></app-member-profile-card>
     }
 
-    <button [routerLink]="['/my-activities']" >Mis actividades inscriptas</button>
+    @if (admin) {
+        <app-admin-profile-card [admin]="admin"></app-admin-profile-card>
+    }
+
     <button [routerLink]="['/profile/edit']">Editar mi perfil</button>
     <button (click)="removeMember()">Eliminar cuenta</button>
 </section>
