@@ -4,7 +4,7 @@ export default interface Instructor {
     id: number,
     name: string,
     lastname: string,
-    specialty: string,
+    speciality: string,
     birthdate: string,
     activities: SportActivitySummary[],
     role: string,
