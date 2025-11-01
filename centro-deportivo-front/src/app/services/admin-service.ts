@@ -28,4 +28,8 @@ export class AdminService {
   registerAdmin(admin: Admin) {
     return this.http.post(`${this.URL}/create-admin`, admin, {responseType: 'text'});
   }
+
+  enrollMemberToActivity(activityId: string, username: string) {
+    return this.http.post(`${this.URL}/enroll-member`, {username, activityId}, {responseType: 'text'})
+  }
 }
